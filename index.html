@@ -214,6 +214,24 @@
   .form-field input:focus, .form-field select:focus { border-color: #27ae60; }
 
   footer { text-align: center; color: #aaa; font-size: 11px; padding: 20px; }
+
+  /* RECEPT SZERKESZTŐ */
+  .recept-form { background: #f8f9fa; border-radius: 10px; padding: 14px 16px; margin: 4px 0 8px 48px; border: 2px solid #e0e0e0; }
+  .recept-form h4 { font-size: 13px; color: #1F3864; margin-bottom: 10px; }
+  .recept-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .recept-row select { flex: 2; border: 1.5px solid #dde3f0; border-radius: 6px; padding: 6px 8px; font-size: 13px; outline: none; min-width: 120px; }
+  .recept-row select:focus { border-color: #2E5DA6; }
+  .recept-row .r-menny { width: 80px; border: 1.5px solid #dde3f0; border-radius: 6px; padding: 6px 8px; font-size: 13px; outline: none; }
+  .recept-row .r-menny:focus { border-color: #2E5DA6; }
+  .recept-row .r-egys { font-size: 12px; color: #888; }
+  .recept-row .del-btn { background: #fadbd8; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; color: #c0392b; font-size: 13px; }
+  .recept-row .del-btn:hover { background: #f1948a; }
+  .add-anyag-btn { background: #e8f8f0; border: 1.5px dashed #27ae60; border-radius: 6px; padding: 6px 14px; font-size: 12px; cursor: pointer; color: #27ae60; font-weight: bold; width: 100%; margin-top: 4px; }
+  .add-anyag-btn:hover { background: #d5f5e3; }
+  .recept-btn { background: #f0f4f8; border: 1px solid #ccc; border-radius: 6px; padding: 4px 10px; font-size: 11px; cursor: pointer; color: #555; white-space: nowrap; }
+  .recept-btn:hover { background: #e0e8f0; }
+  .new-etel-form { background: #f0fff4; border: 2px dashed #27ae60; border-radius: 10px; padding: 16px; margin-top: 12px; }
+  .new-etel-form h4 { color: #1a5c32; font-size: 14px; margin-bottom: 12px; }
 </style>
 </head>
 <body>
@@ -518,6 +536,7 @@ const defaultPastaAlapanyagok = [
 function dc(o) { return JSON.parse(JSON.stringify(o)); }
 
 let mainTab = 'pizza';
+let receptSzerkesztoIdx = null; // {tipus, idx}
 let pizzaMod = '45', pastaMod = 'pasta';
 let modalTab = 'arak';
 let simaArany45 = 70, simaArany32 = 95;
@@ -921,30 +940,203 @@ function cfgV() {
   renderArakTab();
 }
 
+function getAlapanyagLista(tipus) {
+  return tipus === 'pizza' ? pizzaAlapanyagok : pastaAlapanyagok;
+}
+
 function renderEtelek(lista, tipus) {
   const ossz = Math.round(lista.filter(p=>p.aktiv).reduce((s,p)=>s+p.arany,0)*100)/100;
   const okE = Math.abs(ossz-100)<0.1;
   const normFn = tipus==='pizza'?'normPizza':'normPasta';
+  const anyagLista = getAlapanyagLista(tipus);
+  const anyagOptions = anyagLista.map(a=>`<option value="${a.nev}">${a.nev}</option>`).join('') + '<option value="__uj__">+ Új alapanyag...</option>';
+
   let h=`<div class="etel-settings-header">
     <div>
-      <div style="font-size:12px;color:#888;margin-bottom:4px;">Kapcsold ki amit nem kínálsz · Állítsd be az arányokat</div>
+      <div style="font-size:12px;color:#888;margin-bottom:4px;">Kapcsold ki amit nem kínálsz · Állítsd be az arányokat · Szerkeszd a recepteket</div>
       <div class="arany-ossz ${okE?'ok':'err'}">Összes arány: ${ossz}% ${okE?'✓':'⚠ Normalizálj!'}</div>
     </div>
     <button class="norm-btn" onclick="${normFn}()">⚖️ Normalizálás</button>
   </div>`;
 
   lista.forEach((p,i) => {
-    const isG = p.gnocchi;
+    const isG = p.gnocchi !== undefined ? p.gnocchi : false;
+    const isCustom = p.custom || false;
+    const szerk = receptSzerkesztoIdx && receptSzerkesztoIdx.tipus===tipus && receptSzerkesztoIdx.idx===i;
     h+=`<div class="etel-row">
       <label class="toggle-wrap"><input type="checkbox" ${p.aktiv?'checked':''} onchange="toggleEtel('${tipus}',${i})"><span class="tog-sl"></span></label>
-      <span class="etel-nev-lbl ${p.aktiv?'':'off'}">${p.nev}${isG?' <span style="font-size:10px;background:#27ae60;color:white;border-radius:4px;padding:1px 5px;">🥟</span>':''}</span>
+      <span class="etel-nev-lbl ${p.aktiv?'':'off'}">${p.nev}${isG?' <span style="font-size:10px;background:#27ae60;color:white;border-radius:4px;padding:1px 5px;">🥟</span>':''}${isCustom?' <span style="font-size:10px;background:#8E44AD;color:white;border-radius:4px;padding:1px 5px;">ÚJ</span>':''}</span>
       <div class="arany-iw">
         <input class="arany-inp" type="number" value="${p.arany}" min="0" max="100" step="0.01" ${p.aktiv?'':'disabled'} oninput="aranyV('${tipus}',${i},this.value)">
         <span style="font-size:12px;color:#888;">%</span>
       </div>
+      <button class="recept-btn" onclick="toggleRecept('${tipus}',${i})">🧾 Recept ${szerk?'▲':'▼'}</button>
+      ${isCustom?`<button class="btn btn-danger btn-xs" onclick="etelTorol('${tipus}',${i})">🗑</button>`:''}
     </div>`;
+
+    if(szerk) {
+      h+=`<div class="recept-form">
+        <h4>📋 ${p.nev} – recept (grammban)</h4>
+        ${(p.recept||[]).map((r,ri)=>`
+          <div class="recept-row">
+            <select onchange="receptAnyagV('${tipus}',${i},${ri},this.value)">
+              ${anyagLista.map(a=>`<option value="${a.nev}" ${a.nev===r.a?'selected':''}>${a.nev}</option>`).join('')}
+              <option value="__uj__" ${r.a==='__uj__'?'selected':''}>+ Új alapanyag...</option>
+            </select>
+            ${r.a==='__uj__'?`<input type="text" placeholder="Alapanyag neve" value="${r.ujNev||''}" oninput="receptUjNev('${tipus}',${i},${ri},this.value)" style="flex:2;border:1.5px solid #27ae60;border-radius:6px;padding:6px 8px;font-size:13px;outline:none;">`:''}
+            <input class="r-menny" type="number" value="${r.m}" min="0" oninput="receptMennyV('${tipus}',${i},${ri},this.value)">
+            <span class="r-egys">g</span>
+            <button class="del-btn" onclick="receptSorTorol('${tipus}',${i},${ri})">✕</button>
+          </div>`).join('')}
+        <button class="add-anyag-btn" onclick="receptSorHozzaad('${tipus}',${i})">+ Alapanyag hozzáadása</button>
+      </div>`;
+    }
   });
+
+  // Új étel form
+  const ujGnocchiOpcio = tipus==='pasta' ? `
+    <div class="form-field" style="max-width:140px;">
+      <label>Típus</label>
+      <select id="uj-tipus-${tipus}" style="border:2px solid #dde3f0;border-radius:7px;padding:8px 10px;font-size:13px;outline:none;width:100%;">
+        <option value="false">🍝 Tészta</option>
+        <option value="true">🥟 Gnocchi</option>
+      </select>
+    </div>` : '';
+
+  h+=`<div class="new-etel-form">
+    <h4>➕ Új ${tipus==='pizza'?'pizza':'pasta étel'} hozzáadása</h4>
+    <div class="form-row">
+      <div class="form-field"><label>Neve</label><input type="text" id="uj-nev-${tipus}" placeholder="pl. Caprese"></div>
+      <div class="form-field" style="max-width:110px;"><label>Arány (%)</label><input type="number" id="uj-arany-${tipus}" value="1" min="0.01" step="0.01"></div>
+      ${ujGnocchiOpcio}
+    </div>
+    <div id="uj-recept-${tipus}">
+      <div class="recept-row">
+        <select id="uj-a-0-${tipus}">${anyagOptions}</select>
+        <input class="r-menny" type="number" id="uj-m-0-${tipus}" placeholder="menny">
+        <span class="r-egys">g</span>
+      </div>
+    </div>
+    <button class="add-anyag-btn" onclick="ujReceptSor('${tipus}')" style="margin-top:6px;">+ Alapanyag</button>
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-success btn-sm" onclick="ujEtelMent('${tipus}')">✓ Mentés</button>
+      <span id="uj-hiba-${tipus}" style="color:#c0392b;font-size:12px;"></span>
+    </div>
+  </div>`;
+
   document.getElementById('modal-body').innerHTML=h;
+}
+
+// Recept szerkesztő
+function toggleRecept(tipus, i) {
+  if(receptSzerkesztoIdx && receptSzerkesztoIdx.tipus===tipus && receptSzerkesztoIdx.idx===i) {
+    receptSzerkesztoIdx=null;
+  } else {
+    receptSzerkesztoIdx={tipus, idx:i};
+  }
+  const lista = tipus==='pizza'?pizzak:pastak;
+  renderEtelek(lista, tipus);
+}
+
+function receptAnyagV(tipus,pi,ri,val) {
+  const lista=tipus==='pizza'?pizzak:pastak;
+  lista[pi].recept[ri].a=val;
+  if(val!=='__uj__') delete lista[pi].recept[ri].ujNev;
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  renderEtelek(lista,tipus);
+}
+function receptUjNev(tipus,pi,ri,val) {
+  const lista=tipus==='pizza'?pizzak:pastak;
+  lista[pi].recept[ri].ujNev=val;
+}
+function receptMennyV(tipus,pi,ri,val) {
+  const lista=tipus==='pizza'?pizzak:pastak;
+  lista[pi].recept[ri].m=parseFloat(val)||0;
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  if(tipus==='pizza') pizzaFrissit(); else pastaFrissit();
+}
+function receptSorHozzaad(tipus,pi) {
+  const lista=tipus==='pizza'?pizzak:pastak;
+  const anyagLista=getAlapanyagLista(tipus);
+  lista[pi].recept.push({a:anyagLista[0].nev, m:0});
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  renderEtelek(lista,tipus);
+}
+function receptSorTorol(tipus,pi,ri) {
+  const lista=tipus==='pizza'?pizzak:pastak;
+  lista[pi].recept.splice(ri,1);
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  renderEtelek(lista,tipus);
+  if(tipus==='pizza') pizzaFrissit(); else pastaFrissit();
+}
+function etelTorol(tipus,i) {
+  const lista=tipus==='pizza'?pizzak:pastak;
+  if(!confirm(`Törlöd: "${lista[i].nev}"?`)) return;
+  lista.splice(i,1);
+  receptSzerkesztoIdx=null;
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  renderEtelek(lista,tipus);
+  if(tipus==='pizza') pizzaFrissit(); else pastaFrissit();
+}
+
+let ujReceptSorDb = {};
+function ujReceptSor(tipus) {
+  if(!ujReceptSorDb[tipus]) ujReceptSorDb[tipus]=1;
+  const i=ujReceptSorDb[tipus]++;
+  const anyagLista=getAlapanyagLista(tipus);
+  const opts=anyagLista.map(a=>`<option value="${a.nev}">${a.nev}</option>`).join('')+'<option value="__uj__">+ Új alapanyag...</option>';
+  const cont=document.getElementById(`uj-recept-${tipus}`);
+  const div=document.createElement('div');
+  div.className='recept-row';
+  div.innerHTML=`<select id="uj-a-${i}-${tipus}">${opts}</select>
+    <input class="r-menny" type="number" id="uj-m-${i}-${tipus}" placeholder="menny">
+    <span class="r-egys">g</span>
+    <button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
+  cont.appendChild(div);
+}
+
+function ujEtelMent(tipus) {
+  const nev=(document.getElementById(`uj-nev-${tipus}`)?.value||'').trim();
+  const arany=parseFloat(document.getElementById(`uj-arany-${tipus}`)?.value)||0;
+  const hiba=document.getElementById(`uj-hiba-${tipus}`);
+  const lista=tipus==='pizza'?pizzak:pastak;
+  const anyagLista=getAlapanyagLista(tipus);
+
+  if(!nev){hiba.textContent='Add meg a nevet!';return;}
+  if(arany<=0){hiba.textContent='Az aránynak 0-nál nagyobbnak kell lennie!';return;}
+  if(lista.find(p=>p.nev.toLowerCase()===nev.toLowerCase())){hiba.textContent='Már van ilyen nevű étel!';return;}
+
+  const recept=[];
+  let ri=0;
+  while(document.getElementById(`uj-a-${ri}-${tipus}`)) {
+    const aEl=document.getElementById(`uj-a-${ri}-${tipus}`);
+    const mEl=document.getElementById(`uj-m-${ri}-${tipus}`);
+    if(aEl && mEl && mEl.value) {
+      let anyagNev=aEl.value;
+      if(anyagNev==='__uj__') {
+        const ujEl=document.getElementById(`uj-ujnev-${ri}-${tipus}`);
+        anyagNev=ujEl?ujEl.value.trim():'';
+        if(!anyagNev){ri++;continue;}
+        if(!anyagLista.find(a=>a.nev===anyagNev)) anyagLista.push({nev:anyagNev,egys:"g",alap:null,ae:null});
+      }
+      recept.push({a:anyagNev, m:parseFloat(mEl.value)||0});
+    }
+    ri++;
+  }
+
+  const ujEtel = {nev, arany, aktiv:true, custom:true, recept};
+  if(tipus==='pasta') {
+    const gnocchiEl=document.getElementById(`uj-tipus-${tipus}`);
+    ujEtel.gnocchi = gnocchiEl ? gnocchiEl.value==='true' : false;
+  }
+
+  lista.push(ujEtel);
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  ujReceptSorDb[tipus]=1;
+  hiba.textContent='';
+  receptSzerkesztoIdx={tipus, idx:lista.length-1};
+  renderEtelek(lista,tipus);
+  if(tipus==='pizza') pizzaFrissit(); else pastaFrissit();
 }
 
 function toggleEtel(tipus, i) {
