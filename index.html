@@ -3,80 +3,123 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍕 Pizza Alapanyag Kalkulátor</title>
+<title>🍽️ Étterem Kalkulátor</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f0f4f8; color: #222; }
-  header { background: #1F3864; color: white; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+
+  /* HEADER */
+  header { background: #1F3864; color: white; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
   header h1 { font-size: 20px; }
   .btn { padding: 8px 18px; border-radius: 8px; border: none; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
   .btn-settings { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
   .btn-settings:hover { background: rgba(255,255,255,0.25); }
   .btn-primary { background: #2E5DA6; color: white; }
-  .btn-primary:hover { background: #1F3864; }
+  .btn-primary:hover { background: #1a3d7a; }
   .btn-danger { background: #c0392b; color: white; }
   .btn-danger:hover { background: #a93226; }
   .btn-success { background: #27ae60; color: white; }
   .btn-success:hover { background: #1e8449; }
-  .btn-warn { background: #e67e22; color: white; }
-  .btn-warn:hover { background: #ca6f1e; }
   .btn-sm { padding: 5px 12px; font-size: 12px; }
   .btn-xs { padding: 3px 8px; font-size: 11px; }
 
-  .container { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+  /* FŐ FÜLEK (Pizza / Pasta) */
+  .main-tabs { background: #162d54; display: flex; gap: 0; }
+  .main-tab { padding: 12px 28px; font-size: 15px; font-weight: bold; color: rgba(255,255,255,0.6); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  .main-tab:hover { color: white; }
+  .main-tab.active { color: white; border-bottom-color: #FFD700; }
+
+  /* PROFIL SÁV */
+  .profil-bar { background: #1a3666; padding: 7px 32px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .profil-label { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+  .profil-btn { padding: 5px 14px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.65); font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
+  .profil-btn:hover { border-color: rgba(255,255,255,0.5); color: white; }
+  .profil-btn.active { background: white; color: #1F3864; border-color: white; }
+  .profil-btn.uj { border-style: dashed; color: rgba(255,255,255,0.4); }
+  .profil-btn.uj:hover { color: white; border-color: white; }
+
+  .container { max-width: 1040px; margin: 24px auto; padding: 0 16px; }
   .card { background: white; border-radius: 10px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
   .card h3 { color: #1F3864; font-size: 15px; margin-bottom: 14px; }
+  .hidden { display: none !important; }
 
+  /* MÓD VÁLTÓ */
   .mode-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-  .mode-tab { flex: 1; min-width: 130px; padding: 10px 14px; border: 2px solid #dde3f0; border-radius: 10px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: bold; color: #888; transition: all 0.15s; }
+  .mode-tab { flex: 1; min-width: 120px; padding: 10px 14px; border: 2px solid #dde3f0; border-radius: 10px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: bold; color: #888; transition: all 0.15s; }
   .mode-tab:hover { border-color: #2E5DA6; color: #2E5DA6; }
   .mode-tab.active { border-color: #1F3864; background: #1F3864; color: white; }
   .mode-tab .sub { font-size: 10px; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
 
+  /* INPUT */
   .input-panels { display: flex; gap: 14px; flex-wrap: wrap; }
-  .input-panel { flex: 1; min-width: 210px; border-radius: 10px; padding: 16px 18px; border: 2px solid #dde3f0; }
-  .input-panel.panel-45 { border-color: #2E5DA6; background: #f0f4ff; }
-  .input-panel.panel-32 { border-color: #E8A000; background: #fff8e1; }
+  .input-panel { flex: 1; min-width: 200px; border-radius: 10px; padding: 16px 18px; border: 2px solid #dde3f0; }
+  .input-panel.p45 { border-color: #2E5DA6; background: #f0f4ff; }
+  .input-panel.p32 { border-color: #E8A000; background: #fff8e1; }
+  .input-panel.ppasta { border-color: #8E44AD; background: #f9f0ff; }
+  .input-panel.pgnocchi { border-color: #27ae60; background: #f0fff4; }
   .input-panel h4 { font-size: 13px; margin-bottom: 10px; }
-  .panel-45 h4 { color: #1F3864; }
-  .panel-32 h4 { color: #7A4F00; }
+  .p45 h4 { color: #1F3864; } .p32 h4 { color: #7A4F00; }
+  .ppasta h4 { color: #6C1A9B; } .pgnocchi h4 { color: #1a5c32; }
   .dual-input { display: flex; flex-direction: column; gap: 8px; }
-  .input-block { border: 2px solid #dde3f0; border-radius: 8px; padding: 10px 14px; background: white; }
-  .input-block.active-45 { border-color: #2E5DA6; background: #e8f0fe; }
-  .input-block.active-32 { border-color: #E8A000; background: #fff3cd; }
-  .input-block label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 4px; }
-  .input-row-inner { display: flex; align-items: center; gap: 6px; }
-  .input-block input[type=number] { font-size: 20px; font-weight: bold; color: #1F3864; border: none; outline: none; background: transparent; width: 100%; }
-  .input-block .suffix { font-size: 12px; color: #888; white-space: nowrap; }
+  .iblock { border: 2px solid #dde3f0; border-radius: 8px; padding: 10px 14px; background: white; }
+  .iblock.a45 { border-color: #2E5DA6; background: #e8f0fe; }
+  .iblock.a32 { border-color: #E8A000; background: #fff3cd; }
+  .iblock.apasta { border-color: #8E44AD; background: #f3e5ff; }
+  .iblock.agnocchi { border-color: #27ae60; background: #e8f8f0; }
+  .iblock label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 4px; }
+  .irow { display: flex; align-items: center; gap: 6px; }
+  .iblock input[type=number] { font-size: 20px; font-weight: bold; color: #1F3864; border: none; outline: none; background: transparent; width: 100%; }
+  .iblock .sfx { font-size: 12px; color: #888; white-space: nowrap; }
   .or-div { text-align: center; font-size: 11px; color: #aaa; font-weight: bold; }
 
-  .summary-bar { background: #1F3864; color: white; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
-  .summary-item .s-label { font-size: 10px; opacity: 0.7; margin-bottom: 2px; }
-  .summary-item .s-val { font-size: 18px; font-weight: bold; }
-  .summary-item.highlight .s-val { color: #FFD700; }
-  .summary-sep { width: 1px; background: rgba(255,255,255,0.2); align-self: stretch; min-height: 36px; }
+  /* SUMMARY */
+  .summary-bar { background: #1F3864; color: white; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  .si .sl { font-size: 10px; opacity: 0.7; margin-bottom: 2px; }
+  .si .sv { font-size: 17px; font-weight: bold; }
+  .si.hl .sv { color: #FFD700; }
+  .ssep { width: 1px; background: rgba(255,255,255,0.2); align-self: stretch; min-height: 32px; }
 
-  .gomboc-controls { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  /* SLIDER */
+  .slider-wrap { display: flex; gap: 16px; flex-wrap: wrap; }
+  .slider-box { flex: 1; min-width: 200px; border-radius: 10px; padding: 14px 18px; }
+  .slider-box.s45 { background: #f0f4ff; border: 2px solid #2E5DA6; }
+  .slider-box.s32 { background: #fff8e1; border: 2px solid #E8A000; }
+  .slider-box .stitle { font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+  .s45 .stitle { color: #2E5DA6; } .s32 .stitle { color: #7A4F00; }
   .slider-side { display: flex; flex-direction: column; gap: 6px; }
   .slider-side label { font-size: 13px; font-weight: bold; color: #555; }
   input[type=range] { width: 200px; accent-color: #2E5DA6; cursor: pointer; }
-  .gomboc-vals { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .gv { border-radius: 8px; padding: 8px 14px; text-align: center; min-width: 84px; border: 2px solid #2E5DA6; background: #f0f4ff; }
+  .gv-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .gv { border-radius: 8px; padding: 7px 12px; text-align: center; min-width: 80px; border: 2px solid #2E5DA6; background: #f0f4ff; }
   .gv.tk { border-color: #E8A000; background: #fff8e1; }
-  .gv.g32 { border-color: #E8A000; background: #fff8e1; }
-  .gv .glabel { font-size: 9px; color: #888; margin-bottom: 1px; }
-  .gv .num { font-size: 18px; font-weight: bold; color: #1F3864; }
-  .gv.tk .num, .gv.g32 .num { color: #7A4F00; }
-  .gv .pct { font-size: 10px; color: #2E5DA6; font-weight: bold; }
-  .gv.tk .pct, .gv.g32 .pct { color: #E8A000; }
-  .vs { font-size: 14px; color: #ccc; font-weight: bold; }
-  .reset-btn { background: #f0f4f8; border: 1px solid #ccc; border-radius: 6px; padding: 5px 12px; font-size: 11px; cursor: pointer; color: #555; }
+  .gv .gl { font-size: 9px; color: #888; margin-bottom: 1px; }
+  .gv .gn { font-size: 17px; font-weight: bold; color: #1F3864; }
+  .gv.tk .gn { color: #7A4F00; }
+  .gv .gp { font-size: 10px; color: #2E5DA6; font-weight: bold; }
+  .gv.tk .gp { color: #E8A000; }
+  .vs { font-size: 13px; color: #ccc; font-weight: bold; }
+  .reset-btn { background: #f0f4f8; border: 1px solid #ccc; border-radius: 6px; padding: 5px 12px; font-size: 11px; cursor: pointer; color: #555; margin-top: 6px; display: inline-block; }
   .reset-btn:hover { background: #dde5f0; }
 
+  /* PASTA TÉSZTA ARÁNY */
+  .teszta-box { background: #f9f0ff; border: 2px solid #8E44AD; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+  .teszta-box h4 { color: #6C1A9B; font-size: 13px; margin-bottom: 12px; }
+  .teszta-sliders { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .teszta-slider { display: flex; flex-direction: column; gap: 4px; min-width: 160px; }
+  .teszta-slider label { font-size: 12px; font-weight: bold; color: #555; }
+  .teszta-cards { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .teszta-card { background: white; border: 2px solid #8E44AD; border-radius: 8px; padding: 8px 14px; text-align: center; min-width: 80px; }
+  .teszta-card .tn { font-size: 11px; color: #888; }
+  .teszta-card .tv { font-size: 18px; font-weight: bold; color: #6C1A9B; }
+  .teszta-card .tp { font-size: 11px; color: #8E44AD; font-weight: bold; }
+
+  /* SECTION */
   .section { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden; }
   .section-title { background: #2E5DA6; color: white; padding: 10px 18px; font-weight: bold; font-size: 14px; }
+  .section-title.pasta-color { background: #8E44AD; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { background: #2E5DA6; color: white; padding: 8px 12px; text-align: center; font-size: 11px; }
+  th.pasta-th { background: #8E44AD; }
   th:first-child { text-align: left; }
   td { padding: 7px 12px; border-bottom: 1px solid #eee; }
   td:first-child { font-weight: 500; }
@@ -86,25 +129,31 @@
   .ceil { font-weight: bold; color: #375623; background: #E2EFDA; border-radius: 5px; padding: 2px 7px; display: inline-block; }
   .unit { color: #888; font-size: 10px; margin-left: 2px; }
   .dash { color: #bbb; }
-  .group-header td { font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 7px 12px 5px; border-bottom: none; color: white; }
-  .group-gomboc td { background: #1F3864; }
-  .group-egyeb-pizza td { background: #8E44AD; }
-  .group-fix td { background: #2E5DA6; }
+  .gh td { font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 7px 12px 5px; border-bottom: none; color: white; }
+  .gh-gomboc td { background: #1F3864; }
+  .gh-alap td { background: #2E5DA6; }
+  .gh-pasta td { background: #8E44AD; }
+  .gh-gnocchi td { background: #27ae60; }
+  .gh-hus td { background: #7B3F00; }
+  .gh-sajt td { background: #5C6BC0; }
+  .gh-gomba td { background: #2E7D32; }
+  .gh-egyeb td { background: #546E7A; }
   .row-gomboc { background: #fff8e1 !important; }
   .row-gomboc td:first-child { color: #7A4F00; font-weight: bold; }
-  .row-fix { background: #e8f0fe !important; }
-  .row-egyeb-pizza { background: #f5eeff !important; }
-  .row-normal { background: white; }
-  .row-normal:nth-child(even) { background: #f7f9fc; }
+  .row-pasta { background: #f9f0ff !important; }
+  .row-gnocchi { background: #f0fff4 !important; }
+  .row-norm:nth-child(even) { background: #f7f9fc; }
 
-  .pizza-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 8px; padding: 14px; }
-  .pizza-card { background: #f7f9fc; border: 1px solid #dde3f0; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
-  .pizza-card.custom { border-color: #8E44AD; background: #f9f0ff; }
-  .pizza-name { font-size: 12px; font-weight: 500; }
-  .pizza-dbs { text-align: right; }
-  .pizza-db45 { font-size: 14px; font-weight: bold; color: #2E5DA6; }
-  .pizza-db32 { font-size: 11px; color: #E8A000; font-weight: bold; }
-  .pizza-pct { font-size: 10px; color: #888; }
+  /* ÉTEL GRID */
+  .etel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 8px; padding: 14px; }
+  .etel-card { background: #f7f9fc; border: 1px solid #dde3f0; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
+  .etel-card.pasta-card { border-color: #c9a0e8; background: #faf0ff; }
+  .etel-card.gnocchi-card { border-color: #90d4a8; background: #f0fff6; }
+  .etel-nev { font-size: 12px; font-weight: 500; }
+  .etel-db { font-size: 14px; font-weight: bold; color: #2E5DA6; }
+  .etel-db.pasta-db { color: #8E44AD; }
+  .etel-db.gnocchi-db { color: #27ae60; }
+  .etel-pct { font-size: 10px; color: #888; }
 
   /* MODAL */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
@@ -114,99 +163,82 @@
   .modal-header h2 { font-size: 17px; }
   .modal-close { background: none; border: none; color: white; font-size: 22px; cursor: pointer; opacity: 0.7; }
   .modal-close:hover { opacity: 1; }
-  .modal-tabs { display: flex; border-bottom: 2px solid #eee; }
-  .modal-tab { flex: 1; padding: 12px; text-align: center; font-size: 13px; font-weight: bold; color: #888; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .modal-tabs { display: flex; border-bottom: 2px solid #eee; overflow-x: auto; }
+  .modal-tab { padding: 11px 16px; text-align: center; font-size: 12px; font-weight: bold; color: #888; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; white-space: nowrap; }
   .modal-tab.active { color: #1F3864; border-bottom-color: #1F3864; }
-  .modal-body { padding: 20px 24px; max-height: 72vh; overflow-y: auto; }
+  .modal-body { padding: 20px 24px; max-height: 70vh; overflow-y: auto; }
   .modal-footer { padding: 14px 24px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-  /* Ár tab */
+  /* BEÁLLÍTÁSOK */
   .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .setting-item { display: flex; flex-direction: column; gap: 6px; }
-  .setting-item label { font-size: 12px; font-weight: bold; color: #555; }
-  .setting-item input { border: 2px solid #dde3f0; border-radius: 8px; padding: 10px 14px; font-size: 16px; font-weight: bold; color: #1F3864; outline: none; width: 100%; }
-  .setting-item input:focus { border-color: #2E5DA6; }
-  .setting-item .s-hint { font-size: 11px; color: #888; }
+  .si-item { display: flex; flex-direction: column; gap: 6px; }
+  .si-item label { font-size: 12px; font-weight: bold; color: #555; }
+  .si-item input { border: 2px solid #dde3f0; border-radius: 8px; padding: 10px 14px; font-size: 15px; font-weight: bold; color: #1F3864; outline: none; width: 100%; }
+  .si-item input:focus { border-color: #2E5DA6; }
+  .si-item .hint { font-size: 11px; color: #888; }
 
-  /* Pizza tab */
-  .pizza-settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  /* ÉTEL BEÁLLÍTÁSOK */
+  .etel-settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
   .arany-ossz { font-size: 13px; font-weight: bold; }
-  .arany-ossz.ok { color: #27ae60; }
-  .arany-ossz.err { color: #c0392b; }
-  .pizza-setting-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f0f0f0; }
-  .pizza-toggle { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
-  .pizza-toggle input { opacity: 0; width: 0; height: 0; }
-  .toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 22px; cursor: pointer; transition: 0.2s; }
-  .toggle-slider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.2s; }
-  .pizza-toggle input:checked + .toggle-slider { background: #27ae60; }
-  .pizza-toggle input:checked + .toggle-slider:before { transform: translateX(16px); }
-  .pizza-setting-name { flex: 1; font-size: 13px; font-weight: 500; }
-  .pizza-setting-name.disabled { color: #bbb; text-decoration: line-through; }
-  .pizza-setting-name .custom-badge { font-size: 10px; background: #8E44AD; color: white; border-radius: 4px; padding: 1px 5px; margin-left: 5px; }
-  .arany-input-wrap { display: flex; align-items: center; gap: 4px; }
-  .arany-input { width: 68px; border: 2px solid #dde3f0; border-radius: 6px; padding: 5px 8px; font-size: 13px; font-weight: bold; color: #1F3864; text-align: right; outline: none; }
-  .arany-input:focus { border-color: #2E5DA6; }
-  .arany-input:disabled { background: #f5f5f5; color: #ccc; border-color: #eee; }
+  .arany-ossz.ok { color: #27ae60; } .arany-ossz.err { color: #c0392b; }
+  .etel-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f0f0f0; }
+  .toggle-wrap { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+  .toggle-wrap input { opacity: 0; width: 0; height: 0; }
+  .tog-sl { position: absolute; inset: 0; background: #ccc; border-radius: 22px; cursor: pointer; transition: 0.2s; }
+  .tog-sl:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+  .toggle-wrap input:checked + .tog-sl { background: #27ae60; }
+  .toggle-wrap input:checked + .tog-sl:before { transform: translateX(16px); }
+  .etel-nev-lbl { flex: 1; font-size: 13px; font-weight: 500; }
+  .etel-nev-lbl.off { color: #bbb; text-decoration: line-through; }
+  .arany-iw { display: flex; align-items: center; gap: 4px; }
+  .arany-inp { width: 68px; border: 2px solid #dde3f0; border-radius: 6px; padding: 5px 8px; font-size: 13px; font-weight: bold; color: #1F3864; text-align: right; outline: none; }
+  .arany-inp:focus { border-color: #2E5DA6; }
+  .arany-inp:disabled { background: #f5f5f5; color: #ccc; border-color: #eee; }
   .norm-btn { background: #2E5DA6; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; cursor: pointer; }
   .norm-btn:hover { background: #1F3864; }
-  .pizza-recept-btn { background: #f0f4f8; border: 1px solid #ccc; border-radius: 6px; padding: 4px 10px; font-size: 11px; cursor: pointer; color: #555; white-space: nowrap; }
-  .pizza-recept-btn:hover { background: #e0e8f0; }
 
-  /* Recept szerkesztő */
-  .recept-form { background: #f8f9fa; border-radius: 10px; padding: 16px; margin-top: 4px; border: 2px solid #e0e0e0; }
-  .recept-form h4 { font-size: 14px; color: #1F3864; margin-bottom: 12px; }
-  .recept-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
-  .recept-row select, .recept-row input[type=text] { flex: 2; border: 1.5px solid #dde3f0; border-radius: 6px; padding: 7px 10px; font-size: 13px; outline: none; min-width: 120px; }
-  .recept-row input[type=number] { width: 80px; border: 1.5px solid #dde3f0; border-radius: 6px; padding: 7px 10px; font-size: 13px; outline: none; }
-  .recept-row select:focus, .recept-row input:focus { border-color: #2E5DA6; }
-  .recept-row .del-btn { background: #fadbd8; border: none; border-radius: 6px; padding: 7px 10px; cursor: pointer; font-size: 13px; color: #c0392b; }
-  .recept-row .del-btn:hover { background: #f1948a; }
-  .add-anyag-btn { background: #e8f8f0; border: 1.5px dashed #27ae60; border-radius: 6px; padding: 7px 14px; font-size: 12px; cursor: pointer; color: #27ae60; font-weight: bold; width: 100%; margin-top: 4px; }
-  .add-anyag-btn:hover { background: #d5f5e3; }
-
-  /* Új pizza form */
-  .new-pizza-form { background: #f0fff4; border: 2px dashed #27ae60; border-radius: 10px; padding: 16px; margin-top: 12px; }
-  .new-pizza-form h4 { color: #1a5c32; font-size: 14px; margin-bottom: 12px; }
-  .form-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 10px; }
-  .form-field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
-  .form-field label { font-size: 11px; font-weight: bold; color: #555; }
-  .form-field input { border: 2px solid #dde3f0; border-radius: 7px; padding: 8px 12px; font-size: 14px; outline: none; }
-  .form-field input:focus { border-color: #27ae60; }
-
-  footer { text-align: center; color: #aaa; font-size: 11px; padding: 20px; }
-
-  /* PROFILOK */
-  .profil-bar { background: #162d54; padding: 8px 32px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .profil-label { color: rgba(255,255,255,0.6); font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-  .profil-btn { padding: 6px 14px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-  .profil-btn:hover { border-color: rgba(255,255,255,0.5); color: white; }
-  .profil-btn.active { background: white; color: #1F3864; border-color: white; }
-  .profil-btn.uj-profil { border-style: dashed; color: rgba(255,255,255,0.5); }
-  .profil-btn.uj-profil:hover { color: white; border-color: white; }
+  /* PROFIL TAB */
   .profil-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
   .profil-sor { display: flex; align-items: center; gap: 10px; background: #f7f9fc; border-radius: 8px; padding: 10px 14px; border: 2px solid #eee; }
   .profil-sor.aktiv { border-color: #2E5DA6; background: #f0f4ff; }
-  .profil-nev-input { flex: 1; border: 1.5px solid #dde3f0; border-radius: 6px; padding: 6px 10px; font-size: 14px; font-weight: bold; outline: none; background: transparent; }
-  .profil-nev-input:focus { border-color: #2E5DA6; background: white; }
+  .profil-nev-inp { flex: 1; border: 1.5px solid transparent; border-radius: 6px; padding: 6px 10px; font-size: 14px; font-weight: bold; outline: none; background: transparent; }
+  .profil-nev-inp:focus { border-color: #2E5DA6; background: white; }
   .profil-aktiv-badge { font-size: 10px; background: #2E5DA6; color: white; border-radius: 10px; padding: 2px 8px; white-space: nowrap; }
   .profil-default-badge { font-size: 10px; background: #888; color: white; border-radius: 10px; padding: 2px 8px; white-space: nowrap; }
   .uj-profil-form { background: #f0fff4; border: 2px dashed #27ae60; border-radius: 10px; padding: 16px; }
   .uj-profil-form h4 { color: #1a5c32; font-size: 14px; margin-bottom: 12px; }
+  .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .form-field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+  .form-field label { font-size: 11px; font-weight: bold; color: #555; }
+  .form-field input, .form-field select { border: 2px solid #dde3f0; border-radius: 7px; padding: 8px 12px; font-size: 13px; outline: none; width: 100%; }
+  .form-field input:focus, .form-field select:focus { border-color: #27ae60; }
+
+  footer { text-align: center; color: #aaa; font-size: 11px; padding: 20px; }
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <h1>🍕 Pizza Alapanyag Kalkulátor</h1>
-    <div style="font-size:12px;opacity:0.7;">45cm szelet · 32cm egész pizza · kombinált mód</div>
+    <h1>🍽️ Étterem Kalkulátor</h1>
+    <div style="font-size:12px;opacity:0.7;">Pizza · Pasta · Alapanyag tervező</div>
   </div>
   <button class="btn btn-settings" onclick="openSettings()">⚙️ Beállítások</button>
 </header>
 
+<!-- FŐ FÜLEK -->
+<div class="main-tabs">
+  <div class="main-tab active" id="maintab-pizza" onclick="setMainTab('pizza')">🍕 Pizza</div>
+  <div class="main-tab" id="maintab-pasta" onclick="setMainTab('pasta')">🍝 Pasta</div>
+</div>
+
+<!-- PROFIL SÁV -->
 <div class="profil-bar" id="profil-bar"></div>
 
+<!-- ════════ PIZZA SZEKCIÓ ════════ -->
+<div id="section-pizza">
 <div class="container">
+
   <div class="mode-tabs">
     <div class="mode-tab active" id="tab-45" onclick="setMod('45')">🍕 45cm-es<span class="sub">Szeletenként</span></div>
     <div class="mode-tab" id="tab-32" onclick="setMod('32')">🫓 32cm-es<span class="sub">Egész pizza</span></div>
@@ -214,50 +246,108 @@
   </div>
 
   <div class="card">
-    <h3 id="input-title">📊 Mennyi áru kell?</h3>
-    <div class="input-panels" id="input-panels"></div>
+    <h3 id="pizza-input-title">📊 Mennyi áru kell?</h3>
+    <div class="input-panels" id="pizza-input-panels"></div>
   </div>
 
-  <div class="summary-bar" id="summary-bar"></div>
+  <div class="summary-bar" id="pizza-summary"></div>
 
   <div class="card">
     <h3>🫓 Gombóc arány (sima / TK)</h3>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:220px;background:#f0f4ff;border:2px solid #2E5DA6;border-radius:10px;padding:14px 18px;">
-        <div style="font-size:12px;font-weight:bold;color:#2E5DA6;margin-bottom:10px;">🍕 45cm-es</div>
+    <div class="slider-wrap">
+      <div class="slider-box s45">
+        <div class="stitle">🍕 45cm-es</div>
         <div class="slider-side">
-          <label>Sima: <strong id="sima-pct-lbl-45">70%</strong> &nbsp; TK: <strong id="tk-pct-lbl-45">30%</strong></label>
-          <input type="range" id="sima-slider-45" min="0" max="100" value="70" oninput="sliderValtozas45(this.value)">
-          <button class="reset-btn" onclick="resetArany45()">↺ 70% / 30%</button>
+          <label>Sima: <strong id="s45-sima">70%</strong> &nbsp; TK: <strong id="s45-tk">30%</strong></label>
+          <input type="range" id="sl45" min="0" max="100" value="70" oninput="sl45Change(this.value)">
+          <button class="reset-btn" onclick="sl45Reset()">↺ 70% / 30%</button>
         </div>
-        <div class="gomboc-vals" id="gomboc-vals-45" style="margin-top:10px;"></div>
+        <div class="gv-row" id="gv45"></div>
       </div>
-      <div style="flex:1;min-width:220px;background:#fff8e1;border:2px solid #E8A000;border-radius:10px;padding:14px 18px;">
-        <div style="font-size:12px;font-weight:bold;color:#7A4F00;margin-bottom:10px;">🫓 32cm-es</div>
+      <div class="slider-box s32">
+        <div class="stitle">🫓 32cm-es</div>
         <div class="slider-side">
-          <label>Sima: <strong id="sima-pct-lbl-32">95%</strong> &nbsp; TK: <strong id="tk-pct-lbl-32">5%</strong></label>
-          <input type="range" id="sima-slider-32" min="0" max="100" value="95" oninput="sliderValtozas32(this.value)">
-          <button class="reset-btn" onclick="resetArany32()">↺ 95% / 5%</button>
+          <label>Sima: <strong id="s32-sima">95%</strong> &nbsp; TK: <strong id="s32-tk">5%</strong></label>
+          <input type="range" id="sl32" min="0" max="100" value="95" oninput="sl32Change(this.value)">
+          <button class="reset-btn" onclick="sl32Reset()">↺ 95% / 5%</button>
         </div>
-        <div class="gomboc-vals" id="gomboc-vals-32" style="margin-top:10px;"></div>
+        <div class="gv-row" id="gv32"></div>
       </div>
     </div>
   </div>
 
   <div class="section">
     <div class="section-title">🍕 Pizza típusonkénti bontás</div>
-    <div class="pizza-grid" id="pizza-grid"></div>
+    <div class="etel-grid" id="pizza-grid"></div>
   </div>
 
   <div class="section">
     <div class="section-title">📦 Alapanyag szükséglet</div>
     <table>
-      <thead><tr>
-        <th>Alapanyag</th><th>Egység</th><th>Szükséges</th><th>Alapegység</th><th>Rendeléshez</th>
-      </tr></thead>
-      <tbody id="anyag-tabla"></tbody>
+      <thead><tr><th>Alapanyag</th><th>Egység</th><th>Szükséges</th><th>Alapegység</th><th>Rendeléshez</th></tr></thead>
+      <tbody id="pizza-anyag-tabla"></tbody>
     </table>
   </div>
+
+</div>
+</div>
+
+<!-- ════════ PASTA SZEKCIÓ ════════ -->
+<div id="section-pasta" class="hidden">
+<div class="container">
+
+  <div class="mode-tabs">
+    <div class="mode-tab active" id="ptab-pasta" onclick="setPastaMod('pasta')">🍝 Tészta<span class="sub">Fusili/Spagetti/Penne</span></div>
+    <div class="mode-tab" id="ptab-gnocchi" onclick="setPastaMod('gnocchi')">🥟 Gnocchi<span class="sub">Külön kezelve</span></div>
+    <div class="mode-tab" id="ptab-kombi" onclick="setPastaMod('kombi')">🔀 Kombinált<span class="sub">Mindkettő</span></div>
+  </div>
+
+  <div class="card">
+    <h3 id="pasta-input-title">📊 Mennyi áru kell? (Pasta)</h3>
+    <div class="input-panels" id="pasta-input-panels"></div>
+  </div>
+
+  <div class="summary-bar" id="pasta-summary"></div>
+
+  <!-- Tészta bontás -->
+  <div class="teszta-box" id="teszta-box">
+    <h4>🍝 Tészta bontás (Fusili / Spaghetti / Penne)</h4>
+    <div style="font-size:12px;color:#888;margin-bottom:10px;">Az összes tészta ételen belül melyik tésztával kérik – alapból a valós fogyási arány szerint.</div>
+    <div class="teszta-sliders">
+      <div class="teszta-slider">
+        <label>Fusili: <strong id="teszta-fusili-pct">47%</strong></label>
+        <input type="range" id="teszta-fusili-sl" min="0" max="100" value="47" oninput="tesztaSlChange()">
+      </div>
+      <div class="teszta-slider">
+        <label>Spaghetti: <strong id="teszta-spagetti-pct">35%</strong></label>
+        <input type="range" id="teszta-spagetti-sl" min="0" max="100" value="35" oninput="tesztaSlChange()">
+      </div>
+      <div class="teszta-slider">
+        <label>Penne: <strong id="teszta-penne-pct">18%</strong></label>
+        <input type="range" id="teszta-penne-sl" min="0" max="100" value="18" oninput="tesztaSlChange()">
+      </div>
+      <button class="reset-btn" onclick="tesztaReset()" style="align-self:flex-end;">↺ Alapértelmezett</button>
+    </div>
+    <div class="teszta-cards" id="teszta-cards"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title pasta-color">🍝 Pasta ételek bontása</div>
+    <div class="etel-grid" id="pasta-grid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title pasta-color">📦 Pasta alapanyag szükséglet</div>
+    <table>
+      <thead><tr>
+        <th class="pasta-th">Alapanyag</th><th class="pasta-th">Egység</th>
+        <th class="pasta-th">Szükséges</th><th class="pasta-th">Alapegység</th><th class="pasta-th">Rendeléshez</th>
+      </tr></thead>
+      <tbody id="pasta-anyag-tabla"></tbody>
+    </table>
+  </div>
+
+</div>
 </div>
 
 <!-- MODAL -->
@@ -269,7 +359,8 @@
     </div>
     <div class="modal-tabs">
       <div class="modal-tab active" id="mtab-arak" onclick="setModalTab('arak')">💰 Árak</div>
-      <div class="modal-tab" id="mtab-pizzak" onclick="setModalTab('pizzak')">🍕 Pizzák & arányok</div>
+      <div class="modal-tab" id="mtab-pizzak" onclick="setModalTab('pizzak')">🍕 Pizzák</div>
+      <div class="modal-tab" id="mtab-pastak" onclick="setModalTab('pastak')">🍝 Pasták</div>
       <div class="modal-tab" id="mtab-profilok" onclick="setModalTab('profilok')">👤 Profilok</div>
     </div>
     <div class="modal-body" id="modal-body"></div>
@@ -280,617 +371,686 @@
   </div>
 </div>
 
-<footer id="footer-bar"></footer>
+<footer id="footer-bar">Étterem Kalkulátor · Pizza + Pasta alapanyag tervező</footer>
 
 <script>
-// ════════════════════════════════
-// ADATOK
-// ════════════════════════════════
-const DEFAULTS = { szeletAr45: 1199, pizzaAr32: 5600, szeletPerGomboc: 8 };
+// ════════════════════════════════════════
+// KONFIGURÁCIÓ
+// ════════════════════════════════════════
+const DEFAULTS = { szeletAr45: 1199, pizzaAr32: 5600, szeletPerGomboc: 8, pastaAr: 3090, gnocchiAr: 3390 };
 let cfg = { ...DEFAULTS };
-let mod = '45', modalTab = 'arak';
-let simaArany45 = 70, simaArany32 = 95;
-let db45 = 100, db32 = 0;
-let receptSzerkesztoIdx = null;
 
-// Alapanyag master lista: { nev, egys, alap, ae }
-// egys: g vagy db | alap: kerekítési egység | ae: egység neve
-const defaultAlapanyagok = [
-  { nev: "P szósz",               egys: "g",  alap: 10000, ae: "g"  },
-  { nev: "Reszelt Mozzarella",     egys: "g",  alap: 2500,  ae: "g"  },
-  { nev: "P Sonka Cotto",          egys: "g",  alap: 2000,  ae: "g"  },
-  { nev: "Funghi mix zacskó",      egys: "db", alap: 1,     ae: "db" },
-  { nev: "P Spinata Calabra",      egys: "g",  alap: 1000,  ae: "g"  },
-  { nev: "Gorgonzola",             egys: "g",  alap: 500,   ae: "g"  },
-  { nev: "Ricotta",                egys: "g",  alap: 250,   ae: "g"  },
-  { nev: "Parmezánsajt",           egys: "g",  alap: 1000,  ae: "g"  },
-  { nev: "Spenót",                 egys: "db", alap: 1,     ae: "db" },
-  { nev: "P Szalámi Napolitana",   egys: "g",  alap: 500,   ae: "g"  },
-  { nev: "Tartufata szósz",        egys: "db", alap: 1,     ae: "db" },
-  { nev: "P Zöldség mix",          egys: "g",  alap: 400,   ae: "g"  },
-  { nev: "Nutella",                egys: "g",  alap: null,  ae: null },
-  { nev: "Kis Tonhalkonzerv",      egys: "db", alap: 1,     ae: "db" },
-  { nev: "Olívabogyó",             egys: "g",  alap: 160,   ae: "g"  },
-  { nev: "Pepperoni szalámi",      egys: "g",  alap: 500,   ae: "g"  },
-  { nev: "Szupercsípős pepperoni", egys: "g",  alap: 360,   ae: "g"  },
-  { nev: "Lilahagyma",             egys: "g",  alap: null,  ae: null },
+// ── PIZZA ADATOK ──
+const defaultPizzaAlapanyagok = [
+  { nev:"P szósz", egys:"g", alap:10000, ae:"g" },
+  { nev:"Reszelt Mozzarella", egys:"g", alap:2500, ae:"g" },
+  { nev:"P Sonka Cotto", egys:"g", alap:2000, ae:"g" },
+  { nev:"Funghi mix zacskó", egys:"db", alap:1, ae:"db" },
+  { nev:"P Spinata Calabra", egys:"g", alap:1000, ae:"g" },
+  { nev:"Gorgonzola", egys:"g", alap:500, ae:"g" },
+  { nev:"Ricotta", egys:"g", alap:250, ae:"g" },
+  { nev:"Parmezánsajt", egys:"g", alap:1000, ae:"g" },
+  { nev:"Spenót", egys:"db", alap:1, ae:"db" },
+  { nev:"P Szalámi Napolitana", egys:"g", alap:500, ae:"g" },
+  { nev:"Tartufata szósz", egys:"db", alap:1, ae:"db" },
+  { nev:"P Zöldség mix", egys:"g", alap:400, ae:"g" },
+  { nev:"Nutella", egys:"g", alap:null, ae:null },
+  { nev:"Kis Tonhalkonzerv", egys:"db", alap:1, ae:"db" },
+  { nev:"Olívabogyó", egys:"g", alap:160, ae:"g" },
+  { nev:"Pepperoni szalámi", egys:"g", alap:500, ae:"g" },
+  { nev:"Szupercsípős pepperoni", egys:"g", alap:360, ae:"g" },
 ];
 
-// Pizza lista: { nev, arany, aktiv, custom, recept: [{anyag, menny, egys}] }
-// Menny: grammban (g) vagy darabban (db) – a 45cm-es recepthez
-// 32cm = fele
 const defaultPizzak = [
-  { nev: "Margherita",          arany: 18.02, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:240,egys:"g"},{anyag:"Reszelt Mozzarella",menny:230,egys:"g"}] },
-  { nev: "Prosciutto",          arany: 13.90, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"P Sonka Cotto",menny:150,egys:"g"}] },
-  { nev: "SalaMe Dolce",        arany: 12.16, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"P Szalámi Napolitana",menny:100,egys:"g"}] },
-  { nev: "Quattro",             arany:  8.17, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:150,egys:"g"},{anyag:"Ricotta",menny:100,egys:"g"},{anyag:"Gorgonzola",menny:80,egys:"g"},{anyag:"Parmezánsajt",menny:25,egys:"g"}] },
-  { nev: "Popeye",              arany:  6.52, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:180,egys:"g"},{anyag:"Ricotta",menny:50,egys:"g"},{anyag:"Spenót",menny:150,egys:"g"},{anyag:"Parmezánsajt",menny:25,egys:"g"}] },
-  { nev: "Diavola",             arany:  6.38, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"P Spinata Calabra",menny:80,egys:"g"}] },
-  { nev: "Prosciutto e Funghi", arany:  5.13, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"P Sonka Cotto",menny:120,egys:"g"},{anyag:"Funghi mix zacskó",menny:100,egys:"g"}] },
-  { nev: "Tartufata",           arany:  4.75, aktiv: true, custom: false,
-    recept: [{anyag:"Funghi mix zacskó",menny:200,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"Tartufata szósz",menny:160,egys:"g"}] },
-  { nev: "Salami & Zola",       arany:  4.34, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"P Spinata Calabra",menny:80,egys:"g"},{anyag:"Gorgonzola",menny:70,egys:"g"}] },
-  { nev: "Pepperoni",           arany:  3.49, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"Pepperoni szalámi",menny:100,egys:"g"}] },
-  { nev: "Alessandro Speciale", arany:  2.84, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"P Sonka Cotto",menny:80,egys:"g"},{anyag:"Pepperoni szalámi",menny:80,egys:"g"},{anyag:"Gorgonzola",menny:60,egys:"g"}] },
-  { nev: "Super Piccante",      arany:  1.42, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:180,egys:"g"},{anyag:"Szupercsípős pepperoni",menny:120,egys:"g"}] },
-  { nev: "Oliva",               arany:  0.89, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:180,egys:"g"},{anyag:"Funghi mix zacskó",menny:100,egys:"g"},{anyag:"Olívabogyó",menny:80,egys:"g"}] },
-  { nev: "Rio Tonhalas",        arany:  0.53, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:180,egys:"g"},{anyag:"Kis Tonhalkonzerv",menny:1,egys:"db"},{anyag:"Olívabogyó",menny:50,egys:"g"}] },
-  { nev: "Funghi",              arany:  0.37, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:220,egys:"g"},{anyag:"Reszelt Mozzarella",menny:200,egys:"g"},{anyag:"Funghi mix zacskó",menny:160,egys:"g"}] },
-  { nev: "Verdure",             arany:  0.35, aktiv: true, custom: false,
-    recept: [{anyag:"P szósz",menny:240,egys:"g"},{anyag:"P Zöldség mix",menny:400,egys:"g"}] },
+  { nev:"Margherita", arany:18.02, aktiv:true,
+    recept:[{a:"P szósz",m:240},{a:"Reszelt Mozzarella",m:230}] },
+  { nev:"Prosciutto", arany:13.90, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"P Sonka Cotto",m:150}] },
+  { nev:"SalaMe Dolce", arany:12.16, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"P Szalámi Napolitana",m:100}] },
+  { nev:"Quattro", arany:8.17, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:150},{a:"Ricotta",m:100},{a:"Gorgonzola",m:80},{a:"Parmezánsajt",m:25}] },
+  { nev:"Popeye", arany:6.52, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:180},{a:"Ricotta",m:50},{a:"Spenót",m:150},{a:"Parmezánsajt",m:25}] },
+  { nev:"Diavola", arany:6.38, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"P Spinata Calabra",m:80}] },
+  { nev:"Prosciutto e Funghi", arany:5.13, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"P Sonka Cotto",m:120},{a:"Funghi mix zacskó",m:100}] },
+  { nev:"Tartufata", arany:4.75, aktiv:true,
+    recept:[{a:"Funghi mix zacskó",m:200},{a:"Reszelt Mozzarella",m:200},{a:"Tartufata szósz",m:160}] },
+  { nev:"Salami & Zola", arany:4.34, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"P Spinata Calabra",m:80},{a:"Gorgonzola",m:70}] },
+  { nev:"Pepperoni", arany:3.49, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"Pepperoni szalámi",m:100}] },
+  { nev:"Alessandro Speciale", arany:2.84, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"P Sonka Cotto",m:80},{a:"Pepperoni szalámi",m:80},{a:"Gorgonzola",m:60}] },
+  { nev:"Super Piccante", arany:1.42, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:180},{a:"Szupercsípős pepperoni",m:120}] },
+  { nev:"Oliva", arany:0.89, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:180},{a:"Funghi mix zacskó",m:100},{a:"Olívabogyó",m:80}] },
+  { nev:"Rio Tonhalas", arany:0.53, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:180},{a:"Kis Tonhalkonzerv",m:1},{a:"Olívabogyó",m:50}] },
+  { nev:"Funghi", arany:0.37, aktiv:true,
+    recept:[{a:"P szósz",m:220},{a:"Reszelt Mozzarella",m:200},{a:"Funghi mix zacskó",m:160}] },
+  { nev:"Verdure", arany:0.35, aktiv:true,
+    recept:[{a:"P szósz",m:240},{a:"P Zöldség mix",m:400}] },
 ];
 
-// ════════════════════════════════
+// ── PASTA ADATOK ──
+// Arányok: tészta és gnocchi együttes lista normalizálva 100%-ra
+// Tészta arányok összesen: Bolognese 27.03, Tartufata 13.30, Négysajtos 9.72, PannaProsciutto 7.61,
+// Arrabiata 8.66, PestoGenova 5.21, Tonhalas 4.62, Vegetariana 1.18, Pomodoro 3.15, Bambino (nincs külön, beleszámítva)
+// Gnocchi arányok: Négysajtos 5.29, BologneseG 3.48, PannaProsciuttoG 3.16, TartufataG 2.40,
+// ArrabiataG 2.11, PestoGenovaG 1.85, PomodoroG 1.24, VegetarianaG 1.18
+
+// Teljes összeg: 27.03+13.30+9.72+7.61+8.66+5.21+4.62+1.18+3.15 + 5.29+3.48+3.16+2.40+2.11+1.85+1.24+1.18 = ~101.19
+// Normalizált 100%-ra
+
+const defaultPastaEtelek = [
+  // TÉSZTA ÉTELEK
+  { nev:"Bolognese", arany:27.03, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"P Bolognai ragu",m:400},{a:"Olívaolaj",m:10}] },
+  { nev:"Tartufata", arany:13.30, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"Tartufata szósz pasta",m:100},{a:"Funghi mix zacskó",m:50},{a:"Olívaolaj",m:10},{a:"Panna",m:50}] },
+  { nev:"Négysajtos", arany:9.72, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"Gorgonzola",m:30},{a:"Ricotta",m:30},{a:"Parmezánsajt",m:20},{a:"Reszelt Mozzarella",m:30},{a:"Olívaolaj",m:10},{a:"Panna",m:70}] },
+  { nev:"Arrabiata", arany:8.66, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"P szósz",m:200},{a:"Olívaolaj",m:10}] },
+  { nev:"Panna Prosciutto", arany:7.61, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"Panna",m:140},{a:"Parmezánsajt",m:10},{a:"P Sonka Cotto",m:50}] },
+  { nev:"Pesto Genova", arany:5.21, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"Pesto szósz",m:100}] },
+  { nev:"Tonhalas", arany:4.62, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"Kis Tonhalkonzerv",m:1},{a:"P Olívabogyó",m:20},{a:"P szósz",m:150},{a:"Olívaolaj",m:20}] },
+  { nev:"Pomodoro", arany:3.15, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"P szósz",m:200},{a:"Olívaolaj",m:10}] },
+  { nev:"Vegetariana", arany:1.18, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"P Zöldség mix",m:200},{a:"Olívaolaj",m:15}] },
+  { nev:"Pasta Bambino", arany:0, aktiv:true, gnocchi:false,
+    recept:[{a:"Tészta",m:200},{a:"P szósz",m:200},{a:"Olívaolaj",m:10},{a:"Cukor",m:3}] },
+  // GNOCCHI ÉTELEK
+  { nev:"Négysajtos Gnocchi", arany:5.29, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"Gorgonzola",m:15},{a:"Ricotta",m:15},{a:"Parmezánsajt",m:10},{a:"Reszelt Mozzarella",m:15},{a:"Olívaolaj",m:5},{a:"Panna",m:35}] },
+  { nev:"Bolognese Gnocchi", arany:3.48, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"P Bolognai ragu",m:200},{a:"Olívaolaj",m:5}] },
+  { nev:"Panna Prosciutto Gnocchi", arany:3.16, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"Panna",m:70},{a:"Parmezánsajt",m:5},{a:"P Sonka Cotto",m:25}] },
+  { nev:"Tartufata Gnocchi", arany:2.40, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"Tartufata szósz pasta",m:50},{a:"Funghi mix zacskó",m:25},{a:"Olívaolaj",m:5},{a:"Panna",m:25}] },
+  { nev:"Arrabiata Gnocchi", arany:2.11, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"P szósz",m:100},{a:"Olívaolaj",m:5}] },
+  { nev:"Pesto Genova Gnocchi", arany:1.85, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"Pesto szósz",m:50}] },
+  { nev:"Pomodoro Gnocchi", arany:1.24, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"P szósz",m:100},{a:"Olívaolaj",m:5}] },
+  { nev:"Vegetariana Gnocchi", arany:1.18, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"P Zöldség mix",m:100},{a:"Olívaolaj",m:7.5}] },
+  { nev:"Pasta Bambino Gnocchi", arany:0, aktiv:true, gnocchi:true,
+    recept:[{a:"Gnocchi",m:250},{a:"P szósz",m:100},{a:"Olívaolaj",m:5},{a:"Cukor",m:1.5}] },
+];
+
+const defaultPastaAlapanyagok = [
+  { nev:"Tészta (Fusili)", egys:"g", alap:1000, ae:"g" },
+  { nev:"Tészta (Spaghetti)", egys:"g", alap:1000, ae:"g" },
+  { nev:"Tészta (Penne)", egys:"g", alap:1000, ae:"g" },
+  { nev:"Gnocchi", egys:"g", alap:1000, ae:"g" },
+  { nev:"P szósz", egys:"g", alap:10000, ae:"g" },
+  { nev:"P Bolognai ragu", egys:"g", alap:2000, ae:"g" },
+  { nev:"Tartufata szósz pasta", egys:"g", alap:1000, ae:"g" },
+  { nev:"Pesto szósz", egys:"g", alap:1000, ae:"g" },
+  { nev:"Panna", egys:"g", alap:1000, ae:"g" },
+  { nev:"Olívaolaj", egys:"g", alap:1000, ae:"g" },
+  { nev:"Funghi mix zacskó", egys:"db", alap:1, ae:"db" },
+  { nev:"Gorgonzola", egys:"g", alap:500, ae:"g" },
+  { nev:"Ricotta", egys:"g", alap:250, ae:"g" },
+  { nev:"Parmezánsajt", egys:"g", alap:1000, ae:"g" },
+  { nev:"Reszelt Mozzarella", egys:"g", alap:2500, ae:"g" },
+  { nev:"P Sonka Cotto", egys:"g", alap:2000, ae:"g" },
+  { nev:"Kis Tonhalkonzerv", egys:"db", alap:1, ae:"db" },
+  { nev:"P Olívabogyó", egys:"g", alap:160, ae:"g" },
+  { nev:"P Zöldség mix", egys:"g", alap:400, ae:"g" },
+  { nev:"Cukor", egys:"g", alap:null, ae:null },
+];
+
+// ════════════════════════════════════════
+// ÁLLAPOT
+// ════════════════════════════════════════
+function dc(o) { return JSON.parse(JSON.stringify(o)); }
+
+let mainTab = 'pizza';
+let pizzaMod = '45', pastaMod = 'pasta';
+let modalTab = 'arak';
+let simaArany45 = 70, simaArany32 = 95;
+let db45 = 100, db32 = 0, dbPasta = 100, dbGnocchi = 0;
+let tesztaFusili = 47, tesztaSpagetti = 35, tesztaPenne = 18;
+
 // PROFIL RENDSZER
-// ════════════════════════════════
-function ujProfilAdat(nev, forrasPizzak) {
-  return {
-    id: Date.now() + Math.random(),
-    nev: nev,
-    pizzak: forrasPizzak.map(p => deepCopy(p))
-  };
+function ujProfilObj(nev, pizzak, pastak) {
+  return { id: Date.now() + Math.random(), nev, pizzak: dc(pizzak), pastak: dc(pastak) };
 }
-
-const defaultProfil = ujProfilAdat('Általános', defaultPizzak);
-let profilok = [defaultProfil];
-let aktivProfilId = defaultProfil.id;
-
+const alapProfil = ujProfilObj('Általános', defaultPizzak, defaultPastaEtelek);
+let profilok = [alapProfil];
+let aktivProfilId = alapProfil.id;
 function aktivProfil() { return profilok.find(p => p.id === aktivProfilId); }
 
-function profilValtas(id) {
-  aktivProfilId = id;
-  pizzak = aktivProfil().pizzak;
-  receptSzerkesztoIdx = null;
-  renderProfilBar();
-  renderModalBody();
-  frissit();
-}
-
-function renderProfilBar() {
-  const bar = document.getElementById('profil-bar');
-  let h = '<span class="profil-label">Profil:</span>';
-  profilok.forEach(p => {
-    h += `<button class="profil-btn ${p.id===aktivProfilId?'active':''}" onclick="profilValtas(${p.id})">${p.nev}</button>`;
-  });
-  h += `<button class="profil-btn uj-profil" onclick="openSettings();setModalTab('profilok')">+ Új profil</button>`;
-  bar.innerHTML = h;
-}
-
 let pizzak = aktivProfil().pizzak;
-let alapanyagok = defaultAlapanyagok.map(a => ({...a}));
+let pastak = aktivProfil().pastak;
+let pizzaAlapanyagok = defaultPizzaAlapanyagok.map(a => ({...a}));
+let pastaAlapanyagok = defaultPastaAlapanyagok.map(a => ({...a}));
 
-function deepCopy(o) { return JSON.parse(JSON.stringify(o)); }
-function aktivPizzak() { return pizzak.filter(p => p.aktiv); }
-function osszeArany() { return Math.round(aktivPizzak().reduce((s,p) => s+p.arany, 0)*100)/100; }
-
-// ════════════════════════════════
-// ALAPANYAG ÖSSZESÍTŐ SZÁMÍTÁS
-// ════════════════════════════════
-function szamolAlapanyagok() {
-  // Minden alapanyaghoz összegyűjtjük a szükségletet
-  // db egységű alapanyagoknál (pl. Funghi mix zacskó, Spenót, Tartufata) a menny grammban értendő, osztani kell a csomag gramm súlyával
-  const csomagSuly = {
-    "Funghi mix zacskó": 1800,
-    "Spenót": 1800,
-    "Tartufata szósz": 1200,
-  };
-
-  const ossz = {}; // anyagnev -> { ertek_g, egys }
-
-  aktivPizzak().forEach(pizza => {
-    const db45_pizza = db45 * pizza.arany / 100;
-    const db32_pizza = db32 * pizza.arany / 100;
-
-    pizza.recept.forEach(sor => {
-      if (!ossz[sor.anyag]) ossz[sor.anyag] = 0;
-      // 45cm: teljes menny, 32cm: fele
-      ossz[sor.anyag] += db45_pizza * sor.menny + db32_pizza * sor.menny * 0.5;
-    });
-  });
-
-  // Alapanyag adatok összeállítása
-  const eredmeny = [];
-  const feldolgozott = new Set();
-
-  // Végigmegyünk az alapanyag master listán (sorrendért)
-  alapanyagok.forEach(a => {
-    if (ossz[a.nev] === undefined) return;
-    feldolgozott.add(a.nev);
-    let ertek = Math.round(ossz[a.nev]);
-    // Ha db egységű és gramm alapú a recept → átváltás
-    if (a.egys === "db" && csomagSuly[a.nev]) {
-      ertek = Math.round(ossz[a.nev] / csomagSuly[a.nev] * 100) / 100;
-    }
-    eredmeny.push({ nev: a.nev, egys: a.egys, ertek, alap: a.alap, ae: a.ae, custom: false });
-  });
-
-  // Egyéni pizza alapanyagok amik nincsenek a master listán
-  Object.keys(ossz).forEach(nev => {
-    if (feldolgozott.has(nev)) return;
-    eredmeny.push({ nev, egys: "g", ertek: Math.round(ossz[nev]), alap: null, ae: null, custom: true });
-  });
-
-  return eredmeny;
+// ════════════════════════════════════════
+// FŐ FÜL
+// ════════════════════════════════════════
+function setMainTab(t) {
+  mainTab = t;
+  document.getElementById('maintab-pizza').classList.toggle('active', t==='pizza');
+  document.getElementById('maintab-pasta').classList.toggle('active', t==='pasta');
+  document.getElementById('section-pizza').classList.toggle('hidden', t!=='pizza');
+  document.getElementById('section-pasta').classList.toggle('hidden', t!=='pasta');
 }
 
-// ════════════════════════════════
-// MÓD, INPUT, SLIDER
-// ════════════════════════════════
+// ════════════════════════════════════════
+// PIZZA MÓD
+// ════════════════════════════════════════
 function setMod(m) {
-  mod = m;
+  pizzaMod = m;
   ['45','32','kombi'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===m));
-  if (m==='45') db32=0;
-  if (m==='32') db45=0;
-  renderInputs(); frissit();
+  if(m==='45') db32=0;
+  if(m==='32') db45=0;
+  renderPizzaInputs(); pizzaFrissit();
 }
 
-function renderInputs() {
-  const cont = document.getElementById('input-panels');
+function renderPizzaInputs() {
   let h = '';
-  if (mod !== '32') h += panel45Html();
-  if (mod === 'kombi') h += `<div style="display:flex;align-items:center;padding:0 6px;font-size:20px;color:#ccc;font-weight:bold;">+</div>`;
-  if (mod !== '45') h += panel32Html();
-  cont.innerHTML = h;
+  if(pizzaMod!=='32') h += pizzaPanel45();
+  if(pizzaMod==='kombi') h += `<div style="display:flex;align-items:center;padding:0 6px;font-size:20px;color:#ccc;font-weight:bold;">+</div>`;
+  if(pizzaMod!=='45') h += pizzaPanel32();
+  document.getElementById('pizza-input-panels').innerHTML = h;
 }
 
-function panel45Html() {
-  return `<div class="input-panel panel-45">
-    <h4>🍕 45cm-es · ${fmt(cfg.szeletAr45)} Ft/szelet</h4>
+function pizzaPanel45() {
+  return `<div class="input-panel p45"><h4>🍕 45cm-es · ${fmt(cfg.szeletAr45)} Ft/szelet</h4>
     <div class="dual-input">
-      <div class="input-block active-45"><label>Darabszám</label>
-        <div class="input-row-inner"><input type="number" id="inp45-db" value="${db45||''}" min="0" placeholder="db" oninput="inputDb45()"><span class="suffix">db pizza</span></div></div>
+      <div class="iblock a45"><label>Darabszám</label><div class="irow"><input type="number" id="i45db" value="${db45||''}" min="0" placeholder="db" oninput="iDb45()"><span class="sfx">db pizza</span></div></div>
       <div class="or-div">VAGY</div>
-      <div class="input-block active-45"><label>Forgalom</label>
-        <div class="input-row-inner"><input type="number" id="inp45-ft" value="${db45?db45*cfg.szeletPerGomboc*cfg.szeletAr45:''}" min="0" placeholder="Ft" oninput="inputFt45()"><span class="suffix">Ft</span></div></div>
+      <div class="iblock a45"><label>Forgalom</label><div class="irow"><input type="number" id="i45ft" value="${db45?db45*cfg.szeletPerGomboc*cfg.szeletAr45:''}" min="0" placeholder="Ft" oninput="iFt45()"><span class="sfx">Ft</span></div></div>
+    </div></div>`;
+}
+function pizzaPanel32() {
+  return `<div class="input-panel p32"><h4>🫓 32cm-es · ${fmt(cfg.pizzaAr32)} Ft/pizza</h4>
+    <div class="dual-input">
+      <div class="iblock a32"><label>Darabszám</label><div class="irow"><input type="number" id="i32db" value="${db32||''}" min="0" placeholder="db" oninput="iDb32()"><span class="sfx">db pizza</span></div></div>
+      <div class="or-div">VAGY</div>
+      <div class="iblock a32"><label>Forgalom</label><div class="irow"><input type="number" id="i32ft" value="${db32?db32*cfg.pizzaAr32:''}" min="0" placeholder="Ft" oninput="iFt32()"><span class="sfx">Ft</span></div></div>
     </div></div>`;
 }
 
-function panel32Html() {
-  return `<div class="input-panel panel-32">
-    <h4>🫓 32cm-es · ${fmt(cfg.pizzaAr32)} Ft/pizza</h4>
+function iDb45() { db45=Math.ceil(parseFloat(document.getElementById('i45db').value)||0); const e=document.getElementById('i45ft'); if(e) e.value=db45>0?db45*cfg.szeletPerGomboc*cfg.szeletAr45:''; pizzaFrissit(); }
+function iFt45() { const ft=parseFloat(document.getElementById('i45ft').value)||0; db45=Math.ceil(ft/cfg.szeletAr45/cfg.szeletPerGomboc); const e=document.getElementById('i45db'); if(e) e.value=db45>0?db45:''; pizzaFrissit(); }
+function iDb32() { db32=Math.ceil(parseFloat(document.getElementById('i32db').value)||0); const e=document.getElementById('i32ft'); if(e) e.value=db32>0?db32*cfg.pizzaAr32:''; pizzaFrissit(); }
+function iFt32() { const ft=parseFloat(document.getElementById('i32ft').value)||0; db32=Math.ceil(ft/cfg.pizzaAr32); const e=document.getElementById('i32db'); if(e) e.value=db32>0?db32:''; pizzaFrissit(); }
+
+function sl45Change(v) { simaArany45=parseInt(v); document.getElementById('s45-sima').textContent=v+'%'; document.getElementById('s45-tk').textContent=(100-v)+'%'; pizzaFrissit(); }
+function sl45Reset() { simaArany45=70; document.getElementById('sl45').value=70; sl45Change(70); }
+function sl32Change(v) { simaArany32=parseInt(v); document.getElementById('s32-sima').textContent=v+'%'; document.getElementById('s32-tk').textContent=(100-v)+'%'; pizzaFrissit(); }
+function sl32Reset() { simaArany32=95; document.getElementById('sl32').value=95; sl32Change(95); }
+
+// ════════════════════════════════════════
+// PASTA MÓD
+// ════════════════════════════════════════
+function setPastaMod(m) {
+  pastaMod = m;
+  ['pasta','gnocchi','kombi'].forEach(t => document.getElementById('ptab-'+t).classList.toggle('active', t===m));
+  if(m==='pasta') dbGnocchi=0;
+  if(m==='gnocchi') dbPasta=0;
+  const tb = document.getElementById('teszta-box');
+  tb.classList.toggle('hidden', m==='gnocchi');
+  renderPastaInputs(); pastaFrissit();
+}
+
+function renderPastaInputs() {
+  let h = '';
+  if(pastaMod!=='gnocchi') h += pastaPanel();
+  if(pastaMod==='kombi') h += `<div style="display:flex;align-items:center;padding:0 6px;font-size:20px;color:#ccc;font-weight:bold;">+</div>`;
+  if(pastaMod!=='pasta') h += gnocchiPanel();
+  document.getElementById('pasta-input-panels').innerHTML = h;
+}
+
+function pastaPanel() {
+  return `<div class="input-panel ppasta"><h4>🍝 Tészta · ${fmt(cfg.pastaAr)} Ft átlag</h4>
     <div class="dual-input">
-      <div class="input-block active-32"><label>Darabszám</label>
-        <div class="input-row-inner"><input type="number" id="inp32-db" value="${db32||''}" min="0" placeholder="db" oninput="inputDb32()"><span class="suffix">db pizza</span></div></div>
+      <div class="iblock apasta"><label>Darabszám</label><div class="irow"><input type="number" id="ipdb" value="${dbPasta||''}" min="0" placeholder="db" oninput="iPDb()"><span class="sfx">adag</span></div></div>
       <div class="or-div">VAGY</div>
-      <div class="input-block active-32"><label>Forgalom</label>
-        <div class="input-row-inner"><input type="number" id="inp32-ft" value="${db32?db32*cfg.pizzaAr32:''}" min="0" placeholder="Ft" oninput="inputFt32()"><span class="suffix">Ft</span></div></div>
+      <div class="iblock apasta"><label>Forgalom</label><div class="irow"><input type="number" id="ipft" value="${dbPasta?dbPasta*cfg.pastaAr:''}" min="0" placeholder="Ft" oninput="iPFt()"><span class="sfx">Ft</span></div></div>
+    </div></div>`;
+}
+function gnocchiPanel() {
+  return `<div class="input-panel pgnocchi"><h4>🥟 Gnocchi · ${fmt(cfg.gnocchiAr)} Ft átlag</h4>
+    <div class="dual-input">
+      <div class="iblock agnocchi"><label>Darabszám</label><div class="irow"><input type="number" id="igdb" value="${dbGnocchi||''}" min="0" placeholder="db" oninput="iGDb()"><span class="sfx">adag</span></div></div>
+      <div class="or-div">VAGY</div>
+      <div class="iblock agnocchi"><label>Forgalom</label><div class="irow"><input type="number" id="igft" value="${dbGnocchi?dbGnocchi*cfg.gnocchiAr:''}" min="0" placeholder="Ft" oninput="iGFt()"><span class="sfx">Ft</span></div></div>
     </div></div>`;
 }
 
-function inputDb45() { db45=Math.ceil(parseFloat(document.getElementById('inp45-db').value)||0); const el=document.getElementById('inp45-ft'); if(el) el.value=db45>0?db45*cfg.szeletPerGomboc*cfg.szeletAr45:''; frissit(); }
-function inputFt45() { const ft=parseFloat(document.getElementById('inp45-ft').value)||0; db45=Math.ceil(ft/cfg.szeletAr45/cfg.szeletPerGomboc); const el=document.getElementById('inp45-db'); if(el) el.value=db45>0?db45:''; frissit(); }
-function inputDb32() { db32=Math.ceil(parseFloat(document.getElementById('inp32-db').value)||0); const el=document.getElementById('inp32-ft'); if(el) el.value=db32>0?db32*cfg.pizzaAr32:''; frissit(); }
-function inputFt32() { const ft=parseFloat(document.getElementById('inp32-ft').value)||0; db32=Math.ceil(ft/cfg.pizzaAr32); const el=document.getElementById('inp32-db'); if(el) el.value=db32>0?db32:''; frissit(); }
+function iPDb() { dbPasta=Math.ceil(parseFloat(document.getElementById('ipdb').value)||0); const e=document.getElementById('ipft'); if(e) e.value=dbPasta>0?dbPasta*cfg.pastaAr:''; pastaFrissit(); }
+function iPFt() { const ft=parseFloat(document.getElementById('ipft').value)||0; dbPasta=Math.ceil(ft/cfg.pastaAr); const e=document.getElementById('ipdb'); if(e) e.value=dbPasta>0?dbPasta:''; pastaFrissit(); }
+function iGDb() { dbGnocchi=Math.ceil(parseFloat(document.getElementById('igdb').value)||0); const e=document.getElementById('igft'); if(e) e.value=dbGnocchi>0?dbGnocchi*cfg.gnocchiAr:''; pastaFrissit(); }
+function iGFt() { const ft=parseFloat(document.getElementById('igft').value)||0; dbGnocchi=Math.ceil(ft/cfg.gnocchiAr); const e=document.getElementById('igdb'); if(e) e.value=dbGnocchi>0?dbGnocchi:''; pastaFrissit(); }
 
-function sliderValtozas45(v) { simaArany45=parseInt(v); document.getElementById('sima-pct-lbl-45').textContent=simaArany45+'%'; document.getElementById('tk-pct-lbl-45').textContent=(100-simaArany45)+'%'; frissit(); }
-function sliderValtozas32(v) { simaArany32=parseInt(v); document.getElementById('sima-pct-lbl-32').textContent=simaArany32+'%'; document.getElementById('tk-pct-lbl-32').textContent=(100-simaArany32)+'%'; frissit(); }
-function resetArany45() { simaArany45=70; document.getElementById('sima-slider-45').value=70; sliderValtozas45(70); }
-function resetArany32() { simaArany32=95; document.getElementById('sima-slider-32').value=95; sliderValtozas32(95); }
+function tesztaSlChange() {
+  tesztaFusili = parseInt(document.getElementById('teszta-fusili-sl').value);
+  tesztaSpagetti = parseInt(document.getElementById('teszta-spagetti-sl').value);
+  tesztaPenne = parseInt(document.getElementById('teszta-penne-sl').value);
+  const ossz = tesztaFusili + tesztaSpagetti + tesztaPenne;
+  document.getElementById('teszta-fusili-pct').textContent = ossz>0 ? Math.round(tesztaFusili/ossz*100)+'%' : '0%';
+  document.getElementById('teszta-spagetti-pct').textContent = ossz>0 ? Math.round(tesztaSpagetti/ossz*100)+'%' : '0%';
+  document.getElementById('teszta-penne-pct').textContent = ossz>0 ? Math.round(tesztaPenne/ossz*100)+'%' : '0%';
+  pastaFrissit();
+}
+function tesztaReset() {
+  tesztaFusili=47; tesztaSpagetti=35; tesztaPenne=18;
+  document.getElementById('teszta-fusili-sl').value=47;
+  document.getElementById('teszta-spagetti-sl').value=35;
+  document.getElementById('teszta-penne-sl').value=18;
+  tesztaSlChange();
+}
 
-function ceiling(val,alap) { return Math.ceil(val/alap)*alap; }
+// ════════════════════════════════════════
+// SEGÉDFÜGGVÉNYEK
+// ════════════════════════════════════════
+function ceiling(v,a) { return Math.ceil(v/a)*a; }
 function fmt(n) { return Number(n).toLocaleString('hu-HU'); }
 function fmtFt(n) { return Number(n).toLocaleString('hu-HU')+' Ft'; }
+function aktivPizzak() { return pizzak.filter(p=>p.aktiv); }
+function aktivTesztak() { return pastak.filter(p=>p.aktiv && !p.gnocchi); }
+function aktivGnocchik() { return pastak.filter(p=>p.aktiv && p.gnocchi); }
+function pizzaOsszeArany() { return Math.round(aktivPizzak().reduce((s,p)=>s+p.arany,0)*100)/100; }
+function pastaOsszeArany() { return Math.round([...aktivTesztak(),...aktivGnocchik()].reduce((s,p)=>s+p.arany,0)*100)/100; }
 
-// ════════════════════════════════
-// FŐ FRISSÍTÉS
-// ════════════════════════════════
-function frissit() {
+const pizzaCsomagSuly = { "Funghi mix zacskó":1800, "Spenót":1800, "Tartufata szósz":1200 };
+const pastaCsomagSuly = { "Funghi mix zacskó":1800, "Kis Tonhalkonzerv":1 };
+
+// ════════════════════════════════════════
+// PIZZA FRISSÍTÉS
+// ════════════════════════════════════════
+function pizzaFrissit() {
   const tk45=100-simaArany45, tk32=100-simaArany32;
-  const ft45=db45*cfg.szeletPerGomboc*cfg.szeletAr45;
-  const ft32=db32*cfg.pizzaAr32;
+  const ft45=db45*cfg.szeletPerGomboc*cfg.szeletAr45, ft32=db32*cfg.pizzaAr32;
 
   // Summary
   let sh='';
-  if(mod!=='32') sh+=`<div class="summary-item"><div class="s-label">45cm pizza</div><div class="s-val">${fmt(db45)} db</div></div>
-    <div class="summary-item"><div class="s-label">Szelet</div><div class="s-val">${fmt(db45*cfg.szeletPerGomboc)} db</div></div>
-    <div class="summary-item highlight"><div class="s-label">45cm forgalom</div><div class="s-val">${fmtFt(ft45)}</div></div>`;
-  if(mod==='kombi') sh+=`<div class="summary-sep"></div>`;
-  if(mod!=='45') sh+=`<div class="summary-item"><div class="s-label">32cm pizza</div><div class="s-val">${fmt(db32)} db</div></div>
-    <div class="summary-item highlight"><div class="s-label">32cm forgalom</div><div class="s-val">${fmtFt(ft32)}</div></div>`;
-  if(mod==='kombi') sh+=`<div class="summary-sep"></div><div class="summary-item highlight"><div class="s-label">🏆 Összes</div><div class="s-val">${fmtFt(ft45+ft32)}</div></div>`;
-  document.getElementById('summary-bar').innerHTML=sh;
+  if(pizzaMod!=='32') sh+=`<div class="si"><div class="sl">45cm pizza</div><div class="sv">${fmt(db45)} db</div></div>
+    <div class="si"><div class="sl">Szelet</div><div class="sv">${fmt(db45*cfg.szeletPerGomboc)} db</div></div>
+    <div class="si hl"><div class="sl">45cm forgalom</div><div class="sv">${fmtFt(ft45)}</div></div>`;
+  if(pizzaMod==='kombi') sh+=`<div class="ssep"></div>`;
+  if(pizzaMod!=='45') sh+=`<div class="si"><div class="sl">32cm pizza</div><div class="sv">${fmt(db32)} db</div></div>
+    <div class="si hl"><div class="sl">32cm forgalom</div><div class="sv">${fmtFt(ft32)}</div></div>`;
+  if(pizzaMod==='kombi') sh+=`<div class="ssep"></div><div class="si hl"><div class="sl">🏆 Összes</div><div class="sv">${fmtFt(ft45+ft32)}</div></div>`;
+  document.getElementById('pizza-summary').innerHTML=sh;
+  document.getElementById('pizza-input-title').textContent=`📊 Mennyi áru kell? · Profil: ${aktivProfil().nev}`;
 
   // Gombóc kártyák
-  if(mod!=='32') document.getElementById('gomboc-vals-45').innerHTML=
-    `<div class="gv"><div class="glabel">Sima</div><div class="num">${Math.round(db45*simaArany45/100)}</div><div class="pct">${simaArany45}%</div></div>
-    <div class="vs">vs</div><div class="gv tk"><div class="glabel">TK</div><div class="num">${Math.round(db45*tk45/100)}</div><div class="pct">${tk45}%</div></div>`;
-  if(mod!=='45') document.getElementById('gomboc-vals-32').innerHTML=
-    `<div class="gv g32"><div class="glabel">Sima</div><div class="num">${Math.round(db32*simaArany32/100)}</div><div class="pct">${simaArany32}%</div></div>
-    <div class="vs">vs</div><div class="gv tk"><div class="glabel">TK</div><div class="num">${Math.round(db32*tk32/100)}</div><div class="pct">${tk32}%</div></div>`;
+  if(pizzaMod!=='32') document.getElementById('gv45').innerHTML=
+    `<div class="gv"><div class="gl">Sima</div><div class="gn">${Math.round(db45*simaArany45/100)}</div><div class="gp">${simaArany45}%</div></div>
+    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${Math.round(db45*tk45/100)}</div><div class="gp">${tk45}%</div></div>`;
+  if(pizzaMod!=='45') document.getElementById('gv32').innerHTML=
+    `<div class="gv" style="border-color:#E8A000;background:#fff8e1"><div class="gl">Sima</div><div class="gn" style="color:#7A4F00">${Math.round(db32*simaArany32/100)}</div><div class="gp" style="color:#E8A000">${simaArany32}%</div></div>
+    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${Math.round(db32*tk32/100)}</div><div class="gp">${tk32}%</div></div>`;
 
   // Pizza grid
   document.getElementById('pizza-grid').innerHTML = aktivPizzak().map(pz => {
     const d45=Math.round(db45*pz.arany/100), d32=Math.round(db32*pz.arany/100);
     let dbh='';
-    if(mod==='45') dbh=`<div class="pizza-db45">${d45} db</div>`;
-    else if(mod==='32') dbh=`<div class="pizza-db32">${d32} db</div>`;
-    else dbh=`<div class="pizza-db45">${d45} db</div><div class="pizza-db32">${d32} db 32cm</div>`;
-    return `<div class="pizza-card ${pz.custom?'custom':''}"><div><div class="pizza-name">${pz.nev}${pz.custom?'<span style="font-size:9px;background:#8E44AD;color:white;border-radius:3px;padding:1px 4px;margin-left:4px;">ÚJ</span>':''}</div><div class="pizza-pct">${pz.arany}%</div></div><div class="pizza-dbs">${dbh}</div></div>`;
+    if(pizzaMod==='45') dbh=`<div class="etel-db">${d45} db</div>`;
+    else if(pizzaMod==='32') dbh=`<div class="etel-db" style="color:#E8A000">${d32} db</div>`;
+    else dbh=`<div class="etel-db">${d45} db</div><div class="etel-db" style="color:#E8A000;font-size:11px">${d32} 32cm</div>`;
+    return `<div class="etel-card"><div><div class="etel-nev">${pz.nev}</div><div class="etel-pct">${pz.arany}%</div></div><div>${dbh}</div></div>`;
   }).join('');
 
-  // Alapanyag tábla
-  const anyagok = szamolAlapanyagok();
-  let html='';
-  // Gombóc sorok először
-  html+=`<tr class="group-header group-gomboc"><td colspan="5">🫓 Gombóc</td></tr>`;
-  const gombocSorok=[
-    {nev: mod==='32'?`Sima gombóc 32cm (${simaArany32}%)`:`Sima gombóc${mod==='kombi'?' 45cm':''} (${simaArany45}%)`, egys:"db", ertek:Math.round(db45*simaArany45/100), alap:6, ae:"db", sor_class:"row-gomboc"},
-    {nev: mod==='32'?`TK gombóc 32cm (${tk32}%)`:`TK gombóc${mod==='kombi'?' 45cm':''} (${tk45}%)`, egys:"db", ertek:Math.round(db45*tk45/100), alap:6, ae:"db", sor_class:"row-gomboc"},
-  ];
-  if(mod!=='45') {
-    gombocSorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`, egys:"db", ertek:Math.round(db32*simaArany32/100), alap:12, ae:"db", sor_class:"row-gomboc"});
-    gombocSorok.push({nev:`TK gombóc 32cm (${tk32}%)`, egys:"db", ertek:Math.round(db32*tk32/100), alap:8, ae:"db", sor_class:"row-gomboc"});
-  }
-  gombocSorok.forEach(a => {
-    const ceilStr=`<span class="ceil">${fmt(ceiling(a.ertek,a.alap))} ${a.ae}</span>`;
-    html+=`<tr class="${a.sor_class}"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(a.ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${fmt(a.alap)} ${a.ae}</td><td>${ceilStr}</td></tr>`;
+  // Alapanyag összesítő
+  const ossz = {};
+  aktivPizzak().forEach(pz => {
+    const d45p=db45*pz.arany/100, d32p=db32*pz.arany/100;
+    pz.recept.forEach(r => {
+      if(!ossz[r.a]) ossz[r.a]=0;
+      ossz[r.a] += d45p*r.m + d32p*r.m*0.5;
+    });
   });
 
-  // Fix alapanyagok
-  const fixAnyagok = anyagok.filter(a => !a.custom);
-  const egyebAnyagok = anyagok.filter(a => a.custom);
-
-  if(fixAnyagok.length>0) {
-    html+=`<tr class="group-header group-fix"><td colspan="5">📦 Alapanyagok</td></tr>`;
-    fixAnyagok.forEach(a => {
-      const ceilStr=a.alap!==null?`<span class="ceil">${fmt(ceiling(a.ertek,a.alap))} ${a.ae}</span>`:'<span class="dash">–</span>';
-      const alapStr=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
-      html+=`<tr class="row-normal"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(a.ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${alapStr}</td><td>${ceilStr}</td></tr>`;
-    });
+  let html=`<tr class="gh gh-gomboc"><td colspan="5">🫓 Gombóc</td></tr>`;
+  const gsorok=[
+    {nev:`Sima gombóc 45cm (${simaArany45}%)`,egys:"db",ertek:Math.round(db45*simaArany45/100),alap:6,ae:"db",cls:"row-gomboc"},
+    {nev:`TK gombóc 45cm (${tk45}%)`,egys:"db",ertek:Math.round(db45*tk45/100),alap:6,ae:"db",cls:"row-gomboc"},
+  ];
+  if(pizzaMod!=='45') {
+    gsorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`,egys:"db",ertek:Math.round(db32*simaArany32/100),alap:12,ae:"db",cls:"row-gomboc"});
+    gsorok.push({nev:`TK gombóc 32cm (${tk32}%)`,egys:"db",ertek:Math.round(db32*tk32/100),alap:8,ae:"db",cls:"row-gomboc"});
   }
+  gsorok.forEach(r => {
+    html+=`<tr class="${r.cls}"><td>${r.nev}</td><td>${r.egys}</td><td><span class="val">${fmt(r.ertek)}</span></td><td>${fmt(r.alap)} ${r.ae}</td><td><span class="ceil">${fmt(ceiling(r.ertek,r.alap))} ${r.ae}</span></td></tr>`;
+  });
 
-  if(egyebAnyagok.length>0) {
-    html+=`<tr class="group-header group-egyeb-pizza"><td colspan="5">🆕 Egyéni pizza alapanyagok</td></tr>`;
-    egyebAnyagok.forEach(a => {
-      html+=`<tr class="row-egyeb-pizza"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(a.ertek)}</span><span class="unit"> ${a.egys}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td></tr>`;
-    });
-  }
+  html+=`<tr class="gh gh-alap"><td colspan="5">📦 Alapanyagok</td></tr>`;
+  const feldolg=new Set();
+  pizzaAlapanyagok.forEach(a => {
+    if(ossz[a.nev]===undefined) return;
+    feldolg.add(a.nev);
+    let ertek=ossz[a.nev];
+    if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek=ertek/pizzaCsomagSuly[a.nev];
+    ertek=Math.round(ertek*100)/100;
+    const cs=a.alap!==null?`<span class="ceil">${fmt(ceiling(ertek,a.alap))} ${a.ae}</span>`:'<span class="dash">–</span>';
+    const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
+    html+=`<tr class="row-norm"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
+  });
+  Object.keys(ossz).forEach(nev => {
+    if(feldolg.has(nev)) return;
+    html+=`<tr class="row-norm"><td>${nev}</td><td>g</td><td><span class="val">${fmt(Math.round(ossz[nev]))}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td></tr>`;
+  });
 
-  document.getElementById('anyag-tabla').innerHTML=html;
-  document.getElementById('footer-bar').textContent=`45cm: 1 gombóc = ${cfg.szeletPerGomboc} szelet = ${fmtFt(cfg.szeletPerGomboc*cfg.szeletAr45)} · 32cm: 1 pizza = ${fmtFt(cfg.pizzaAr32)} · Receptek: 45cm teljes, 32cm fele`;
-  document.getElementById('input-title').textContent=`📊 Mennyi áru kell? · Profil: ${aktivProfil().nev}`;
+  document.getElementById('pizza-anyag-tabla').innerHTML=html;
 }
 
-// ════════════════════════════════
+// ════════════════════════════════════════
+// PASTA FRISSÍTÉS
+// ════════════════════════════════════════
+function pastaFrissit() {
+  const ftPasta=dbPasta*cfg.pastaAr, ftGnocchi=dbGnocchi*cfg.gnocchiAr;
+  const ossz_t=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
+  const pctF=tesztaFusili/ossz_t, pctS=tesztaSpagetti/ossz_t, pctP=tesztaPenne/ossz_t;
+
+  // Summary
+  let sh='';
+  if(pastaMod!=='gnocchi') sh+=`<div class="si"><div class="sl">Tészta adag</div><div class="sv">${fmt(dbPasta)} db</div></div>
+    <div class="si hl"><div class="sl">Tészta forgalom</div><div class="sv">${fmtFt(ftPasta)}</div></div>`;
+  if(pastaMod==='kombi') sh+=`<div class="ssep"></div>`;
+  if(pastaMod!=='pasta') sh+=`<div class="si"><div class="sl">Gnocchi adag</div><div class="sv">${fmt(dbGnocchi)} db</div></div>
+    <div class="si hl"><div class="sl">Gnocchi forgalom</div><div class="sv">${fmtFt(ftGnocchi)}</div></div>`;
+  if(pastaMod==='kombi') sh+=`<div class="ssep"></div><div class="si hl"><div class="sl">🏆 Összes</div><div class="sv">${fmtFt(ftPasta+ftGnocchi)}</div></div>`;
+  document.getElementById('pasta-summary').innerHTML=sh;
+  document.getElementById('pasta-input-title').textContent=`📊 Mennyi áru kell? · Profil: ${aktivProfil().nev}`;
+
+  // Tészta kártyák
+  document.getElementById('teszta-cards').innerHTML=`
+    <div class="teszta-card"><div class="tn">Fusili</div><div class="tv">${Math.round(dbPasta*pctF)} db</div><div class="tp">${Math.round(pctF*100)}%</div></div>
+    <div class="teszta-card"><div class="tn">Spaghetti</div><div class="tv">${Math.round(dbPasta*pctS)} db</div><div class="tp">${Math.round(pctS*100)}%</div></div>
+    <div class="teszta-card"><div class="tn">Penne</div><div class="tv">${Math.round(dbPasta*pctP)} db</div><div class="tp">${Math.round(pctP*100)}%</div></div>`;
+
+  // Étel bontás
+  const tesztak=aktivTesztak(), gnocchik=aktivGnocchik();
+  const tOssz=tesztak.reduce((s,p)=>s+p.arany,0)||1;
+  const gOssz=gnocchik.reduce((s,p)=>s+p.arany,0)||1;
+
+  let gridH='';
+  if(pastaMod!=='gnocchi') tesztak.forEach(p => {
+    const db=Math.round(dbPasta*p.arany/tOssz);
+    gridH+=`<div class="etel-card pasta-card"><div><div class="etel-nev">${p.nev}</div><div class="etel-pct">${p.arany}%</div></div><div class="etel-db pasta-db">${db} db</div></div>`;
+  });
+  if(pastaMod!=='pasta') gnocchik.forEach(p => {
+    const db=Math.round(dbGnocchi*p.arany/gOssz);
+    gridH+=`<div class="etel-card gnocchi-card"><div><div class="etel-nev">${p.nev}</div><div class="etel-pct">${p.arany}%</div></div><div class="etel-db gnocchi-db">${db} db</div></div>`;
+  });
+  document.getElementById('pasta-grid').innerHTML=gridH;
+
+  // Alapanyag összesítő
+  const pOssz={};
+  if(pastaMod!=='gnocchi') tesztak.forEach(p => {
+    const db=dbPasta*p.arany/tOssz;
+    p.recept.forEach(r => {
+      if(!pOssz[r.a]) pOssz[r.a]=0;
+      if(r.a==='Tészta') {
+        // Tészta 3 felé bontva
+        if(!pOssz['Tészta (Fusili)']) pOssz['Tészta (Fusili)']=0;
+        if(!pOssz['Tészta (Spaghetti)']) pOssz['Tészta (Spaghetti)']=0;
+        if(!pOssz['Tészta (Penne)']) pOssz['Tészta (Penne)']=0;
+        pOssz['Tészta (Fusili)'] += db*r.m*pctF;
+        pOssz['Tészta (Spaghetti)'] += db*r.m*pctS;
+        pOssz['Tészta (Penne)'] += db*r.m*pctP;
+      } else {
+        pOssz[r.a] += db*r.m;
+      }
+    });
+  });
+  if(pastaMod!=='pasta') gnocchik.forEach(p => {
+    const db=dbGnocchi*p.arany/gOssz;
+    p.recept.forEach(r => {
+      if(!pOssz[r.a]) pOssz[r.a]=0;
+      pOssz[r.a] += db*r.m;
+    });
+  });
+
+  let phtml='';
+  const pfeldolg=new Set();
+  pastaAlapanyagok.forEach(a => {
+    if(pOssz[a.nev]===undefined) return;
+    pfeldolg.add(a.nev);
+    let ertek=pOssz[a.nev];
+    if(a.egys==="db" && a.nev==="Kis Tonhalkonzerv") ertek=Math.round(ertek);
+    else ertek=Math.round(ertek);
+    const cs=a.alap!==null?`<span class="ceil">${fmt(ceiling(ertek,a.alap))} ${a.ae}</span>`:'<span class="dash">–</span>';
+    const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
+    // Tészta sorok lila, gnocchi sorok zöld
+    const isTeszta=a.nev.includes('Tészta');
+    const isGnocchi=a.nev==='Gnocchi';
+    const cls=isTeszta?'row-pasta':isGnocchi?'row-gnocchi':'row-norm';
+    phtml+=`<tr class="${cls}"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
+  });
+  Object.keys(pOssz).forEach(nev => {
+    if(pfeldolg.has(nev)) return;
+    phtml+=`<tr class="row-norm"><td>${nev}</td><td>g</td><td><span class="val">${fmt(Math.round(pOssz[nev]))}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td></tr>`;
+  });
+  document.getElementById('pasta-anyag-tabla').innerHTML=phtml;
+}
+
+// ════════════════════════════════════════
+// PROFIL
+// ════════════════════════════════════════
+function renderProfilBar() {
+  let h='<span class="profil-label">Profil:</span>';
+  profilok.forEach(p => {
+    h+=`<button class="profil-btn ${p.id===aktivProfilId?'active':''}" onclick="profilValtas(${p.id})">${p.nev}</button>`;
+  });
+  h+=`<button class="profil-btn uj" onclick="openSettings();setModalTab('profilok')">+ Új profil</button>`;
+  document.getElementById('profil-bar').innerHTML=h;
+}
+
+function profilValtas(id) {
+  aktivProfilId=id;
+  pizzak=aktivProfil().pizzak;
+  pastak=aktivProfil().pastak;
+  renderProfilBar(); renderModalBody(); pizzaFrissit(); pastaFrissit();
+}
+
+// ════════════════════════════════════════
 // MODAL
-// ════════════════════════════════
+// ════════════════════════════════════════
 function openSettings() { document.getElementById('settings-modal').classList.remove('hidden'); renderModalBody(); }
-function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); receptSzerkesztoIdx=null; renderInputs(); frissit(); }
+function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit(); }
+
 function setModalTab(t) {
   modalTab=t;
-  ['arak','pizzak','profilok'].forEach(tab => {
-    const el = document.getElementById('mtab-'+tab);
+  ['arak','pizzak','pastak','profilok'].forEach(tab => {
+    const el=document.getElementById('mtab-'+tab);
     if(el) el.classList.toggle('active', tab===t);
   });
   renderModalBody();
 }
+
 function renderModalBody() {
   if(modalTab==='arak') renderArakTab();
-  else if(modalTab==='pizzak') renderPizzakTab();
+  else if(modalTab==='pizzak') renderEtelek(pizzak, 'pizza');
+  else if(modalTab==='pastak') renderEtelek(pastak, 'pasta');
   else renderProfilokTab();
 }
 
 function renderArakTab() {
   document.getElementById('modal-body').innerHTML=`
     <div class="settings-grid">
-      <div class="setting-item"><label>🍕 45cm szelet ára (Ft)</label>
-        <input type="number" id="set-szelet-ar" value="${cfg.szeletAr45}" min="1" oninput="cfgValtozas()">
-        <span class="s-hint">1 szelet ára forintban</span></div>
-      <div class="setting-item"><label>🫓 32cm egész pizza ára (Ft)</label>
-        <input type="number" id="set-pizza-ar32" value="${cfg.pizzaAr32}" min="1" oninput="cfgValtozas()">
-        <span class="s-hint">1 egész pizza ára forintban</span></div>
-      <div class="setting-item"><label>✂️ Szelet / gombóc (db)</label>
-        <input type="number" id="set-szelet-per-gomboc" value="${cfg.szeletPerGomboc}" min="1" max="20" oninput="cfgValtozas()">
-        <span class="s-hint">Hány szeletre vágják a 45cm-es pizzát</span></div>
-      <div class="setting-item" style="background:#f7f9fc;border-radius:8px;padding:14px;">
+      <div class="si-item"><label>🍕 45cm szelet ára (Ft)</label>
+        <input type="number" id="set-szelet-ar" value="${cfg.szeletAr45}" min="1" oninput="cfgV()">
+        <span class="hint">1 szelet ára</span></div>
+      <div class="si-item"><label>🫓 32cm pizza ára (Ft)</label>
+        <input type="number" id="set-pizza-ar32" value="${cfg.pizzaAr32}" min="1" oninput="cfgV()">
+        <span class="hint">1 egész pizza ára</span></div>
+      <div class="si-item"><label>✂️ Szelet / gombóc</label>
+        <input type="number" id="set-spg" value="${cfg.szeletPerGomboc}" min="1" max="20" oninput="cfgV()">
+        <span class="hint">Hány szelet a 45cm-es</span></div>
+      <div class="si-item"><label>🍝 Tészta átlagár (Ft)</label>
+        <input type="number" id="set-pasta-ar" value="${cfg.pastaAr}" min="1" oninput="cfgV()">
+        <span class="hint">Forint alapú kalkulációhoz</span></div>
+      <div class="si-item"><label>🥟 Gnocchi átlagár (Ft)</label>
+        <input type="number" id="set-gnocchi-ar" value="${cfg.gnocchiAr}" min="1" oninput="cfgV()">
+        <span class="hint">Forint alapú kalkulációhoz</span></div>
+      <div class="si-item" style="background:#f7f9fc;border-radius:8px;padding:14px;">
         <label>📊 Összefoglaló</label>
-        <div style="font-size:13px;color:#555;margin-top:6px;line-height:1.9;">
+        <div style="font-size:13px;color:#555;margin-top:6px;line-height:2;">
           1 gombóc (45cm) = <strong>${fmtFt(cfg.szeletPerGomboc*cfg.szeletAr45)}</strong><br>
-          1 szelet (45cm) = <strong>${fmtFt(cfg.szeletAr45)}</strong><br>
-          1 pizza (32cm) = <strong>${fmtFt(cfg.pizzaAr32)}</strong></div></div>
+          1 pizza (32cm) = <strong>${fmtFt(cfg.pizzaAr32)}</strong><br>
+          Tészta átlag = <strong>${fmtFt(cfg.pastaAr)}</strong><br>
+          Gnocchi átlag = <strong>${fmtFt(cfg.gnocchiAr)}</strong>
+        </div></div>
     </div>`;
 }
 
-function cfgValtozas() {
+function cfgV() {
   cfg.szeletAr45=parseInt(document.getElementById('set-szelet-ar').value)||cfg.szeletAr45;
   cfg.pizzaAr32=parseInt(document.getElementById('set-pizza-ar32').value)||cfg.pizzaAr32;
-  cfg.szeletPerGomboc=parseInt(document.getElementById('set-szelet-per-gomboc').value)||cfg.szeletPerGomboc;
+  cfg.szeletPerGomboc=parseInt(document.getElementById('set-spg').value)||cfg.szeletPerGomboc;
+  cfg.pastaAr=parseInt(document.getElementById('set-pasta-ar').value)||cfg.pastaAr;
+  cfg.gnocchiAr=parseInt(document.getElementById('set-gnocchi-ar').value)||cfg.gnocchiAr;
   renderArakTab();
 }
 
-// ── Pizza tab ──
-function renderPizzakTab() {
-  const ossz=osszeArany();
-  const okE=Math.abs(ossz-100)<0.1;
-  let h=`<div class="pizza-settings-header">
+function renderEtelek(lista, tipus) {
+  const ossz = Math.round(lista.filter(p=>p.aktiv).reduce((s,p)=>s+p.arany,0)*100)/100;
+  const okE = Math.abs(ossz-100)<0.1;
+  const normFn = tipus==='pizza'?'normPizza':'normPasta';
+  let h=`<div class="etel-settings-header">
     <div>
-      <div style="font-size:12px;color:#888;margin-bottom:4px;">Kapcsold ki amit nem kínálsz · Állítsd be az arányokat · Szerkeszd a recepteket</div>
+      <div style="font-size:12px;color:#888;margin-bottom:4px;">Kapcsold ki amit nem kínálsz · Állítsd be az arányokat</div>
       <div class="arany-ossz ${okE?'ok':'err'}">Összes arány: ${ossz}% ${okE?'✓':'⚠ Normalizálj!'}</div>
     </div>
-    <button class="norm-btn" onclick="normalizal()">⚖️ Normalizálás 100%-ra</button>
+    <button class="norm-btn" onclick="${normFn}()">⚖️ Normalizálás</button>
   </div>`;
 
-  pizzak.forEach((p,i) => {
-    h+=`<div class="pizza-setting-row">
-      <label class="pizza-toggle"><input type="checkbox" ${p.aktiv?'checked':''} onchange="togglePizza(${i})"><span class="toggle-slider"></span></label>
-      <span class="pizza-setting-name ${p.aktiv?'':'disabled'}">${p.nev}${p.custom?'<span class="custom-badge">ÚJ</span>':''}</span>
-      <div class="arany-input-wrap">
-        <input class="arany-input" type="number" value="${p.arany}" min="0" max="100" step="0.01" ${p.aktiv?'':'disabled'} oninput="aranyValtozas(${i},this.value)">
+  lista.forEach((p,i) => {
+    const isG = p.gnocchi;
+    h+=`<div class="etel-row">
+      <label class="toggle-wrap"><input type="checkbox" ${p.aktiv?'checked':''} onchange="toggleEtel('${tipus}',${i})"><span class="tog-sl"></span></label>
+      <span class="etel-nev-lbl ${p.aktiv?'':'off'}">${p.nev}${isG?' <span style="font-size:10px;background:#27ae60;color:white;border-radius:4px;padding:1px 5px;">🥟</span>':''}</span>
+      <div class="arany-iw">
+        <input class="arany-inp" type="number" value="${p.arany}" min="0" max="100" step="0.01" ${p.aktiv?'':'disabled'} oninput="aranyV('${tipus}',${i},this.value)">
         <span style="font-size:12px;color:#888;">%</span>
       </div>
-      <button class="pizza-recept-btn" onclick="toggleReceptSzerkeszto(${i})">🧾 Recept ${receptSzerkesztoIdx===i?'▲':'▼'}</button>
-      ${p.custom?`<button class="btn btn-danger btn-xs" onclick="pizzaTorles(${i})">🗑</button>`:''}
     </div>`;
-
-    if(receptSzerkesztoIdx===i) {
-      h+=`<div class="recept-form">
-        <h4>📋 ${p.nev} – recept szerkesztése (45cm, grammban)</h4>
-        ${p.recept.map((r,ri) => `
-          <div class="recept-row">
-            <select onchange="receptAnyagValtozas(${i},${ri},this.value)">
-              ${alapanyagok.map(a=>`<option value="${a.nev}" ${a.nev===r.anyag?'selected':''}>${a.nev}</option>`).join('')}
-              <option value="__uj__" ${r.anyag==='__uj__'?'selected':''}>+ Új alapanyag...</option>
-            </select>
-            ${r.anyag==='__uj__'?`<input type="text" placeholder="Alapanyag neve" value="${r.ujNev||''}" oninput="receptUjNevValtozas(${i},${ri},this.value)" style="flex:2;border:1.5px solid #27ae60;border-radius:6px;padding:7px 10px;font-size:13px;outline:none;">`:''}
-            <input type="number" value="${r.menny}" min="0" placeholder="menny" oninput="receptMennyValtozas(${i},${ri},this.value)">
-            <span style="font-size:12px;color:#888;">${r.egys||'g'}</span>
-            <button class="del-btn" onclick="receptSorTorles(${i},${ri})">✕</button>
-          </div>`).join('')}
-        <button class="add-anyag-btn" onclick="receptSorHozzaad(${i})">+ Alapanyag hozzáadása</button>
-      </div>`;
-    }
   });
-
-  // Új pizza form
-  h+=`<div class="new-pizza-form">
-    <h4>➕ Új pizza hozzáadása</h4>
-    <div class="form-row">
-      <div class="form-field"><label>Pizza neve</label><input type="text" id="uj-nev" placeholder="pl. Caprese"></div>
-      <div class="form-field" style="max-width:120px;"><label>Arány (%)</label><input type="number" id="uj-arany" value="1" min="0.01" max="100" step="0.01"></div>
-    </div>
-    <div id="uj-recept-sorok">
-      <div class="recept-row">
-        <select id="uj-anyag-0">
-          ${alapanyagok.map(a=>`<option value="${a.nev}">${a.nev}</option>`).join('')}
-          <option value="__uj__">+ Új alapanyag...</option>
-        </select>
-        <input type="number" id="uj-menny-0" value="" min="0" placeholder="menny">
-        <span style="font-size:12px;color:#888;">g</span>
-      </div>
-    </div>
-    <button class="add-anyag-btn" onclick="ujReceptSorHozzaad()" style="margin-top:6px;">+ Alapanyag hozzáadása</button>
-    <div style="margin-top:12px;display:flex;gap:10px;">
-      <button class="btn btn-success btn-sm" onclick="ujPizzaMent()">✓ Pizza mentése</button>
-      <div id="uj-hiba" style="color:#c0392b;font-size:12px;display:flex;align-items:center;"></div>
-    </div>
-  </div>`;
-
   document.getElementById('modal-body').innerHTML=h;
 }
 
-let ujReceptSorDb=1;
-
-function ujReceptSorHozzaad() {
-  const cont=document.getElementById('uj-recept-sorok');
-  const i=ujReceptSorDb++;
-  const div=document.createElement('div');
-  div.className='recept-row';
-  div.innerHTML=`<select id="uj-anyag-${i}">${alapanyagok.map(a=>`<option value="${a.nev}">${a.nev}</option>`).join('')}<option value="__uj__">+ Új alapanyag...</option></select>
-    <input type="number" id="uj-menny-${i}" value="" min="0" placeholder="menny">
-    <span style="font-size:12px;color:#888;">g</span>
-    <button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
-  cont.appendChild(div);
+function toggleEtel(tipus, i) {
+  const lista = tipus==='pizza'?pizzak:pastak;
+  lista[i].aktiv=!lista[i].aktiv;
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  renderEtelek(lista, tipus);
+  if(tipus==='pizza') pizzaFrissit(); else pastaFrissit();
 }
 
-function ujPizzaMent() {
-  const nev=document.getElementById('uj-nev').value.trim();
-  const arany=parseFloat(document.getElementById('uj-arany').value)||0;
-  const hiba=document.getElementById('uj-hiba');
-
-  if(!nev) { hiba.textContent='Kérlek add meg a pizza nevét!'; return; }
-  if(arany<=0) { hiba.textContent='Az aránynak 0-nál nagyobbnak kell lennie!'; return; }
-  if(pizzak.find(p=>p.nev.toLowerCase()===nev.toLowerCase())) { hiba.textContent='Már van ilyen nevű pizza!'; return; }
-
-  const recept=[];
-  let ri=0;
-  while(document.getElementById(`uj-anyag-${ri}`)) {
-    const anyagEl=document.getElementById(`uj-anyag-${ri}`);
-    const mennyEl=document.getElementById(`uj-menny-${ri}`);
-    if(anyagEl && mennyEl && mennyEl.value) {
-      let anyagNev=anyagEl.value;
-      if(anyagNev==='__uj__') {
-        const ujNevEl=document.getElementById(`uj-ujnev-${ri}`);
-        anyagNev=ujNevEl?ujNevEl.value.trim():'';
-        if(!anyagNev) { ri++; continue; }
-        // Új alapanyag hozzáadása a master listához
-        if(!alapanyagok.find(a=>a.nev===anyagNev)) {
-          alapanyagok.push({nev:anyagNev, egys:"g", alap:null, ae:null});
-        }
-      }
-      recept.push({anyag:anyagNev, menny:parseFloat(mennyEl.value)||0, egys:"g"});
-    }
-    ri++;
-  }
-
-  pizzak.push({nev, arany, aktiv:true, custom:true, recept});
-  aktivProfil().pizzak=pizzak;
-  ujReceptSorDb=1;
-  hiba.textContent='';
-  renderPizzakTab();
-  frissit();
-}
-
-function toggleReceptSzerkeszto(i) {
-  receptSzerkesztoIdx = receptSzerkesztoIdx===i ? null : i;
-  renderPizzakTab();
-}
-
-function togglePizza(i) { pizzak[i].aktiv=!pizzak[i].aktiv; aktivProfil().pizzak=pizzak; renderPizzakTab(); frissit(); }
-
-function aranyValtozas(i,val) {
-  pizzak[i].arany=Math.round(parseFloat(val)*100)/100||0;
-  aktivProfil().pizzak=pizzak;
-  const ossz=osszeArany(); const okE=Math.abs(ossz-100)<0.1;
+function aranyV(tipus, i, val) {
+  const lista = tipus==='pizza'?pizzak:pastak;
+  lista[i].arany=Math.round(parseFloat(val)*100)/100||0;
+  aktivProfil()[tipus==='pizza'?'pizzak':'pastak']=lista;
+  const ossz=Math.round(lista.filter(p=>p.aktiv).reduce((s,p)=>s+p.arany,0)*100)/100;
+  const okE=Math.abs(ossz-100)<0.1;
   const el=document.querySelector('.arany-ossz');
   if(el){el.textContent=`Összes arány: ${ossz}% ${okE?'✓':'⚠ Normalizálj!'}`; el.className=`arany-ossz ${okE?'ok':'err'}`;}
-  frissit();
+  if(tipus==='pizza') pizzaFrissit(); else pastaFrissit();
 }
 
-function pizzaTorles(i) {
-  if(!confirm(`Törlöd a(z) "${pizzak[i].nev}" pizzát?`)) return;
-  pizzak.splice(i,1);
-  aktivProfil().pizzak=pizzak;
-  receptSzerkesztoIdx=null;
-  renderPizzakTab(); frissit();
-}
-
-function receptAnyagValtozas(pi,ri,val) {
-  pizzak[pi].recept[ri].anyag=val;
-  if(val!=='__uj__') delete pizzak[pi].recept[ri].ujNev;
-  renderPizzakTab();
-}
-
-function receptUjNevValtozas(pi,ri,val) { pizzak[pi].recept[ri].ujNev=val; }
-function receptMennyValtozas(pi,ri,val) { pizzak[pi].recept[ri].menny=parseFloat(val)||0; frissit(); }
-
-function receptSorHozzaad(pi) {
-  pizzak[pi].recept.push({anyag:alapanyagok[0].nev, menny:0, egys:"g"});
-  renderPizzakTab();
-}
-
-function receptSorTorles(pi,ri) {
-  pizzak[pi].recept.splice(ri,1);
-  renderPizzakTab(); frissit();
-}
-
-function normalizal() {
-  const ak=aktivPizzak(); const ossz=ak.reduce((s,p)=>s+p.arany,0);
-  if(ossz===0) return;
+function normPizza() {
+  const ak=pizzak.filter(p=>p.aktiv); const ossz=ak.reduce((s,p)=>s+p.arany,0);
+  if(!ossz) return;
   ak.forEach(p=>p.arany=Math.round(p.arany/ossz*10000)/100);
-  const diff=Math.round((100-aktivPizzak().reduce((s,p)=>s+p.arany,0))*100)/100;
-  if(diff!==0&&ak.length>0) ak[0].arany=Math.round((ak[0].arany+diff)*100)/100;
-  aktivProfil().pizzak=pizzak;
-  renderPizzakTab(); frissit();
+  const diff=Math.round((100-ak.reduce((s,p)=>s+p.arany,0))*100)/100;
+  if(diff&&ak.length) ak[0].arany=Math.round((ak[0].arany+diff)*100)/100;
+  aktivProfil().pizzak=pizzak; renderEtelek(pizzak,'pizza'); pizzaFrissit();
+}
+function normPasta() {
+  const ak=pastak.filter(p=>p.aktiv); const ossz=ak.reduce((s,p)=>s+p.arany,0);
+  if(!ossz) return;
+  ak.forEach(p=>p.arany=Math.round(p.arany/ossz*10000)/100);
+  const diff=Math.round((100-ak.reduce((s,p)=>s+p.arany,0))*100)/100;
+  if(diff&&ak.length) ak[0].arany=Math.round((ak[0].arany+diff)*100)/100;
+  aktivProfil().pastak=pastak; renderEtelek(pastak,'pasta'); pastaFrissit();
 }
 
 function renderProfilokTab() {
-  let h = `<div style="margin-bottom:16px;">
-    <div style="font-size:12px;color:#888;margin-bottom:12px;">Válts profilok között, nevezd át őket, vagy hozz létre újat meglévő alapján.</div>
-    <div class="profil-lista">`;
-
-  profilok.forEach((p, i) => {
-    const isAktiv = p.id === aktivProfilId;
-    const isDefault = i === 0;
-    h += `<div class="profil-sor ${isAktiv?'aktiv':''}">
-      <input class="profil-nev-input" type="text" value="${p.nev}" oninput="profilAtnevez(${p.id}, this.value)" placeholder="Profil neve">
-      ${isAktiv ? '<span class="profil-aktiv-badge">✓ Aktív</span>' : `<button class="btn btn-primary btn-xs" onclick="profilValtas(${p.id});renderProfilokTab()">Aktiválás</button>`}
-      ${!isDefault ? `<button class="btn btn-danger btn-xs" onclick="profilTorles(${p.id})">🗑</button>` : '<span class="profil-default-badge">Alapértelmezett</span>'}
+  let h=`<div class="profil-lista">`;
+  profilok.forEach((p,i) => {
+    const isA=p.id===aktivProfilId;
+    h+=`<div class="profil-sor ${isA?'aktiv':''}">
+      <input class="profil-nev-inp" type="text" value="${p.nev}" oninput="profilNev(${p.id},this.value)">
+      ${isA?'<span class="profil-aktiv-badge">✓ Aktív</span>':`<button class="btn btn-primary btn-xs" onclick="profilValtas(${p.id});renderProfilokTab()">Aktiválás</button>`}
+      ${i===0?'<span class="profil-default-badge">Alap</span>':`<button class="btn btn-danger btn-xs" onclick="profilTorol(${p.id})">🗑</button>`}
     </div>`;
   });
-
-  h += `</div></div>
+  h+=`</div>
   <div class="uj-profil-form">
     <h4>➕ Új profil létrehozása</h4>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-      <div class="form-field" style="flex:2;min-width:160px;">
-        <label>Profil neve</label>
-        <input type="text" id="uj-profil-nev" placeholder="pl. Rendezvény, Hétvége...">
-      </div>
-      <div class="form-field" style="flex:2;min-width:160px;">
-        <label>Másolás ebből a profilból</label>
-        <select id="uj-profil-forrás" style="border:2px solid #dde3f0;border-radius:7px;padding:8px 10px;font-size:13px;outline:none;width:100%;">
-          ${profilok.map(p => `<option value="${p.id}">${p.nev}</option>`).join('')}
-        </select>
+    <div class="form-row">
+      <div class="form-field"><label>Profil neve</label><input type="text" id="uj-profil-nev" placeholder="pl. Rendezvény"></div>
+      <div class="form-field"><label>Másolás innen</label>
+        <select id="uj-profil-forras">${profilok.map(p=>`<option value="${p.id}">${p.nev}</option>`).join('')}</select>
       </div>
     </div>
-    <div style="font-size:12px;color:#888;margin-bottom:10px;">Az új profil a kiválasztott profil pizzáit és arányait másolja – utána szabadon szerkesztheted.</div>
-    <button class="btn btn-success btn-sm" onclick="ujProfilMent()">✓ Profil létrehozása</button>
+    <div style="font-size:12px;color:#888;margin-bottom:10px;">A kiválasztott profil pizzáit és pastáit másolja – utána szabadon szerkesztheted.</div>
+    <button class="btn btn-success btn-sm" onclick="ujProfilMent()">✓ Létrehozás</button>
     <span id="uj-profil-hiba" style="color:#c0392b;font-size:12px;margin-left:10px;"></span>
   </div>`;
-
-  document.getElementById('modal-body').innerHTML = h;
+  document.getElementById('modal-body').innerHTML=h;
 }
 
-function profilAtnevez(id, nev) {
-  const p = profilok.find(p => p.id === id);
-  if(p) { p.nev = nev; renderProfilBar(); }
+function profilNev(id, nev) { const p=profilok.find(x=>x.id===id); if(p){p.nev=nev; renderProfilBar();} }
+function profilTorol(id) {
+  const p=profilok.find(x=>x.id===id);
+  if(!confirm(`Törlöd: "${p.nev}"?`)) return;
+  if(id===aktivProfilId) { aktivProfilId=profilok[0].id; pizzak=aktivProfil().pizzak; pastak=aktivProfil().pastak; }
+  profilok=profilok.filter(x=>x.id!==id);
+  renderProfilBar(); renderProfilokTab(); pizzaFrissit(); pastaFrissit();
 }
-
-function profilTorles(id) {
-  const p = profilok.find(pr => pr.id === id);
-  if(!p) return;
-  if(!confirm(`Törlöd a(z) "${p.nev}" profilt?`)) return;
-  if(id === aktivProfilId) {
-    aktivProfilId = profilok[0].id;
-    pizzak = aktivProfil().pizzak;
-  }
-  profilok = profilok.filter(pr => pr.id !== id);
-  renderProfilBar(); renderProfilokTab(); frissit();
-}
-
 function ujProfilMent() {
-  const nev = document.getElementById('uj-profil-nev').value.trim();
-  const forrasId = parseFloat(document.getElementById('uj-profil-forrás').value);
-  const hiba = document.getElementById('uj-profil-hiba');
-  if(!nev) { hiba.textContent = 'Add meg a profil nevét!'; return; }
-  if(profilok.find(p => p.nev.toLowerCase() === nev.toLowerCase())) { hiba.textContent = 'Már van ilyen nevű profil!'; return; }
-  const forras = profilok.find(p => p.id === forrasId) || profilok[0];
-  const ujProfil = ujProfilAdat(nev, forras.pizzak);
-  profilok.push(ujProfil);
-  hiba.textContent = '';
-  profilValtas(ujProfil.id);
+  const nev=document.getElementById('uj-profil-nev').value.trim();
+  const hiba=document.getElementById('uj-profil-hiba');
+  if(!nev){hiba.textContent='Add meg a nevet!';return;}
+  if(profilok.find(p=>p.nev.toLowerCase()===nev.toLowerCase())){hiba.textContent='Már van ilyen nevű profil!';return;}
+  const forrasId=parseFloat(document.getElementById('uj-profil-forras').value);
+  const forras=profilok.find(p=>p.id===forrasId)||profilok[0];
+  const uj=ujProfilObj(nev, forras.pizzak, forras.pastak);
+  profilok.push(uj);
+  hiba.textContent='';
+  profilValtas(uj.id);
   renderProfilokTab();
 }
 
 function resetAll() {
-  if(!confirm('Visszaállítod az összes beállítást az alapértelmezettre? (Minden profil törlődik!)')) return;
+  if(!confirm('Visszaállítod az összes beállítást?')) return;
   cfg={...DEFAULTS};
-  alapanyagok=defaultAlapanyagok.map(a=>({...a}));
-  const alap = ujProfilAdat('Általános', defaultPizzak);
-  profilok = [alap];
-  aktivProfilId = alap.id;
-  pizzak = aktivProfil().pizzak;
-  receptSzerkesztoIdx=null;
-  renderProfilBar(); renderModalBody(); frissit();
+  const alap=ujProfilObj('Általános', defaultPizzak, defaultPastaEtelek);
+  profilok=[alap]; aktivProfilId=alap.id;
+  pizzak=aktivProfil().pizzak; pastak=aktivProfil().pastak;
+  pizzaAlapanyagok=defaultPizzaAlapanyagok.map(a=>({...a}));
+  pastaAlapanyagok=defaultPastaAlapanyagok.map(a=>({...a}));
+  renderProfilBar(); renderModalBody(); pizzaFrissit(); pastaFrissit();
 }
 
-// Init
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
 renderProfilBar();
-renderInputs(); db45=100; frissit();
+renderPizzaInputs();
+renderPastaInputs();
+db45=100; dbPasta=100;
+pizzaFrissit();
+pastaFrissit();
 </script>
 </body>
 </html>
