@@ -380,7 +380,7 @@
     <div style="display:flex;gap:16px;flex-wrap:wrap;">
       <!-- A ÜZLET -->
       <div style="flex:1;min-width:280px;background:#f0f4ff;border:2px solid #2E5DA6;border-radius:10px;padding:16px 18px;">
-        <div style="font-size:13px;font-weight:bold;color:#1F3864;margin-bottom:12px;">🍕 A üzlet – csak 45cm pizza</div>
+        <div style="font-size:13px;font-weight:bold;color:#1F3864;margin-bottom:12px;">🍕 PM1 Király – csak 45cm pizza</div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
           <div style="font-size:11px;font-weight:bold;color:#555;margin-bottom:4px;grid-column:1/-1;">Heti forgalmi minta (Ft/nap átlag)</div>
@@ -419,7 +419,7 @@
 
       <!-- B ÜZLET -->
       <div style="flex:1;min-width:280px;background:#fff8e1;border:2px solid #E8A000;border-radius:10px;padding:16px 18px;">
-        <div style="font-size:13px;font-weight:bold;color:#7A4F00;margin-bottom:12px;">🍕🫓 B üzlet – 45cm + 32cm pizza</div>
+        <div style="font-size:13px;font-weight:bold;color:#7A4F00;margin-bottom:12px;">🍕🫓 PM10 Oktogon – 45cm + 32cm pizza</div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
           <div style="font-size:11px;font-weight:bold;color:#555;margin-bottom:4px;grid-column:1/-1;">Heti forgalmi minta (Ft/nap – 45cm)</div>
@@ -463,8 +463,20 @@
     </div>
   </div>
 
-  <!-- RENDELÉSI LISTÁK -->
-  <div id="uzlet-rendelesek"></div>
+  <!-- RENDELÉSI TÁBLÁZAT -->
+  <div style="background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:20px;">
+    <div style="display:flex;border-bottom:2px solid #eee;">
+      <button id="utab-a" onclick="setUzletTab('a')"
+        style="flex:1;padding:12px 20px;font-size:14px;font-weight:bold;border:none;cursor:pointer;background:#2E5DA6;color:white;border-radius:0;">
+        🍕 PM1 Király – rendelési terv
+      </button>
+      <button id="utab-b" onclick="setUzletTab('b')"
+        style="flex:1;padding:12px 20px;font-size:14px;font-weight:bold;border:none;cursor:pointer;background:#f0f4f8;color:#888;border-radius:0;">
+        🍕🫓 PM10 Oktogon – rendelési terv
+      </button>
+    </div>
+    <div id="uzlet-rendelesek" style="padding:16px;"></div>
+  </div>
 
 </div>
 </div>
@@ -1526,45 +1538,170 @@ function uzletRendelesHtml(nev, szin, ciklusok, ft45_napi, ft32_napi, profil, is
   return html;
 }
 
+let aktívUzletTab = 'a';
+
+function setUzletTab(t) {
+  aktívUzletTab = t;
+  const aBtn = document.getElementById('utab-a');
+  const bBtn = document.getElementById('utab-b');
+  if(aBtn) { aBtn.style.background = t==='a'?'#2E5DA6':'#f0f4f8'; aBtn.style.color = t==='a'?'white':'#888'; }
+  if(bBtn) { bBtn.style.background = t==='b'?'#E8A000':'#f0f4f8'; bBtn.style.color = t==='b'?'white':'#888'; }
+  uzletTabFrissit();
+}
+
+function uzletTabFrissit() {
+  const cont = document.getElementById('uzlet-rendelesek');
+  if(!cont) return;
+  const profil = aktivProfil();
+
+  if(aktívUzletTab === 'a') {
+    const { ft45, ft32 } = getForgalom('a', null);
+    const ciklus = document.getElementById('a-ciklus')?.value || 'h3x';
+    const nap = document.getElementById('a-nap')?.value || '4';
+    const ciklusNapok = getCiklusNapok(ciklus, nap);
+    cont.innerHTML = uzletTablaHtml('🍕 PM1 Király (csak 45cm)', '#2E5DA6', ciklusNapok, ft45, Array(7).fill(0), profil, ciklus==='2h');
+  } else {
+    const { ft45, ft32 } = getForgalom('b45', 'b32');
+    const ciklus = document.getElementById('b-ciklus')?.value || '3n';
+    const nap = document.getElementById('b-nap')?.value || '0';
+    const ciklusNapok = getCiklusNapok(ciklus, nap);
+    cont.innerHTML = uzletTablaHtml('🍕🫓 PM10 Oktogon (45cm + 32cm)', '#E8A000', ciklusNapok, ft45, ft32, profil, ciklus==='2h');
+  }
+}
+
 function uzletFrissit() {
-  // A üzlet
-  const { ft45: aft45, ft32: aft32 } = getForgalom('a', null);
-  const aCiklus = document.getElementById('a-ciklus')?.value || 'h3x';
-  const aNap = document.getElementById('a-nap')?.value || '4';
-  const aCiklusNapok = getCiklusNapok(aCiklus, aNap);
+  // Összefoglalók frissítése
+  const { ft45: aft45 } = getForgalom('a', null);
+  const aHeti = aft45.reduce((s,v)=>s+v,0);
+  const aEl = document.getElementById('a-osszefoglalo');
+  if(aEl) aEl.innerHTML = `
+    <strong>Heti forgalom:</strong> ${fmt(Math.round(aHeti))} Ft<br>
+    <strong>Heti gombóc:</strong> ${Math.round(aHeti/ATL_SZELET_AR/SZELET_PER_GOMBOC)} db<br>
+    <strong>Napi átlag:</strong> ${Math.round(aHeti/ATL_SZELET_AR/SZELET_PER_GOMBOC/7)} db/nap`;
 
-  // A összefoglaló
-  const aHeti45 = aft45.reduce((s,v)=>s+v,0);
-  const aHeti45Gomboc = aHeti45/ATL_SZELET_AR/SZELET_PER_GOMBOC;
-  const aOsszFogl = document.getElementById('a-osszefoglalo');
-  if(aOsszFogl) aOsszFogl.innerHTML = `
-    <strong>Heti forgalom:</strong> ${fmt(Math.round(aHeti45))} Ft<br>
-    <strong>Heti gombóc:</strong> ${Math.round(aHeti45Gomboc)} db<br>
-    <strong>Napi átlag:</strong> ${Math.round(aHeti45Gomboc/7)} db/nap`;
-
-  // B üzlet
   const { ft45: bft45, ft32: bft32 } = getForgalom('b45', 'b32');
-  const bCiklus = document.getElementById('b-ciklus')?.value || '3n';
-  const bNap = document.getElementById('b-nap')?.value || '0';
-  const bCiklusNapok = getCiklusNapok(bCiklus, bNap);
-
   const bHeti45 = bft45.reduce((s,v)=>s+v,0);
   const bHeti32 = bft32.reduce((s,v)=>s+v,0);
-  const bOsszFogl = document.getElementById('b-osszefoglalo');
-  if(bOsszFogl) bOsszFogl.innerHTML = `
-    <strong>Heti 45cm forgalom:</strong> ${fmt(Math.round(bHeti45))} Ft<br>
-    <strong>Heti 32cm forgalom:</strong> ${fmt(Math.round(bHeti32))} Ft<br>
-    <strong>Heti gombóc (45cm):</strong> ${Math.round(bHeti45/ATL_SZELET_AR/SZELET_PER_GOMBOC)} db<br>
-    <strong>Heti pizza (32cm):</strong> ${Math.round(bHeti32/ATL_32_AR)} db`;
+  const bEl = document.getElementById('b-osszefoglalo');
+  if(bEl) bEl.innerHTML = `
+    <strong>Heti 45cm:</strong> ${fmt(Math.round(bHeti45))} Ft · ${Math.round(bHeti45/ATL_SZELET_AR/SZELET_PER_GOMBOC)} gombóc<br>
+    <strong>Heti 32cm:</strong> ${fmt(Math.round(bHeti32))} Ft · ${Math.round(bHeti32/ATL_32_AR)} pizza`;
 
-  // Rendelési listák
-  const profil = aktivProfil();
-  let rendHtml = '';
-  rendHtml += uzletRendelesHtml('🍕 A üzlet', '#2E5DA6', aCiklusNapok, aft45, Array(7).fill(0), profil, aCiklus==='2h');
-  rendHtml += uzletRendelesHtml('🍕🫓 B üzlet', '#E8A000', bCiklusNapok, bft45, bft32, profil, bCiklus==='2h');
+  uzletTabFrissit();
+}
 
-  const cont = document.getElementById('uzlet-rendelesek');
-  if(cont) cont.innerHTML = rendHtml;
+function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h) {
+  const csomagSuly = {"Funghi mix zacskó":1800,"Spenót":1800,"Tartufata szósz":1200};
+  const szorzo = is2h ? 2 : 1;
+
+  // Oszlopok = szállítások (csak ahol van forgalom)
+  const oszlopok = ciklusok.map((napIndexek, ci) => {
+    const uniqueNapok = [...new Set(napIndexek.map(n => n%7))];
+    let gomboc45=0, gomboc32=0, ft45=0, ft32=0;
+    uniqueNapok.forEach(n => {
+      gomboc45 += ft45_napi[n]/ATL_SZELET_AR/SZELET_PER_GOMBOC * szorzo;
+      gomboc32 += ft32_napi[n]/ATL_32_AR * szorzo;
+      ft45 += ft45_napi[n] * szorzo;
+      ft32 += ft32_napi[n] * szorzo;
+    });
+    const { ossz, gombocSorok } = szamolRendeles(gomboc45, gomboc32, profil);
+    return {
+      ci, napok: uniqueNapok, szallNap: NAPOK[napIndexek[0]%7],
+      fedNapok: uniqueNapok.map(n=>NAPOK[n]).join('+'),
+      gomboc45, gomboc32, ft45, ft32, ossz, gombocSorok
+    };
+  }).filter(o => o.ft45+o.ft32 > 0); // csak ahol van forgalom
+
+  // Sorok = összes alapanyag ami legalább egy oszlopban > 0
+  // Először gombócok, majd alapanyagok
+  const sorok = [];
+
+  // Gombóc sorok
+  const gombocNevek = new Set();
+  oszlopok.forEach(o => o.gombocSorok.forEach(r => { if(r.ertek>0) gombocNevek.add(r.nev+'|'+r.alap); }));
+  gombocNevek.forEach(key => {
+    const [nev, alap] = key.split('|');
+    sorok.push({ nev, alap: parseInt(alap), egys:'db', ae:'db', tipus:'gomboc' });
+  });
+
+  // Alapanyag sorok
+  pizzaAlapanyagok.forEach(a => {
+    const vanAdat = oszlopok.some(o => (o.ossz[a.nev]||0) > 0);
+    if(vanAdat) sorok.push({ nev: a.nev, alap: a.alap, egys: a.egys, ae: a.ae, tipus:'anyag' });
+  });
+
+  // TÁBLÁZAT
+  let html = `<div style="background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);overflow:hidden;">
+    <div style="background:${szin};color:white;padding:12px 20px;font-size:14px;font-weight:bold;">${cim}</div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:500px;">
+      <thead>
+        <tr style="background:#f0f4ff;">
+          <th style="text-align:left;padding:8px 12px;font-size:11px;color:#1F3864;border-bottom:2px solid #dde3f0;min-width:160px;">Alapanyag</th>
+          <th style="padding:8px 12px;font-size:11px;color:#1F3864;border-bottom:2px solid #dde3f0;">Egység</th>`;
+
+  oszlopok.forEach((o, oi) => {
+    html += `<th style="padding:10px 12px;border-bottom:3px solid ${szin};text-align:center;min-width:120px;background:#fafbff;">
+      <div style="font-size:10px;font-weight:bold;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">${oi+1}. szállítás</div>
+      <div style="font-size:16px;font-weight:bold;color:${szin};">📦 ${o.szallNap}</div>
+      <div style="font-size:10px;color:#888;margin-top:3px;line-height:1.5;">
+        ${o.fedNapok.split('+').map(n=>`<span style="background:#eef2ff;border-radius:4px;padding:1px 5px;margin:1px;display:inline-block;">${n}</span>`).join('')}
+        ${is2h?'<span style="color:#c0392b;font-weight:bold;">×2 hét</span>':''}
+      </div>
+      <div style="margin-top:5px;font-size:11px;font-weight:bold;color:#555;border-top:1px solid #eee;padding-top:4px;">${fmt(Math.round(o.ft45+o.ft32))} Ft</div>
+    </th>`;
+  });
+  html += `</tr></thead><tbody>`;
+
+  // Sorok kirajzolása
+  let lastTipus = '';
+  sorok.forEach(sor => {
+    // Csoport fejléc
+    if(sor.tipus !== lastTipus) {
+      lastTipus = sor.tipus;
+      const fejNev = sor.tipus==='gomboc' ? '🫓 Gombóc' : '📦 Alapanyagok';
+      const fejSzin = sor.tipus==='gomboc' ? '#7A4F00' : '#1F3864';
+      html += `<tr><td colspan="${oszlopok.length+2}" style="background:${sor.tipus==='gomboc'?'#fff3cd':'#e8f0fe'};padding:5px 12px;font-size:11px;font-weight:bold;color:${fejSzin};letter-spacing:0.5px;">${fejNev}</td></tr>`;
+    }
+
+    html += `<tr style="border-bottom:1px solid #f0f0f0;" onmouseover="this.style.background='#f8faff'" onmouseout="this.style.background=''">
+      <td style="padding:6px 12px;font-weight:500;">${sor.nev}</td>
+      <td style="padding:6px 12px;color:#888;text-align:center;">${sor.egys}</td>`;
+
+    oszlopok.forEach(o => {
+      let ertek = 0;
+      if(sor.tipus==='gomboc') {
+        const gr = o.gombocSorok.find(r=>r.nev===sor.nev);
+        ertek = gr ? gr.ertek : 0;
+      } else {
+        ertek = o.ossz[sor.nev] || 0;
+        if(sor.egys==='db' && csomagSuly[sor.nev]) ertek = ertek/csomagSuly[sor.nev];
+        ertek = Math.round(ertek*10)/10;
+      }
+
+      const ceil = sor.alap ? Math.ceil(ertek/sor.alap)*sor.alap : null;
+      const van = ertek > 0;
+
+      html += `<td style="padding:6px 12px;text-align:center;">
+        ${van ? `
+          <div style="font-size:11px;color:#888;">${fmt(ertek)} ${sor.egys}</div>
+          ${ceil!==null ? `<div style="font-weight:bold;color:#375623;background:#E2EFDA;border-radius:5px;padding:2px 8px;display:inline-block;margin-top:2px;">${fmt(ceil)} ${sor.ae||sor.egys}</div>` : ''}
+        ` : '<span style="color:#e0e0e0;">–</span>'}
+      </td>`;
+    });
+
+    html += `</tr>`;
+  });
+
+  // Összesítő sor
+  html += `<tr style="background:#f0f4ff;font-weight:bold;border-top:2px solid #dde3f0;">
+    <td colspan="2" style="padding:7px 12px;color:#1F3864;font-size:12px;">🏆 Forgalom összesen</td>`;
+  oszlopok.forEach(o => {
+    html += `<td style="padding:7px 12px;text-align:center;color:${szin};">${fmt(Math.round(o.ft45+o.ft32))} Ft</td>`;
+  });
+  html += `</tr></tbody></table></div></div>`;
+
+  return html;
 }
 
 // ════════════════════════════════════════
