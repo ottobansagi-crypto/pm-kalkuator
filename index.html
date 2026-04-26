@@ -45,13 +45,22 @@
   .profil-btn.uj:hover { color: white; border-color: white; }
 
   /* SABLON SÁV */
-  .sablon-bar { background: #12274a; padding: 6px 32px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 36px; }
+  .sablon-bar { background: #12274a; padding: 6px 32px; display: flex; align-items: center; gap: 8px; min-height: 36px; }
   .sablon-label { color: rgba(255,255,255,0.4); font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
-  .sablon-btn { padding: 3px 12px; border-radius: 14px; border: 1.5px solid rgba(255,200,0,0.3); background: transparent; color: rgba(255,200,0,0.7); font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
-  .sablon-btn:hover { border-color: #FFD700; color: #FFD700; }
-  .sablon-btn.uj-sablon { border-style: dashed; color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.2); font-size: 11px; }
-  .sablon-btn.uj-sablon:hover { color: white; border-color: white; }
-  .sablon-ures { color: rgba(255,255,255,0.25); font-size: 11px; font-style: italic; }
+  .sablon-dropdown-wrap { position: relative; }
+  .sablon-dropdown-btn { padding: 4px 14px; border-radius: 14px; border: 1.5px solid rgba(255,200,0,0.4); background: transparent; color: rgba(255,200,0,0.85); font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
+  .sablon-dropdown-btn:hover { border-color: #FFD700; color: #FFD700; }
+  .sablon-dropdown-btn.ures { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); }
+  .sablon-dropdown-list { position: absolute; top: calc(100% + 6px); left: 0; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); min-width: 200px; z-index: 500; overflow: hidden; display: none; }
+  .sablon-dropdown-list.open { display: block; }
+  .sablon-dropdown-item { padding: 10px 16px; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 1px solid #f0f0f0; color: #1F3864; display: flex; justify-content: space-between; align-items: center; }
+  .sablon-dropdown-item:hover { background: #f0f4ff; }
+  .sablon-dropdown-item .sablon-del { font-size: 11px; color: #ccc; padding: 2px 6px; border-radius: 4px; }
+  .sablon-dropdown-item .sablon-del:hover { background: #fadbd8; color: #c0392b; }
+  .sablon-dropdown-item.sablon-ures-item { color: #aaa; font-style: italic; cursor: default; }
+  .sablon-dropdown-item.sablon-ures-item:hover { background: white; }
+  .sablon-uj-btn { padding: 4px 14px; border-radius: 14px; border: 1.5px dashed rgba(255,255,255,0.25); background: transparent; color: rgba(255,255,255,0.4); font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
+  .sablon-uj-btn:hover { border-color: white; color: white; }
 
   .container { max-width: 1040px; margin: 24px auto; padding: 0 16px; }
   .card { background: white; border-radius: 10px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
@@ -697,7 +706,7 @@ function importAllapot(input) {
       document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
       document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
       document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
-      renderProfilBar(); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit();
+      renderProfilBar(); renderSablonBar(); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit();
       const toast = document.getElementById('share-toast');
       toast.textContent = '✓ Beállítások betöltve!';
       toast.classList.add('show');
@@ -1091,17 +1100,62 @@ function renderSablonBar() {
   const sablonok = aktivProfilSablonok();
   const bar = document.getElementById('sablon-bar');
   if(!bar) return;
+  const vanSablon = sablonok.length > 0;
   let h = '<span class="sablon-label">⚡ Sablonok:</span>';
-  if(sablonok.length === 0) {
-    h += '<span class="sablon-ures">Nincs sablon – mentsd el az aktuális értékeket</span>';
+  // Dropdown gomb
+  h += `<div class="sablon-dropdown-wrap">
+    <button class="sablon-dropdown-btn ${vanSablon?'':'ures'}" onclick="sablonDropdownToggle(event)">
+      ${vanSablon ? '⚡ Sablonok (' + sablonok.length + ') ▾' : '⚡ Nincs sablon ▾'}
+    </button>
+    <div class="sablon-dropdown-list" id="sablon-dropdown-list">`;
+  if(!vanSablon) {
+    h += `<div class="sablon-dropdown-item sablon-ures-item">Még nincs mentett sablon</div>`;
   } else {
     sablonok.forEach((s, i) => {
-      h += `<button class="sablon-btn" onclick="sablonBetolt(${i})" title="${s.db45>0?s.db45+' db 45cm':''}${s.db32>0?' + '+s.db32+' db 32cm':''}${s.dbPasta>0?' + '+s.dbPasta+' pasta':''}">⚡ ${s.nev}</button>`;
+      let info = [];
+      if(s.db45>0) info.push(s.db45+' db 45cm');
+      if(s.db32>0) info.push(s.db32+' db 32cm');
+      if(s.dbPasta>0) info.push(s.dbPasta+' pasta');
+      if(s.dbGnocchi>0) info.push(s.dbGnocchi+' gnocchi');
+      h += `<div class="sablon-dropdown-item" onclick="sablonBetolt(${i})">
+        <div>
+          <div style="font-weight:bold;color:#1F3864;">⚡ ${s.nev}</div>
+          <div style="font-size:11px;color:#888;">${info.join(' · ')}</div>
+        </div>
+        <span class="sablon-del" onclick="sablonTorol(event,${i})">🗑</span>
+      </div>`;
     });
   }
-  h += `<button class="sablon-btn uj-sablon" onclick="sablonMent()">＋ Mentés sablonként</button>`;
+  h += `</div></div>`;
+  // Mentés gomb
+  h += `<button class="sablon-uj-btn" onclick="sablonMent()">＋ Mentés sablonként</button>`;
   bar.innerHTML = h;
 }
+
+function sablonDropdownToggle(e) {
+  e.stopPropagation();
+  const list = document.getElementById('sablon-dropdown-list');
+  if(list) list.classList.toggle('open');
+}
+
+function sablonTorol(e, i) {
+  e.stopPropagation();
+  const p = aktivProfil();
+  if(!p.sablonok) return;
+  const nev = p.sablonok[i].nev;
+  p.sablonok.splice(i, 1);
+  renderSablonBar();
+  const toast = document.getElementById('share-toast');
+  toast.textContent = '🗑 Sablon törölve: ' + nev;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Fájl mentve!'; }, 2000);
+}
+
+// Kattintás máshova → dropdown bezárás
+document.addEventListener('click', function() {
+  const list = document.getElementById('sablon-dropdown-list');
+  if(list) list.classList.remove('open');
+});
 
 function sablonMent() {
   // Preview szöveg
@@ -1163,6 +1217,9 @@ function sablonBetolt(i) {
   renderPastaInputs();
   pizzaFrissit();
   pastaFrissit();
+  // Dropdown bezárás
+  const list = document.getElementById('sablon-dropdown-list');
+  if(list) list.classList.remove('open');
   // Toast
   const toast = document.getElementById('share-toast');
   toast.textContent = '⚡ Sablon betöltve: ' + s.nev;
