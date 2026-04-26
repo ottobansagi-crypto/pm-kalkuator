@@ -629,9 +629,55 @@ let simaArany45 = 70, simaArany32 = 95;
 let db45 = 100, db32 = 0, dbPasta = 100, dbGnocchi = 0;
 let tesztaFusili = 47, tesztaSpagetti = 35, tesztaPenne = 18;
 
-function ujProfilObj(nev, pizzak, pastak) {
-  return { id: Date.now() + Math.random(), nev, pizzak: dc(pizzak), pastak: dc(pastak) };
+function ujProfilObj(nev, pizzak, pastak, beallitasok) {
+  const alap = {
+    cfg: {...DEFAULTS},
+    db45: 100, db32: 0, dbPasta: 100, dbGnocchi: 0,
+    pizzaMod: '45', pastaMod: 'pasta',
+    simaArany45: 70, simaArany32: 95,
+    tesztaFusili: 47, tesztaSpagetti: 35, tesztaPenne: 18
+  };
+  return {
+    id: Date.now() + Math.random(),
+    nev,
+    pizzak: dc(pizzak),
+    pastak: dc(pastak),
+    beallitasok: beallitasok ? {...alap, ...beallitasok} : {...alap}
+  };
 }
+
+// Aktuális állapot mentése az aktív profilba
+function profilAllapotMent() {
+  const p = aktivProfil();
+  if(!p) return;
+  p.beallitasok = {
+    cfg: {...cfg},
+    db45, db32, dbPasta, dbGnocchi,
+    pizzaMod, pastaMod,
+    simaArany45, simaArany32,
+    tesztaFusili, tesztaSpagetti, tesztaPenne
+  };
+}
+
+// Aktív profil beállításainak betöltése
+function profilAllapotBetolt() {
+  const p = aktivProfil();
+  if(!p || !p.beallitasok) return;
+  const b = p.beallitasok;
+  cfg = {...DEFAULTS, ...(b.cfg||{})};
+  db45 = b.db45 ?? 100;
+  db32 = b.db32 ?? 0;
+  dbPasta = b.dbPasta ?? 100;
+  dbGnocchi = b.dbGnocchi ?? 0;
+  pizzaMod = b.pizzaMod || '45';
+  pastaMod = b.pastaMod || 'pasta';
+  simaArany45 = b.simaArany45 ?? 70;
+  simaArany32 = b.simaArany32 ?? 95;
+  tesztaFusili = b.tesztaFusili ?? 47;
+  tesztaSpagetti = b.tesztaSpagetti ?? 35;
+  tesztaPenne = b.tesztaPenne ?? 18;
+}
+
 const alapProfil = ujProfilObj('Általános', defaultPizzak, defaultPastaEtelek);
 let profilok = [alapProfil];
 let aktivProfilId = alapProfil.id;
@@ -690,14 +736,14 @@ function pizzaPanel32() {
     </div></div>`;
 }
 
-function iDb45() { db45=Math.ceil(parseFloat(document.getElementById('i45db').value)||0); const e=document.getElementById('i45ft'); if(e) e.value=db45>0?db45*cfg.szeletPerGomboc*cfg.szeletAr45:''; pizzaFrissit(); }
-function iFt45() { const ft=parseFloat(document.getElementById('i45ft').value)||0; db45=Math.ceil(ft/cfg.szeletAr45/cfg.szeletPerGomboc); const e=document.getElementById('i45db'); if(e) e.value=db45>0?db45:''; pizzaFrissit(); }
-function iDb32() { db32=Math.ceil(parseFloat(document.getElementById('i32db').value)||0); const e=document.getElementById('i32ft'); if(e) e.value=db32>0?db32*cfg.pizzaAr32:''; pizzaFrissit(); }
-function iFt32() { const ft=parseFloat(document.getElementById('i32ft').value)||0; db32=Math.ceil(ft/cfg.pizzaAr32); const e=document.getElementById('i32db'); if(e) e.value=db32>0?db32:''; pizzaFrissit(); }
+function iDb45() { db45=Math.ceil(parseFloat(document.getElementById('i45db').value)||0); const e=document.getElementById('i45ft'); if(e) e.value=db45>0?db45*cfg.szeletPerGomboc*cfg.szeletAr45:''; profilAllapotMent(); pizzaFrissit(); }
+function iFt45() { const ft=parseFloat(document.getElementById('i45ft').value)||0; db45=Math.ceil(ft/cfg.szeletAr45/cfg.szeletPerGomboc); const e=document.getElementById('i45db'); if(e) e.value=db45>0?db45:''; profilAllapotMent(); pizzaFrissit(); }
+function iDb32() { db32=Math.ceil(parseFloat(document.getElementById('i32db').value)||0); const e=document.getElementById('i32ft'); if(e) e.value=db32>0?db32*cfg.pizzaAr32:''; profilAllapotMent(); pizzaFrissit(); }
+function iFt32() { const ft=parseFloat(document.getElementById('i32ft').value)||0; db32=Math.ceil(ft/cfg.pizzaAr32); const e=document.getElementById('i32db'); if(e) e.value=db32>0?db32:''; profilAllapotMent(); pizzaFrissit(); }
 
-function sl45Change(v) { simaArany45=parseInt(v); document.getElementById('s45-sima').textContent=v+'%'; document.getElementById('s45-tk').textContent=(100-v)+'%'; pizzaFrissit(); }
+function sl45Change(v) { simaArany45=parseInt(v); document.getElementById('s45-sima').textContent=v+'%'; document.getElementById('s45-tk').textContent=(100-v)+'%'; profilAllapotMent(); pizzaFrissit(); }
 function sl45Reset() { simaArany45=70; document.getElementById('sl45').value=70; sl45Change(70); }
-function sl32Change(v) { simaArany32=parseInt(v); document.getElementById('s32-sima').textContent=v+'%'; document.getElementById('s32-tk').textContent=(100-v)+'%'; pizzaFrissit(); }
+function sl32Change(v) { simaArany32=parseInt(v); document.getElementById('s32-sima').textContent=v+'%'; document.getElementById('s32-tk').textContent=(100-v)+'%'; profilAllapotMent(); pizzaFrissit(); }
 function sl32Reset() { simaArany32=95; document.getElementById('sl32').value=95; sl32Change(95); }
 
 // ════════════════════════════════════════
@@ -738,10 +784,10 @@ function gnocchiPanel() {
     </div></div>`;
 }
 
-function iPDb() { dbPasta=Math.ceil(parseFloat(document.getElementById('ipdb').value)||0); const e=document.getElementById('ipft'); if(e) e.value=dbPasta>0?dbPasta*cfg.pastaAr:''; pastaFrissit(); }
-function iPFt() { const ft=parseFloat(document.getElementById('ipft').value)||0; dbPasta=Math.ceil(ft/cfg.pastaAr); const e=document.getElementById('ipdb'); if(e) e.value=dbPasta>0?dbPasta:''; pastaFrissit(); }
-function iGDb() { dbGnocchi=Math.ceil(parseFloat(document.getElementById('igdb').value)||0); const e=document.getElementById('igft'); if(e) e.value=dbGnocchi>0?dbGnocchi*cfg.gnocchiAr:''; pastaFrissit(); }
-function iGFt() { const ft=parseFloat(document.getElementById('igft').value)||0; dbGnocchi=Math.ceil(ft/cfg.gnocchiAr); const e=document.getElementById('igdb'); if(e) e.value=dbGnocchi>0?dbGnocchi:''; pastaFrissit(); }
+function iPDb() { dbPasta=Math.ceil(parseFloat(document.getElementById('ipdb').value)||0); const e=document.getElementById('ipft'); if(e) e.value=dbPasta>0?dbPasta*cfg.pastaAr:''; profilAllapotMent(); pastaFrissit(); }
+function iPFt() { const ft=parseFloat(document.getElementById('ipft').value)||0; dbPasta=Math.ceil(ft/cfg.pastaAr); const e=document.getElementById('ipdb'); if(e) e.value=dbPasta>0?dbPasta:''; profilAllapotMent(); pastaFrissit(); }
+function iGDb() { dbGnocchi=Math.ceil(parseFloat(document.getElementById('igdb').value)||0); const e=document.getElementById('igft'); if(e) e.value=dbGnocchi>0?dbGnocchi*cfg.gnocchiAr:''; profilAllapotMent(); pastaFrissit(); }
+function iGFt() { const ft=parseFloat(document.getElementById('igft').value)||0; dbGnocchi=Math.ceil(ft/cfg.gnocchiAr); const e=document.getElementById('igdb'); if(e) e.value=dbGnocchi>0?dbGnocchi:''; profilAllapotMent(); pastaFrissit(); }
 
 function tesztaSlChange() {
   tesztaFusili = parseInt(document.getElementById('teszta-fusili-sl').value);
@@ -943,10 +989,28 @@ function renderProfilBar() {
 }
 
 function profilValtas(id) {
+  profilAllapotMent();
   aktivProfilId=id;
   pizzak=aktivProfil().pizzak;
   pastak=aktivProfil().pastak;
-  renderProfilBar(); renderModalBody(); pizzaFrissit(); pastaFrissit();
+  profilAllapotBetolt();
+  ['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
+  ['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
+  document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
+  document.getElementById('sl45').value=simaArany45;
+  document.getElementById('s45-sima').textContent=simaArany45+'%';
+  document.getElementById('s45-tk').textContent=(100-simaArany45)+'%';
+  document.getElementById('sl32').value=simaArany32;
+  document.getElementById('s32-sima').textContent=simaArany32+'%';
+  document.getElementById('s32-tk').textContent=(100-simaArany32)+'%';
+  document.getElementById('teszta-fusili-sl').value=tesztaFusili;
+  document.getElementById('teszta-spagetti-sl').value=tesztaSpagetti;
+  document.getElementById('teszta-penne-sl').value=tesztaPenne;
+  const ossz2=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
+  document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
+  document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
+  document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
+  renderProfilBar(); renderPizzaInputs(); renderPastaInputs(); renderModalBody(); pizzaFrissit(); pastaFrissit();
 }
 
 // ════════════════════════════════════════
@@ -1004,6 +1068,8 @@ function cfgV() {
   cfg.szeletPerGomboc=parseInt(document.getElementById('set-spg').value)||cfg.szeletPerGomboc;
   cfg.pastaAr=parseInt(document.getElementById('set-pasta-ar').value)||cfg.pastaAr;
   cfg.gnocchiAr=parseInt(document.getElementById('set-gnocchi-ar').value)||cfg.gnocchiAr;
+  aktivProfil().beallitasok = aktivProfil().beallitasok || {};
+  aktivProfil().beallitasok.cfg = {...cfg};
   renderArakTab();
 }
 
