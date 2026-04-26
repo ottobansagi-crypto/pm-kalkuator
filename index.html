@@ -44,6 +44,15 @@
   .profil-btn.uj { border-style: dashed; color: rgba(255,255,255,0.4); }
   .profil-btn.uj:hover { color: white; border-color: white; }
 
+  /* SABLON SÁV */
+  .sablon-bar { background: #12274a; padding: 6px 32px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 36px; }
+  .sablon-label { color: rgba(255,255,255,0.4); font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .sablon-btn { padding: 3px 12px; border-radius: 14px; border: 1.5px solid rgba(255,200,0,0.3); background: transparent; color: rgba(255,200,0,0.7); font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.15s; }
+  .sablon-btn:hover { border-color: #FFD700; color: #FFD700; }
+  .sablon-btn.uj-sablon { border-style: dashed; color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.2); font-size: 11px; }
+  .sablon-btn.uj-sablon:hover { color: white; border-color: white; }
+  .sablon-ures { color: rgba(255,255,255,0.25); font-size: 11px; font-style: italic; }
+
   .container { max-width: 1040px; margin: 24px auto; padding: 0 16px; }
   .card { background: white; border-radius: 10px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
   .card h3 { color: #1F3864; font-size: 15px; margin-bottom: 14px; }
@@ -248,6 +257,7 @@
 </div>
 
 <div class="profil-bar" id="profil-bar"></div>
+<div class="sablon-bar" id="sablon-bar"></div>
 
 <!-- PIZZA -->
 <div id="section-pizza">
@@ -441,6 +451,31 @@
 </div>
 
 <!-- MODAL -->
+<!-- SABLON MENTÉS MODAL -->
+<div class="modal-overlay hidden" id="sablon-modal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <h2>⚡ Sablon mentése</h2>
+      <button class="modal-close" onclick="sablonModalZar()">✕</button>
+    </div>
+    <div style="padding:24px;">
+      <div style="font-size:13px;color:#555;margin-bottom:16px;">
+        Az aktuális értékek kerülnek mentésre:<br>
+        <strong id="sablon-preview" style="color:#1F3864;"></strong>
+      </div>
+      <label style="font-size:12px;font-weight:bold;color:#555;display:block;margin-bottom:6px;">Sablon neve</label>
+      <input type="text" id="sablon-nev-inp" placeholder="pl. 1 milliós nap" 
+        style="width:100%;border:2px solid #2E5DA6;border-radius:8px;padding:10px 14px;font-size:15px;font-weight:bold;color:#1F3864;outline:none;"
+        onkeydown="if(event.key==='Enter') sablonMentOk()">
+      <div id="sablon-hiba" style="color:#c0392b;font-size:12px;margin-top:6px;"></div>
+    </div>
+    <div style="padding:0 24px 20px;display:flex;gap:10px;">
+      <button class="btn btn-success" onclick="sablonMentOk()" style="flex:1;">✓ Mentés</button>
+      <button class="btn btn-settings" onclick="sablonModalZar()" style="flex:1;">Mégse</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="settings-modal">
   <div class="modal">
     <div class="modal-header">
@@ -1044,6 +1079,98 @@ function pastaFrissit() {
 }
 
 // ════════════════════════════════════════
+// SABLON RENDSZER
+// ════════════════════════════════════════
+function aktivProfilSablonok() {
+  const p = aktivProfil();
+  if(!p.sablonok) p.sablonok = [];
+  return p.sablonok;
+}
+
+function renderSablonBar() {
+  const sablonok = aktivProfilSablonok();
+  const bar = document.getElementById('sablon-bar');
+  if(!bar) return;
+  let h = '<span class="sablon-label">⚡ Sablonok:</span>';
+  if(sablonok.length === 0) {
+    h += '<span class="sablon-ures">Nincs sablon – mentsd el az aktuális értékeket</span>';
+  } else {
+    sablonok.forEach((s, i) => {
+      h += `<button class="sablon-btn" onclick="sablonBetolt(${i})" title="${s.db45>0?s.db45+' db 45cm':''}${s.db32>0?' + '+s.db32+' db 32cm':''}${s.dbPasta>0?' + '+s.dbPasta+' pasta':''}">⚡ ${s.nev}</button>`;
+    });
+  }
+  h += `<button class="sablon-btn uj-sablon" onclick="sablonMent()">＋ Mentés sablonként</button>`;
+  bar.innerHTML = h;
+}
+
+function sablonMent() {
+  // Preview szöveg
+  let prev = [];
+  if(db45 > 0) prev.push(db45 + ' db 45cm');
+  if(db32 > 0) prev.push(db32 + ' db 32cm');
+  if(dbPasta > 0) prev.push(dbPasta + ' adag pasta');
+  if(dbGnocchi > 0) prev.push(dbGnocchi + ' adag gnocchi');
+  const prevEl = document.getElementById('sablon-preview');
+  if(prevEl) prevEl.textContent = prev.length > 0 ? prev.join(', ') : '(üres értékek)';
+  document.getElementById('sablon-nev-inp').value = '';
+  document.getElementById('sablon-hiba').textContent = '';
+  document.getElementById('sablon-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('sablon-nev-inp').focus(), 100);
+}
+
+function sablonModalZar() {
+  document.getElementById('sablon-modal').classList.add('hidden');
+}
+
+function sablonMentOk() {
+  const nev = document.getElementById('sablon-nev-inp').value.trim();
+  const hiba = document.getElementById('sablon-hiba');
+  if(!nev) { hiba.textContent = 'Add meg a sablon nevét!'; return; }
+  const p = aktivProfil();
+  if(!p.sablonok) p.sablonok = [];
+  const meglevo = p.sablonok.findIndex(s => s.nev.toLowerCase() === nev.toLowerCase());
+  if(meglevo >= 0) {
+    p.sablonok[meglevo] = { nev, db45, db32, dbPasta, dbGnocchi, pizzaMod, pastaMod };
+  } else {
+    p.sablonok.push({ nev, db45, db32, dbPasta, dbGnocchi, pizzaMod, pastaMod });
+  }
+  sablonModalZar();
+  renderSablonBar();
+  const toast = document.getElementById('share-toast');
+  toast.textContent = '✓ Sablon elmentve: ' + nev;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Fájl mentve!'; }, 2500);
+}
+
+function sablonBetolt(i) {
+  const s = aktivProfilSablonok()[i];
+  if(!s) return;
+  db45 = s.db45 || 0;
+  db32 = s.db32 || 0;
+  dbPasta = s.dbPasta || 0;
+  dbGnocchi = s.dbGnocchi || 0;
+  if(s.pizzaMod) {
+    pizzaMod = s.pizzaMod;
+    ['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
+  }
+  if(s.pastaMod) {
+    pastaMod = s.pastaMod;
+    ['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
+    document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
+  }
+  profilAllapotMent();
+  renderPizzaInputs();
+  renderPastaInputs();
+  pizzaFrissit();
+  pastaFrissit();
+  // Toast
+  const toast = document.getElementById('share-toast');
+  toast.textContent = '⚡ Sablon betöltve: ' + s.nev;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Fájl mentve!'; }, 2500);
+}
+
+// ════════════════════════════════════════
 // PROFIL
 // ════════════════════════════════════════
 function renderProfilBar() {
@@ -1077,7 +1204,7 @@ function profilValtas(id) {
   document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
   document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
   document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
-  renderProfilBar(); renderPizzaInputs(); renderPastaInputs(); renderModalBody(); pizzaFrissit(); pastaFrissit();
+  renderProfilBar(); renderSablonBar(); renderPizzaInputs(); renderPastaInputs(); renderModalBody(); pizzaFrissit(); pastaFrissit();
 }
 
 // ════════════════════════════════════════
@@ -1594,6 +1721,7 @@ document.getElementById('teszta-penne-sl').value = tesztaPenne;
 document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
 
 renderProfilBar();
+renderSablonBar();
 renderPizzaInputs();
 renderPastaInputs();
 pizzaFrissit();
