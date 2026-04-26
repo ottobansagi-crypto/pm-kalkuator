@@ -233,8 +233,10 @@
     <h1>🍽️ Étterem Kalkulátor</h1>
     <div style="font-size:12px;opacity:0.7;">Pizza · Pasta · Alapanyag tervező</div>
   </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;">
-    <button class="btn btn-share" onclick="linkMasolas()">🔗 Link másolása</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+    <button class="btn btn-share" onclick="exportAllapot()">💾 Mentés</button>
+    <label class="btn btn-share" style="background:#2980b9;cursor:pointer;" for="import-input">📂 Betöltés</label>
+    <input type="file" id="import-input" accept=".json" style="display:none;" onchange="importAllapot(this)">
     <button class="btn btn-settings" onclick="openSettings()">⚙️ Beállítások</button>
   </div>
 </header>
@@ -459,7 +461,7 @@
   </div>
 </div>
 
-<footer>Étterem Kalkulátor · Pizza + Pasta alapanyag tervező · 🔗 Link másolásával megosztható</footer>
+<footer>Étterem Kalkulátor · Pizza + Pasta alapanyag tervező · 💾 Mentés gombbal exportálható · 📂 Betöltés gombbal visszatölthető</footer>
 
 <script>
 // ════════════════════════════════════════
@@ -595,17 +597,82 @@ function allapotBetoltes(kodolt) {
   }
 }
 
-function linkMasolas() {
-  const kod = allapotMentes();
-  const url = window.location.origin + window.location.pathname + '?d=' + kod;
-  navigator.clipboard.writeText(url).then(() => {
-    const toast = document.getElementById('share-toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }).catch(() => {
-    // Fallback ha a clipboard nem elérhető
-    prompt('Másold ki ezt a linket:', url);
-  });
+function exportAllapot() {
+  profilAllapotMent();
+  const adat = {
+    cfg, profilok, aktivProfilId,
+    pizzaMod, pastaMod,
+    simaArany45, simaArany32,
+    tesztaFusili, tesztaSpagetti, tesztaPenne,
+    db45, db32, dbPasta, dbGnocchi,
+    verzio: 2
+  };
+  const json = JSON.stringify(adat, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const datum = new Date().toISOString().slice(0,10);
+  a.download = 'pizzame-kalkulator-' + datum + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  const toast = document.getElementById('share-toast');
+  toast.textContent = '✓ Fájl mentve! Tárold el Google Drive-on.';
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Link vágólapra másolva! Bárhol megnyitható.'; }, 3000);
+}
+
+function importAllapot(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const adat = JSON.parse(e.target.result);
+      if(adat.cfg) cfg = {...DEFAULTS, ...adat.cfg};
+      if(adat.profilok) profilok = adat.profilok;
+      if(adat.aktivProfilId) aktivProfilId = adat.aktivProfilId;
+      if(adat.pizzaMod) pizzaMod = adat.pizzaMod;
+      if(adat.pastaMod) pastaMod = adat.pastaMod;
+      if(adat.simaArany45 !== undefined) simaArany45 = adat.simaArany45;
+      if(adat.simaArany32 !== undefined) simaArany32 = adat.simaArany32;
+      if(adat.tesztaFusili !== undefined) tesztaFusili = adat.tesztaFusili;
+      if(adat.tesztaSpagetti !== undefined) tesztaSpagetti = adat.tesztaSpagetti;
+      if(adat.tesztaPenne !== undefined) tesztaPenne = adat.tesztaPenne;
+      if(adat.db45 !== undefined) db45 = adat.db45;
+      if(adat.db32 !== undefined) db32 = adat.db32;
+      if(adat.dbPasta !== undefined) dbPasta = adat.dbPasta;
+      if(adat.dbGnocchi !== undefined) dbGnocchi = adat.dbGnocchi;
+      pizzak = aktivProfil().pizzak;
+      pastak = aktivProfil().pastak;
+      // UI szinkronizálás
+      ['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
+      ['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
+      document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
+      document.getElementById('sl45').value=simaArany45;
+      document.getElementById('s45-sima').textContent=simaArany45+'%';
+      document.getElementById('s45-tk').textContent=(100-simaArany45)+'%';
+      document.getElementById('sl32').value=simaArany32;
+      document.getElementById('s32-sima').textContent=simaArany32+'%';
+      document.getElementById('s32-tk').textContent=(100-simaArany32)+'%';
+      document.getElementById('teszta-fusili-sl').value=tesztaFusili;
+      document.getElementById('teszta-spagetti-sl').value=tesztaSpagetti;
+      document.getElementById('teszta-penne-sl').value=tesztaPenne;
+      const ossz2=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
+      document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
+      document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
+      document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
+      renderProfilBar(); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit();
+      const toast = document.getElementById('share-toast');
+      toast.textContent = '✓ Beállítások betöltve!';
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Fájl mentve!'; }, 3000);
+    } catch(err) {
+      alert('Hiba a fájl betöltésekor! Ellenőrizd hogy jó fájlt választottál.');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
 }
 
 function urlBetoltesIndulas() {
