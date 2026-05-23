@@ -1,0 +1,2451 @@
+{
+  "cfg": {
+    "szeletAr45": 1399,
+    "pizzaAr32": 5900,
+    "szeletPerGomboc": 8,
+    "pastaAr": 3090,
+    "gnocchiAr": 3390
+  },
+  "profilok": [
+    {
+      "id": 1779514657539.4731,
+      "nev": "Általános",
+      "pizzak": [
+        {
+          "nev": "Margherita",
+          "arany": 17.89,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 240
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 230
+            }
+          ]
+        },
+        {
+          "nev": "Prosciutto",
+          "arany": 16.78,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 150
+            }
+          ]
+        },
+        {
+          "nev": "SalaMe Dolce",
+          "arany": 13.43,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Szalámi Napolitana",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Quattro",
+          "arany": 8.95,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 150
+            },
+            {
+              "a": "Ricotta",
+              "m": 100
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 80
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Popeye",
+          "arany": 7.83,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Ricotta",
+              "m": 50
+            },
+            {
+              "a": "Spenót",
+              "m": 150
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Diavola",
+          "arany": 7.83,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Spinata Calabra",
+              "m": 80
+            }
+          ]
+        },
+        {
+          "nev": "Prosciutto e Funghi",
+          "arany": 5.59,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 120
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata",
+          "arany": 5.59,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "Funghi mix zacskó",
+              "m": 200
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Tartufata szósz",
+              "m": 160
+            }
+          ]
+        },
+        {
+          "nev": "Salami & Zola",
+          "arany": 5.59,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Spinata Calabra",
+              "m": 80
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 70
+            }
+          ]
+        },
+        {
+          "nev": "Pepperoni",
+          "arany": 5.78,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Pepperoni szalámi",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Alessandro Speciale",
+          "arany": 2.84,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 80
+            },
+            {
+              "a": "Pepperoni szalámi",
+              "m": 80
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 60
+            }
+          ]
+        },
+        {
+          "nev": "Super Piccante",
+          "arany": 2.23,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Szupercsípős pepperoni",
+              "m": 120
+            }
+          ]
+        },
+        {
+          "nev": "Oliva",
+          "arany": 1.11,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 100
+            },
+            {
+              "a": "Olívabogyó",
+              "m": 80
+            }
+          ]
+        },
+        {
+          "nev": "Rio Tonhalas",
+          "arany": 0.59,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Kis Tonhalkonzerv",
+              "m": 1
+            },
+            {
+              "a": "Olívabogyó",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Funghi",
+          "arany": 0.42,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 160
+            }
+          ]
+        },
+        {
+          "nev": "Verdure",
+          "arany": 0.39,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 240
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 400
+            }
+          ]
+        }
+      ],
+      "pastak": [
+        {
+          "nev": "Bolognese",
+          "arany": 27.03,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P Bolognai ragu",
+              "m": 400
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata",
+          "arany": 13.3,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Tartufata szósz pasta",
+              "m": 100
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 50
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Panna",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Négysajtos",
+          "arany": 9.72,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 30
+            },
+            {
+              "a": "Ricotta",
+              "m": 30
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 20
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 30
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Panna",
+              "m": 70
+            }
+          ]
+        },
+        {
+          "nev": "Arrabiata",
+          "arany": 8.66,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Panna Prosciutto",
+          "arany": 7.61,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Panna",
+              "m": 140
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 10
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Pesto Genova",
+          "arany": 5.21,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Pesto szósz",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Tonhalas",
+          "arany": 4.62,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Kis Tonhalkonzerv",
+              "m": 1
+            },
+            {
+              "a": "P Olívabogyó",
+              "m": 20
+            },
+            {
+              "a": "P szósz",
+              "m": 150
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 20
+            }
+          ]
+        },
+        {
+          "nev": "Pomodoro",
+          "arany": 3.15,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Vegetariana",
+          "arany": 1.18,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 15
+            }
+          ]
+        },
+        {
+          "nev": "Pasta Bambino",
+          "arany": 0,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Cukor",
+              "m": 3
+            }
+          ]
+        },
+        {
+          "nev": "Négysajtos Gnocchi",
+          "arany": 5.29,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 15
+            },
+            {
+              "a": "Ricotta",
+              "m": 15
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 10
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 15
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Panna",
+              "m": 35
+            }
+          ]
+        },
+        {
+          "nev": "Bolognese Gnocchi",
+          "arany": 3.48,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P Bolognai ragu",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Panna Prosciutto Gnocchi",
+          "arany": 3.16,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Panna",
+              "m": 70
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 5
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata Gnocchi",
+          "arany": 2.4,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Tartufata szósz pasta",
+              "m": 50
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 25
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Panna",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Arrabiata Gnocchi",
+          "arany": 2.11,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Pesto Genova Gnocchi",
+          "arany": 1.85,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Pesto szósz",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Pomodoro Gnocchi",
+          "arany": 1.24,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Vegetariana Gnocchi",
+          "arany": 1.18,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 7.5
+            }
+          ]
+        },
+        {
+          "nev": "Pasta Bambino Gnocchi",
+          "arany": 0,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Cukor",
+              "m": 1.5
+            }
+          ]
+        }
+      ],
+      "beallitasok": {
+        "cfg": {
+          "szeletAr45": 1249,
+          "pizzaAr32": 5800,
+          "szeletPerGomboc": 8,
+          "pastaAr": 3090,
+          "gnocchiAr": 3390
+        },
+        "db45": 0,
+        "db32": 0,
+        "dbPasta": 100,
+        "dbGnocchi": 0,
+        "pizzaMod": "45",
+        "pastaMod": "pasta",
+        "simaArany45": 70,
+        "simaArany32": 95,
+        "tesztaFusili": 47,
+        "tesztaSpagetti": 35,
+        "tesztaPenne": 18
+      },
+      "sablonok": []
+    },
+    {
+      "id": 1779515275377.6614,
+      "nev": "Park rendezvény",
+      "pizzak": [
+        {
+          "nev": "Margherita",
+          "arany": 13,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 240
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 230
+            }
+          ]
+        },
+        {
+          "nev": "Prosciutto",
+          "arany": 24,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 150
+            }
+          ]
+        },
+        {
+          "nev": "SalaMe Dolce",
+          "arany": 16,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Szalámi Napolitana",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Quattro",
+          "arany": 8.95,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 150
+            },
+            {
+              "a": "Ricotta",
+              "m": 100
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 80
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Popeye",
+          "arany": 13,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Ricotta",
+              "m": 50
+            },
+            {
+              "a": "Spenót",
+              "m": 150
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Diavola",
+          "arany": 13,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Spinata Calabra",
+              "m": 80
+            }
+          ]
+        },
+        {
+          "nev": "Prosciutto e Funghi",
+          "arany": 5.59,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 120
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata",
+          "arany": 11,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "Funghi mix zacskó",
+              "m": 200
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Tartufata szósz",
+              "m": 160
+            }
+          ]
+        },
+        {
+          "nev": "Salami & Zola",
+          "arany": 5.59,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Spinata Calabra",
+              "m": 80
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 70
+            }
+          ]
+        },
+        {
+          "nev": "Pepperoni",
+          "arany": 10,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Pepperoni szalámi",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Alessandro Speciale",
+          "arany": 2.84,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 80
+            },
+            {
+              "a": "Pepperoni szalámi",
+              "m": 80
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 60
+            }
+          ]
+        },
+        {
+          "nev": "Super Piccante",
+          "arany": 2.23,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Szupercsípős pepperoni",
+              "m": 120
+            }
+          ]
+        },
+        {
+          "nev": "Oliva",
+          "arany": 1.11,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 100
+            },
+            {
+              "a": "Olívabogyó",
+              "m": 80
+            }
+          ]
+        },
+        {
+          "nev": "Rio Tonhalas",
+          "arany": 0.59,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Kis Tonhalkonzerv",
+              "m": 1
+            },
+            {
+              "a": "Olívabogyó",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Funghi",
+          "arany": 0.42,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 160
+            }
+          ]
+        },
+        {
+          "nev": "Verdure",
+          "arany": 0.39,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 240
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 400
+            }
+          ]
+        }
+      ],
+      "pastak": [
+        {
+          "nev": "Bolognese",
+          "arany": 27.03,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P Bolognai ragu",
+              "m": 400
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata",
+          "arany": 13.3,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Tartufata szósz pasta",
+              "m": 100
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 50
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Panna",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Négysajtos",
+          "arany": 9.72,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 30
+            },
+            {
+              "a": "Ricotta",
+              "m": 30
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 20
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 30
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Panna",
+              "m": 70
+            }
+          ]
+        },
+        {
+          "nev": "Arrabiata",
+          "arany": 8.66,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Panna Prosciutto",
+          "arany": 7.61,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Panna",
+              "m": 140
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 10
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Pesto Genova",
+          "arany": 5.21,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Pesto szósz",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Tonhalas",
+          "arany": 4.62,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Kis Tonhalkonzerv",
+              "m": 1
+            },
+            {
+              "a": "P Olívabogyó",
+              "m": 20
+            },
+            {
+              "a": "P szósz",
+              "m": 150
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 20
+            }
+          ]
+        },
+        {
+          "nev": "Pomodoro",
+          "arany": 3.15,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Vegetariana",
+          "arany": 1.18,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 15
+            }
+          ]
+        },
+        {
+          "nev": "Pasta Bambino",
+          "arany": 0,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Cukor",
+              "m": 3
+            }
+          ]
+        },
+        {
+          "nev": "Négysajtos Gnocchi",
+          "arany": 5.29,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 15
+            },
+            {
+              "a": "Ricotta",
+              "m": 15
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 10
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 15
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Panna",
+              "m": 35
+            }
+          ]
+        },
+        {
+          "nev": "Bolognese Gnocchi",
+          "arany": 3.48,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P Bolognai ragu",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Panna Prosciutto Gnocchi",
+          "arany": 3.16,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Panna",
+              "m": 70
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 5
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata Gnocchi",
+          "arany": 2.4,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Tartufata szósz pasta",
+              "m": 50
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 25
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Panna",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Arrabiata Gnocchi",
+          "arany": 2.11,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Pesto Genova Gnocchi",
+          "arany": 1.85,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Pesto szósz",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Pomodoro Gnocchi",
+          "arany": 1.24,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Vegetariana Gnocchi",
+          "arany": 1.18,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 7.5
+            }
+          ]
+        },
+        {
+          "nev": "Pasta Bambino Gnocchi",
+          "arany": 0,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Cukor",
+              "m": 1.5
+            }
+          ]
+        }
+      ],
+      "beallitasok": {
+        "cfg": {
+          "szeletAr45": 1399,
+          "pizzaAr32": 5600,
+          "szeletPerGomboc": 8,
+          "pastaAr": 3090,
+          "gnocchiAr": 3390
+        },
+        "db45": 135,
+        "db32": 0,
+        "dbPasta": 100,
+        "dbGnocchi": 0,
+        "pizzaMod": "45",
+        "pastaMod": "pasta",
+        "simaArany45": 100,
+        "simaArany32": 95,
+        "tesztaFusili": 47,
+        "tesztaSpagetti": 35,
+        "tesztaPenne": 18
+      },
+      "sablonok": []
+    },
+    {
+      "id": 1779515471991.0847,
+      "nev": "Siófok",
+      "pizzak": [
+        {
+          "nev": "Margherita",
+          "arany": 13.14,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 240
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 230
+            }
+          ]
+        },
+        {
+          "nev": "Prosciutto",
+          "arany": 18.2,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 150
+            }
+          ]
+        },
+        {
+          "nev": "SalaMe Dolce",
+          "arany": 14.16,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Szalámi Napolitana",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Quattro",
+          "arany": 9.1,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 150
+            },
+            {
+              "a": "Ricotta",
+              "m": 100
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 80
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Popeye",
+          "arany": 7.08,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Ricotta",
+              "m": 50
+            },
+            {
+              "a": "Spenót",
+              "m": 150
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Diavola",
+          "arany": 9.1,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Spinata Calabra",
+              "m": 80
+            }
+          ]
+        },
+        {
+          "nev": "Prosciutto e Funghi",
+          "arany": 8.09,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 120
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata",
+          "arany": 5.06,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "Funghi mix zacskó",
+              "m": 200
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Tartufata szósz",
+              "m": 160
+            }
+          ]
+        },
+        {
+          "nev": "Salami & Zola",
+          "arany": 4.04,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Spinata Calabra",
+              "m": 80
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 70
+            }
+          ]
+        },
+        {
+          "nev": "Pepperoni",
+          "arany": 7.08,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Pepperoni szalámi",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Alessandro Speciale",
+          "arany": 2.84,
+          "aktiv": false,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 80
+            },
+            {
+              "a": "Pepperoni szalámi",
+              "m": 80
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 60
+            }
+          ]
+        },
+        {
+          "nev": "Super Piccante",
+          "arany": 3.03,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Szupercsípős pepperoni",
+              "m": 120
+            }
+          ]
+        },
+        {
+          "nev": "Oliva",
+          "arany": 0.51,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 100
+            },
+            {
+              "a": "Olívabogyó",
+              "m": 80
+            }
+          ]
+        },
+        {
+          "nev": "Rio Tonhalas",
+          "arany": 0.51,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 180
+            },
+            {
+              "a": "Kis Tonhalkonzerv",
+              "m": 1
+            },
+            {
+              "a": "Olívabogyó",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Funghi",
+          "arany": 0.51,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 220
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 200
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 160
+            }
+          ]
+        },
+        {
+          "nev": "Verdure",
+          "arany": 0.39,
+          "aktiv": true,
+          "recept": [
+            {
+              "a": "P szósz",
+              "m": 240
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 400
+            }
+          ]
+        }
+      ],
+      "pastak": [
+        {
+          "nev": "Bolognese",
+          "arany": 27.03,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P Bolognai ragu",
+              "m": 400
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata",
+          "arany": 13.3,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Tartufata szósz pasta",
+              "m": 100
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 50
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Panna",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Négysajtos",
+          "arany": 9.72,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 30
+            },
+            {
+              "a": "Ricotta",
+              "m": 30
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 20
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 30
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Panna",
+              "m": 70
+            }
+          ]
+        },
+        {
+          "nev": "Arrabiata",
+          "arany": 8.66,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Panna Prosciutto",
+          "arany": 7.61,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Panna",
+              "m": 140
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 10
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Pesto Genova",
+          "arany": 5.21,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Pesto szósz",
+              "m": 100
+            }
+          ]
+        },
+        {
+          "nev": "Tonhalas",
+          "arany": 4.62,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "Kis Tonhalkonzerv",
+              "m": 1
+            },
+            {
+              "a": "P Olívabogyó",
+              "m": 20
+            },
+            {
+              "a": "P szósz",
+              "m": 150
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 20
+            }
+          ]
+        },
+        {
+          "nev": "Pomodoro",
+          "arany": 3.15,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            }
+          ]
+        },
+        {
+          "nev": "Vegetariana",
+          "arany": 1.18,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 15
+            }
+          ]
+        },
+        {
+          "nev": "Pasta Bambino",
+          "arany": 0,
+          "aktiv": true,
+          "gnocchi": false,
+          "recept": [
+            {
+              "a": "Tészta",
+              "m": 200
+            },
+            {
+              "a": "P szósz",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 10
+            },
+            {
+              "a": "Cukor",
+              "m": 3
+            }
+          ]
+        },
+        {
+          "nev": "Négysajtos Gnocchi",
+          "arany": 5.29,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Gorgonzola",
+              "m": 15
+            },
+            {
+              "a": "Ricotta",
+              "m": 15
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 10
+            },
+            {
+              "a": "Reszelt Mozzarella",
+              "m": 15
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Panna",
+              "m": 35
+            }
+          ]
+        },
+        {
+          "nev": "Bolognese Gnocchi",
+          "arany": 3.48,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P Bolognai ragu",
+              "m": 200
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Panna Prosciutto Gnocchi",
+          "arany": 3.16,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Panna",
+              "m": 70
+            },
+            {
+              "a": "Parmezánsajt",
+              "m": 5
+            },
+            {
+              "a": "P Sonka Cotto",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Tartufata Gnocchi",
+          "arany": 2.4,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Tartufata szósz pasta",
+              "m": 50
+            },
+            {
+              "a": "Funghi mix zacskó",
+              "m": 25
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Panna",
+              "m": 25
+            }
+          ]
+        },
+        {
+          "nev": "Arrabiata Gnocchi",
+          "arany": 2.11,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Pesto Genova Gnocchi",
+          "arany": 1.85,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "Pesto szósz",
+              "m": 50
+            }
+          ]
+        },
+        {
+          "nev": "Pomodoro Gnocchi",
+          "arany": 1.24,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            }
+          ]
+        },
+        {
+          "nev": "Vegetariana Gnocchi",
+          "arany": 1.18,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P Zöldség mix",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 7.5
+            }
+          ]
+        },
+        {
+          "nev": "Pasta Bambino Gnocchi",
+          "arany": 0,
+          "aktiv": true,
+          "gnocchi": true,
+          "recept": [
+            {
+              "a": "Gnocchi",
+              "m": 250
+            },
+            {
+              "a": "P szósz",
+              "m": 100
+            },
+            {
+              "a": "Olívaolaj",
+              "m": 5
+            },
+            {
+              "a": "Cukor",
+              "m": 1.5
+            }
+          ]
+        }
+      ],
+      "beallitasok": {
+        "cfg": {
+          "szeletAr45": 1399,
+          "pizzaAr32": 5900,
+          "szeletPerGomboc": 8,
+          "pastaAr": 3090,
+          "gnocchiAr": 3390
+        },
+        "db45": 100,
+        "db32": 0,
+        "dbPasta": 100,
+        "dbGnocchi": 0,
+        "pizzaMod": "45",
+        "pastaMod": "pasta",
+        "simaArany45": 70,
+        "simaArany32": 95,
+        "tesztaFusili": 47,
+        "tesztaSpagetti": 35,
+        "tesztaPenne": 18
+      },
+      "sablonok": []
+    }
+  ],
+  "aktivProfilId": 1779515471991.0847,
+  "pizzaMod": "45",
+  "pastaMod": "pasta",
+  "simaArany45": 70,
+  "simaArany32": 95,
+  "tesztaFusili": 47,
+  "tesztaSpagetti": 35,
+  "tesztaPenne": 18,
+  "db45": 100,
+  "db32": 0,
+  "dbPasta": 100,
+  "dbGnocchi": 0,
+  "verzio": 2
+}
