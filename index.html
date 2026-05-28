@@ -1482,10 +1482,10 @@ function renderSablonBar() {
   } else {
     sablonok.forEach((s, i) => {
       let info = [];
-      if(s.db45>0) info.push(s.db45+' db 45cm');
-      if(s.db32>0) info.push(s.db32+' db 32cm');
-      if(s.dbPasta>0) info.push(s.dbPasta+' pasta');
-      if(s.dbGnocchi>0) info.push(s.dbGnocchi+' gnocchi');
+      if((s.db45||0)>0) info.push(s.db45+' db 45cm pizza');
+      if((s.db32||0)>0) info.push(s.db32+' db 32cm pizza');
+      if((s.dbPasta||0)>0) info.push(s.dbPasta+' adag pasta');
+      if((s.dbGnocchi||0)>0) info.push(s.dbGnocchi+' adag gnocchi');
       h += `<div class="sablon-dropdown-item" onclick="sablonBetolt(${i})">
         <div>
           <div style="font-weight:bold;color:#1F3864;">⚡ ${s.nev}</div>
@@ -1553,9 +1553,15 @@ function sablonMentOk() {
   if(!p.sablonok) p.sablonok = [];
   const meglevo = p.sablonok.findIndex(s => s.nev.toLowerCase() === nev.toLowerCase());
   if(meglevo >= 0) {
-    p.sablonok[meglevo] = { nev, db45, db32, dbPasta, dbGnocchi, pizzaMod, pastaMod };
+    p.sablonok[meglevo] = { nev,
+      db45: db45||0, db32: db32||0,
+      dbPasta: dbPasta||0, dbGnocchi: dbGnocchi||0,
+      pizzaMod, pastaMod };
   } else {
-    p.sablonok.push({ nev, db45, db32, dbPasta, dbGnocchi, pizzaMod, pastaMod });
+    p.sablonok.push({ nev,
+      db45: db45||0, db32: db32||0,
+      dbPasta: dbPasta||0, dbGnocchi: dbGnocchi||0,
+      pizzaMod, pastaMod });
   }
   sablonModalZar();
   renderSablonBar();
