@@ -255,6 +255,7 @@
     <button class="btn btn-share" onclick="exportAllapot()">💾 Mentés</button>
     <label class="btn btn-share" style="background:#2980b9;cursor:pointer;" for="import-input">📂 Betöltés</label>
     <input type="file" id="import-input" accept=".json" style="display:none;" onchange="importAllapot(this)">
+    <button class="btn btn-share" style="background:#8E44AD;" onclick="openSugo()">❓ Súgó</button>
     <button class="btn btn-settings" onclick="openSettings()">⚙️ Beállítások</button>
   </div>
 </header>
@@ -503,6 +504,64 @@
     <div style="padding:0 24px 20px;display:flex;gap:10px;">
       <button class="btn btn-primary" onclick="jelszóEllenőr()" style="flex:1;">🔓 Belépés</button>
       <button class="btn btn-settings" onclick="jelszóModalZár()" style="flex:1;">Mégse</button>
+    </div>
+  </div>
+</div>
+
+<!-- SÚGÓ MODAL -->
+<div class="modal-overlay hidden" id="sugo-modal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header" style="background:#8E44AD;">
+      <h2>❓ PizzaMe Kalkulátor – Súgó</h2>
+      <button class="modal-close" onclick="closeSugo()">✕</button>
+    </div>
+    <div class="modal-body" style="font-size:13px;line-height:1.7;color:#333;">
+
+      <p style="margin-bottom:12px;">Alapanyag-tervező eszköz, amely a receptek és a hálózati eladási arányok alapján kiszámolja, mennyi alapanyag szükséges egy adott forgalomhoz vagy gombócszámhoz.</p>
+
+      <div style="background:#fff8e1;border:2px solid #E8A000;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#7A4F00;">
+        ⚠️ Az arányok az április-májusi teljes hálózati eladási adatokon alapulnak. Üzletspecifikus és szezonális eltérések nincsenek figyelembe véve. A PIZZARIA pizzái és alapanyagaik nincsenek benne.
+      </div>
+
+      <div style="background:#f0f4ff;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-weight:bold;color:#1F3864;margin-bottom:8px;">👤 Profilok</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div>• <strong>Általános</strong> – teljes hálózat, normál eladási arányok</div>
+          <div>• <strong>Park / Rendezvény</strong> – csökkentett pizza kínálat</div>
+          <div>• <strong>Siófok</strong> – teljes kínálat, magasabb árakkal</div>
+        </div>
+      </div>
+
+      <div style="background:#f0f4ff;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-weight:bold;color:#1F3864;margin-bottom:8px;">📋 Hogyan használd?</div>
+        <ol style="padding-left:18px;display:flex;flex-direction:column;gap:5px;">
+          <li>Válaszd ki a profilt</li>
+          <li>Válaszd a méretet: <strong>45cm</strong>, <strong>32cm</strong> vagy <strong>Kombinált</strong></li>
+          <li>Írd be a <strong>gombócszámot</strong> VAGY a <strong>forgalmat</strong> – a másik automatikusan kitöltődik <em>(pl. 100 gombóc ≈ 20 kg mozzarella)</em></li>
+          <li>Állítsd a sima/TK arányt a csúszkával</li>
+          <li>Az alapanyag lista azonnal frissül – a <span style="background:#E2EFDA;color:#375623;font-weight:bold;padding:1px 6px;border-radius:4px;">zöld szám</span> a rendelési egységre kerekített mennyiség</li>
+        </ol>
+      </div>
+
+      <div style="background:#f9f0ff;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-weight:bold;color:#6C1A9B;margin-bottom:6px;">🍝 Pasta kalkulátor</div>
+        <div>Külön fülön elérhető, Fusili/Spaghetti/Penne arányban bontja a tésztát, gnocchi külön kezelt.</div>
+      </div>
+
+      <div style="background:#fff8e1;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-weight:bold;color:#7A4F00;margin-bottom:6px;">⚡ Sablonok</div>
+        <div>Mentsd el a gyakori értékeket sablonként (pl. "1 milliós nap"). Egy kattintással visszatölthető.</div>
+      </div>
+
+      <div style="background:#f0fff4;border:2px solid #27ae60;border-radius:8px;padding:14px 16px;">
+        <div style="font-weight:bold;color:#1a5c32;margin-bottom:6px;">💾 Mentés / 📂 Betöltés</div>
+        <div style="margin-bottom:6px;">Ha új profilt vagy sablont hozol létre → <strong>💾 Mentés</strong> → <code>allapot.json</code> fájl → legközelebb <strong>📂 Betöltés</strong> → minden visszaáll. Az alapprofilok automatikusan betöltődnek.</div>
+        <div style="color:#c0392b;font-weight:bold;">⚠️ Fontos: az oldal nem ment automatikusan – ha változtatsz valamit, ne felejtsd el lementeni!</div>
+      </div>
+
+    </div>
+    <div style="padding:14px 24px;border-top:1px solid #eee;text-align:right;">
+      <button class="btn btn-success" onclick="closeSugo()">✓ Értem, bezárás</button>
     </div>
   </div>
 </div>
@@ -874,19 +933,13 @@ let pastaAlapanyagok = defaultPastaAlapanyagok.map(a => ({...a}));
 // ════════════════════════════════════════
 // FŐ FÜL
 // ════════════════════════════════════════
-// Jelszó hash (SHA szerű egyszerű ellenőrzés)
 const ADMIN_HASH = 'U2FsdGVkX1' + btoa('United82!').split('').reverse().join('');
 
 function uzletJelszó() {
-  // Ellenőrizzük hogy már be van-e lépve
-  if(sessionStorage.getItem('pm_admin') === ADMIN_HASH) {
-    setMainTab('uzlet');
-    return;
-  }
+  if(sessionStorage.getItem('pm_admin') === ADMIN_HASH) { setMainTab('uzlet'); return; }
   document.getElementById('jelszó-modal').classList.remove('hidden');
   setTimeout(() => document.getElementById('jelszó-inp').focus(), 100);
 }
-
 function jelszóEllenőr() {
   const inp = document.getElementById('jelszó-inp').value;
   if(inp === 'United82!') {
@@ -901,12 +954,13 @@ function jelszóEllenőr() {
     document.getElementById('jelszó-inp').focus();
   }
 }
-
 function jelszóModalZár() {
   document.getElementById('jelszó-modal').classList.add('hidden');
   document.getElementById('jelszó-inp').value = '';
   document.getElementById('jelszó-hiba').textContent = '';
 }
+function openSugo() { document.getElementById('sugo-modal').classList.remove('hidden'); }
+function closeSugo() { document.getElementById('sugo-modal').classList.add('hidden'); }
 
 function setMainTab(t) {
   mainTab = t;
