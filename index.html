@@ -241,6 +241,7 @@
   .new-etel-form { background: #f0fff4; border: 2px dashed #27ae60; border-radius: 10px; padding: 16px; margin-top: 12px; }
   .new-etel-form h4 { color: #1a5c32; font-size: 14px; margin-bottom: 12px; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -252,9 +253,16 @@
     <div style="font-size:12px;opacity:0.7;">Pizza · Pasta · Alapanyag tervező</div>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-    <button class="btn btn-share" onclick="exportAllapot()">💾 Mentés</button>
-    <label class="btn btn-share" style="background:#2980b9;cursor:pointer;" for="import-input">📂 Betöltés</label>
-    <input type="file" id="import-input" accept=".json" style="display:none;" onchange="importAllapot(this)">
+    <div style="position:relative;">
+      <button class="btn btn-share" onclick="exportMenuToggle(event)">📤 Export ▾</button>
+      <div id="export-menu" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.2);min-width:190px;z-index:500;overflow:hidden;">
+        <div onclick="exportExcel()" style="padding:12px 16px;cursor:pointer;font-size:13px;font-weight:bold;color:#1a5c32;border-bottom:1px solid #f0f0f0;" onmouseover="this.style.background='#f0fff4'" onmouseout="this.style.background=''">📊 Excel letöltés</div>
+        <div onclick="exportPDF()" style="padding:12px 16px;cursor:pointer;font-size:13px;font-weight:bold;color:#c0392b;border-bottom:2px solid #eee;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background=''">📄 PDF letöltés</div>
+        <div onclick="exportAllapot()" style="padding:12px 16px;cursor:pointer;font-size:13px;font-weight:bold;color:#27ae60;border-bottom:1px solid #f0f0f0;" onmouseover="this.style.background='#f0fff4'" onmouseout="this.style.background=''">💾 Állapot mentése</div>
+        <label style="padding:12px 16px;cursor:pointer;font-size:13px;font-weight:bold;color:#2980b9;display:block;margin:0;" for="import-input" onmouseover="this.style.background='#f0f8ff'" onmouseout="this.style.background=''">📂 Állapot betöltése</label>
+        <input type="file" id="import-input" accept=".json" style="display:none;" onchange="importAllapot(this)">
+      </div>
+    </div>
     <button class="btn btn-share" style="background:#8E44AD;" onclick="openSugo()">❓ Súgó</button>
     <button class="btn btn-settings" onclick="openSettings()">⚙️ Beállítások</button>
   </div>
@@ -868,7 +876,7 @@ let receptSzerkesztoIdx = null;
 let pizzaMod = '45', pastaMod = 'pasta';
 let modalTab = 'arak';
 let simaArany45 = 70, simaArany32 = 95;
-let db45 = 100, db32 = 0, dbPasta = 100, dbGnocchi = 0;
+let db45 = 0, db32 = 0, dbPasta = 0, dbGnocchi = 0;
 let tesztaFusili = 47, tesztaSpagetti = 35, tesztaPenne = 18;
 
 function ujProfilObj(nev, pizzak, pastak, beallitasok) {
@@ -907,9 +915,9 @@ function profilAllapotBetolt() {
   if(!p || !p.beallitasok) return;
   const b = p.beallitasok;
   cfg = {...DEFAULTS, ...(b.cfg||{})};
-  db45 = b.db45 ?? 100;
+  db45 = b.db45 ?? 0;
   db32 = b.db32 ?? 0;
-  dbPasta = b.dbPasta ?? 100;
+  dbPasta = b.dbPasta ?? 0;
   dbGnocchi = b.dbGnocchi ?? 0;
   pizzaMod = b.pizzaMod || '45';
   pastaMod = b.pastaMod || 'pasta';
@@ -947,7 +955,15 @@ function jelszóEllenőr() {
     document.getElementById('jelszó-modal').classList.add('hidden');
     document.getElementById('jelszó-inp').value = '';
     document.getElementById('jelszó-hiba').textContent = '';
-    setMainTab('uzlet');
+    if(pendingReceptToggle) {
+      toggleRecept(pendingReceptToggle.tipus, pendingReceptToggle.i);
+      pendingReceptToggle = null;
+    } else if(pendingReceptTab) {
+      setModalTab(pendingReceptTab);
+      pendingReceptTab = null;
+    } else {
+      setMainTab('uzlet');
+    }
   } else {
     document.getElementById('jelszó-hiba').textContent = '❌ Helytelen jelszó!';
     document.getElementById('jelszó-inp').value = '';
@@ -959,6 +975,199 @@ function jelszóModalZár() {
   document.getElementById('jelszó-inp').value = '';
   document.getElementById('jelszó-hiba').textContent = '';
 }
+function exportMenuToggle(e) {
+  e.stopPropagation();
+  const m = document.getElementById('export-menu');
+  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', function() {
+  const m = document.getElementById('export-menu');
+  if(m) m.style.display = 'none';
+});
+
+function exportExcel() {
+  document.getElementById('export-menu').style.display = 'none';
+  // Összegyűjtjük az adatokat
+  const datum = new Date().toLocaleDateString('hu-HU');
+  const profil = aktivProfil().nev;
+  const rows = [];
+
+  // Fejléc
+  rows.push(['PizzaMe Kalkulátor – Alapanyag lista']);
+  rows.push(['Profil:', profil, 'Dátum:', datum]);
+  rows.push(['Forgalom:', db45 > 0 ? db45*cfg.szeletPerGomboc*cfg.szeletAr45 + ' Ft' : '', '45cm pizza:', db45 + ' db', '32cm pizza:', db32 + ' db']);
+  rows.push([]);
+  rows.push(['Alapanyag', 'Egység', 'Szükséges', 'Rendelési egység', 'Rendeléshez (kerekítve)']);
+
+  // Gombóc sorok
+  const tk45 = 100 - simaArany45, tk32 = 100 - simaArany32;
+  if(db45 > 0) {
+    rows.push([`Sima gombóc 45cm (${simaArany45}%)`, 'db', Math.round(db45*simaArany45/100), 6, Math.ceil(Math.round(db45*simaArany45/100)/6)*6]);
+    rows.push([`TK gombóc 45cm (${tk45}%)`, 'db', Math.round(db45*tk45/100), 6, Math.ceil(Math.round(db45*tk45/100)/6)*6]);
+  }
+  if(db32 > 0) {
+    rows.push([`Sima gombóc 32cm (${simaArany32}%)`, 'db', Math.round(db32*simaArany32/100), 12, Math.ceil(Math.round(db32*simaArany32/100)/12)*12]);
+    rows.push([`TK gombóc 32cm (${tk32}%)`, 'db', Math.round(db32*tk32/100), 8, Math.ceil(Math.round(db32*tk32/100)/8)*8]);
+  }
+
+  // Pizza alapanyagok
+  const ossz = {};
+  aktivPizzak().forEach(pz => {
+    const d45p=db45*pz.arany/100, d32p=db32*pz.arany/100;
+    pz.recept.forEach(r => { if(!ossz[r.a]) ossz[r.a]=0; ossz[r.a]+=d45p*r.m+d32p*r.m*0.5; });
+  });
+  const pizzaCsomagSuly = {"Funghi mix zacskó":1800,"Spenót":1800,"Tartufata szósz":1200};
+  pizzaAlapanyagok.forEach(a => {
+    if(ossz[a.nev]===undefined) return;
+    let ertek = ossz[a.nev];
+    if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
+    ertek = Math.round(ertek*100)/100;
+    const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : '';
+    rows.push([a.nev, a.egys, ertek, a.alap || '', ceil]);
+  });
+
+  // Pasta alapanyagok ha van
+  if(dbPasta > 0 || dbGnocchi > 0) {
+    rows.push([]);
+    rows.push(['--- PASTA ---']);
+    const ossz_t=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
+    const pctF=tesztaFusili/ossz_t, pctS=tesztaSpagetti/ossz_t, pctP=tesztaPenne/ossz_t;
+    const pOssz={};
+    const tesztak=aktivTesztak(), gnocchik=aktivGnocchik();
+    const tOssz=tesztak.reduce((s,p)=>s+p.arany,0)||1;
+    const gOssz=gnocchik.reduce((s,p)=>s+p.arany,0)||1;
+    tesztak.forEach(p => {
+      const db=dbPasta*p.arany/tOssz;
+      p.recept.forEach(r => {
+        if(r.a==='Tészta') {
+          if(!pOssz['Tészta (Fusili)']) pOssz['Tészta (Fusili)']=0;
+          if(!pOssz['Tészta (Spaghetti)']) pOssz['Tészta (Spaghetti)']=0;
+          if(!pOssz['Tészta (Penne)']) pOssz['Tészta (Penne)']=0;
+          pOssz['Tészta (Fusili)']+=db*r.m*pctF;
+          pOssz['Tészta (Spaghetti)']+=db*r.m*pctS;
+          pOssz['Tészta (Penne)']+=db*r.m*pctP;
+        } else { if(!pOssz[r.a]) pOssz[r.a]=0; pOssz[r.a]+=db*r.m; }
+      });
+    });
+    gnocchik.forEach(p => {
+      const db=dbGnocchi*p.arany/gOssz;
+      p.recept.forEach(r => { if(!pOssz[r.a]) pOssz[r.a]=0; pOssz[r.a]+=db*r.m; });
+    });
+    pastaAlapanyagok.forEach(a => {
+      if(pOssz[a.nev]===undefined) return;
+      const ertek = Math.round(pOssz[a.nev]);
+      const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : '';
+      rows.push([a.nev, a.egys, ertek, a.alap || '', ceil]);
+    });
+  }
+
+  // Excel generálás SheetJS-szel
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:30},{wch:8},{wch:12},{wch:16},{wch:18}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Alapanyag lista');
+  XLSX.writeFile(wb, 'pizzame-rendeles-' + new Date().toISOString().slice(0,10) + '.xlsx');
+
+  const toast = document.getElementById('share-toast');
+  toast.textContent = '✓ Excel letöltve!';
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); }, 2500);
+}
+
+function exportPDF() {
+  document.getElementById('export-menu').style.display = 'none';
+  const datum = new Date().toLocaleDateString('hu-HU');
+  const profil = aktivProfil().nev;
+  const ft45 = db45*cfg.szeletPerGomboc*cfg.szeletAr45;
+  const ft32 = db32*cfg.pizzaAr32;
+
+  // Összegyűjtjük az alapanyagokat
+  const ossz = {};
+  aktivPizzak().forEach(pz => {
+    const d45p=db45*pz.arany/100, d32p=db32*pz.arany/100;
+    pz.recept.forEach(r => { if(!ossz[r.a]) ossz[r.a]=0; ossz[r.a]+=d45p*r.m+d32p*r.m*0.5; });
+  });
+  const pizzaCsomagSuly = {"Funghi mix zacskó":1800,"Spenót":1800,"Tartufata szósz":1200};
+  const tk45=100-simaArany45, tk32=100-simaArany32;
+
+  let sorok = '';
+  // Gombócok
+  if(db45>0) {
+    sorok += `<tr style="background:#fff8e1;"><td>Sima gombóc 45cm (${simaArany45}%)</td><td>db</td><td>${Math.round(db45*simaArany45/100)}</td><td><strong>${Math.ceil(Math.round(db45*simaArany45/100)/6)*6} db</strong></td></tr>`;
+    sorok += `<tr style="background:#fff8e1;"><td>TK gombóc 45cm (${tk45}%)</td><td>db</td><td>${Math.round(db45*tk45/100)}</td><td><strong>${Math.ceil(Math.round(db45*tk45/100)/6)*6} db</strong></td></tr>`;
+  }
+  if(db32>0) {
+    sorok += `<tr style="background:#fff8e1;"><td>Sima gombóc 32cm (${simaArany32}%)</td><td>db</td><td>${Math.round(db32*simaArany32/100)}</td><td><strong>${Math.ceil(Math.round(db32*simaArany32/100)/12)*12} db</strong></td></tr>`;
+    sorok += `<tr style="background:#fff8e1;"><td>TK gombóc 32cm (${tk32}%)</td><td>db</td><td>${Math.round(db32*tk32/100)}</td><td><strong>${Math.ceil(Math.round(db32*tk32/100)/8)*8} db</strong></td></tr>`;
+  }
+  pizzaAlapanyagok.forEach(a => {
+    if(ossz[a.nev]===undefined) return;
+    let ertek = ossz[a.nev];
+    if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
+    ertek = Math.round(ertek*100)/100;
+    const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap + ' ' + a.ae : '–';
+    sorok += `<tr><td>${a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#375623;">${ceil}</strong></td></tr>`;
+  });
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>PizzaMe Rendelés – ${datum}</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; color: #222; }
+    h1 { color: #EC1B23; font-size: 20px; margin-bottom: 4px; }
+    .meta { font-size: 12px; color: #888; margin-bottom: 16px; }
+    .info { display: flex; gap: 20px; background: #1F3864; color: white; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; }
+    .info strong { font-size: 16px; display: block; color: #FFD700; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #1F3864; color: white; padding: 8px 12px; text-align: left; }
+    td { padding: 7px 12px; border-bottom: 1px solid #eee; }
+    tr:nth-child(even) { background: #f7f9fc; }
+    @media print { body { padding: 0; } }
+  </style></head><body>
+  <h1>🍕 PizzaMe – Alapanyag rendelés</h1>
+  <div class="meta">Profil: ${profil} · Dátum: ${datum}</div>
+  <div class="info">
+    ${db45>0?`<div><div>45cm pizza</div><strong>${db45} db</strong></div>`:''}
+    ${db32>0?`<div><div>32cm pizza</div><strong>${db32} db</strong></div>`:''}
+    ${ft45+ft32>0?`<div><div>Forgalom</div><strong>${(ft45+ft32).toLocaleString('hu-HU')} Ft</strong></div>`:''}
+  </div>
+  <table>
+    <thead><tr><th>Alapanyag</th><th>Egység</th><th>Szükséges</th><th>Rendelés</th></tr></thead>
+    <tbody>${sorok}</tbody>
+  </table>
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`;
+
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+// Recept jelszóvédés
+function receptGombKattint(tipus, i) {
+  if(sessionStorage.getItem('pm_admin') === ADMIN_HASH) {
+    toggleRecept(tipus, i);
+    return;
+  }
+  pendingReceptTab = null;
+  pendingReceptToggle = {tipus, i};
+  document.getElementById('jelszó-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('jelszó-inp').focus(), 100);
+}
+let pendingReceptToggle = null;
+
+function receptJelszó(tab) {
+  if(sessionStorage.getItem('pm_admin') === ADMIN_HASH) {
+    setModalTab(tab);
+    return;
+  }
+  // Jelszó modal megnyitása, utána a megfelelő tab
+  pendingReceptTab = tab;
+  document.getElementById('jelszó-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('jelszó-inp').focus(), 100);
+}
+let pendingReceptTab = null;
+
 function openSugo() { document.getElementById('sugo-modal').classList.remove('hidden'); }
 function closeSugo() { document.getElementById('sugo-modal').classList.add('hidden'); }
 
@@ -1513,7 +1722,7 @@ function renderEtelek(lista, tipus) {
         <input class="arany-inp" type="number" value="${p.arany}" min="0" max="100" step="0.01" ${p.aktiv?'':'disabled'} oninput="aranyV('${tipus}',${i},this.value)">
         <span style="font-size:12px;color:#888;">%</span>
       </div>
-      <button class="recept-btn" onclick="toggleRecept('${tipus}',${i})">🧾 Recept ${szerk?'▲':'▼'}</button>
+      <button class="recept-btn" onclick="receptGombKattint('${tipus}',${i})">🧾 Recept 🔒 ${szerk?'▲':'▼'}</button>
       ${isCustom?`<button class="btn btn-danger btn-xs" onclick="etelTorol('${tipus}',${i})">🗑</button>`:''}
     </div>`;
 
