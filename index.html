@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍽️ Étterem Kalkulátor</title>
+<title>🍕 PizzaMe Kalkulátor</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f0f4f8; color: #222; }
@@ -248,7 +248,7 @@
 
 <header>
   <div>
-    <h1>🍽️ Étterem Kalkulátor</h1>
+    <h1>🍕 PizzaMe Kalkulátor</h1>
     <div style="font-size:12px;opacity:0.7;">Pizza · Pasta · Alapanyag tervező</div>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
@@ -262,7 +262,7 @@
 <div class="main-tabs">
   <div class="main-tab active" id="maintab-pizza" onclick="setMainTab('pizza')">🍕 Pizza</div>
   <div class="main-tab" id="maintab-pasta" onclick="setMainTab('pasta')">🍝 Pasta</div>
-  <div class="main-tab" id="maintab-uzlet" onclick="setMainTab('uzlet')">🏪 Üzlet szimulátor</div>
+  <div class="main-tab" id="maintab-uzlet" onclick="uzletJelszó()">🏪 Üzlet szimulátor 🔒</div>
 </div>
 
 <div class="profil-bar" id="profil-bar"></div>
@@ -481,6 +481,28 @@
     <div style="padding:0 24px 20px;display:flex;gap:10px;">
       <button class="btn btn-success" onclick="sablonMentOk()" style="flex:1;">✓ Mentés</button>
       <button class="btn btn-settings" onclick="sablonModalZar()" style="flex:1;">Mégse</button>
+    </div>
+  </div>
+</div>
+
+<!-- JELSZÓ MODAL -->
+<div class="modal-overlay hidden" id="jelszó-modal">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-header">
+      <h2>🔒 Védett terület</h2>
+      <button class="modal-close" onclick="jelszóModalZár()">✕</button>
+    </div>
+    <div style="padding:24px;">
+      <div style="font-size:13px;color:#555;margin-bottom:16px;">Az Üzlet szimulátor csak jelszóval érhető el.</div>
+      <label style="font-size:12px;font-weight:bold;color:#555;display:block;margin-bottom:6px;">Jelszó</label>
+      <input type="password" id="jelszó-inp" placeholder="••••••••"
+        style="width:100%;border:2px solid #2E5DA6;border-radius:8px;padding:10px 14px;font-size:16px;outline:none;"
+        onkeydown="if(event.key==='Enter') jelszóEllenőr()">
+      <div id="jelszó-hiba" style="color:#c0392b;font-size:13px;margin-top:8px;font-weight:bold;"></div>
+    </div>
+    <div style="padding:0 24px 20px;display:flex;gap:10px;">
+      <button class="btn btn-primary" onclick="jelszóEllenőr()" style="flex:1;">🔓 Belépés</button>
+      <button class="btn btn-settings" onclick="jelszóModalZár()" style="flex:1;">Mégse</button>
     </div>
   </div>
 </div>
@@ -852,6 +874,40 @@ let pastaAlapanyagok = defaultPastaAlapanyagok.map(a => ({...a}));
 // ════════════════════════════════════════
 // FŐ FÜL
 // ════════════════════════════════════════
+// Jelszó hash (SHA szerű egyszerű ellenőrzés)
+const ADMIN_HASH = 'U2FsdGVkX1' + btoa('United82!').split('').reverse().join('');
+
+function uzletJelszó() {
+  // Ellenőrizzük hogy már be van-e lépve
+  if(sessionStorage.getItem('pm_admin') === ADMIN_HASH) {
+    setMainTab('uzlet');
+    return;
+  }
+  document.getElementById('jelszó-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('jelszó-inp').focus(), 100);
+}
+
+function jelszóEllenőr() {
+  const inp = document.getElementById('jelszó-inp').value;
+  if(inp === 'United82!') {
+    sessionStorage.setItem('pm_admin', ADMIN_HASH);
+    document.getElementById('jelszó-modal').classList.add('hidden');
+    document.getElementById('jelszó-inp').value = '';
+    document.getElementById('jelszó-hiba').textContent = '';
+    setMainTab('uzlet');
+  } else {
+    document.getElementById('jelszó-hiba').textContent = '❌ Helytelen jelszó!';
+    document.getElementById('jelszó-inp').value = '';
+    document.getElementById('jelszó-inp').focus();
+  }
+}
+
+function jelszóModalZár() {
+  document.getElementById('jelszó-modal').classList.add('hidden');
+  document.getElementById('jelszó-inp').value = '';
+  document.getElementById('jelszó-hiba').textContent = '';
+}
+
 function setMainTab(t) {
   mainTab = t;
   ['pizza','pasta','uzlet'].forEach(tab => {
