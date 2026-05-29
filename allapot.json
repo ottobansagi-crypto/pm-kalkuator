@@ -804,7 +804,7 @@
         },
         "db45": 0,
         "db32": 0,
-        "dbPasta": 100,
+        "dbPasta": 0,
         "dbGnocchi": 0,
         "pizzaMod": "45",
         "pastaMod": "pasta",
@@ -1611,9 +1611,9 @@
           "pastaAr": 3090,
           "gnocchiAr": 3390
         },
-        "db45": 135,
+        "db45": 0,
         "db32": 0,
-        "dbPasta": 100,
+        "dbPasta": 0,
         "dbGnocchi": 0,
         "pizzaMod": "45",
         "pastaMod": "pasta",
@@ -2420,9 +2420,9 @@
           "pastaAr": 3090,
           "gnocchiAr": 3390
         },
-        "db45": 100,
+        "db45": 0,
         "db32": 0,
-        "dbPasta": 100,
+        "dbPasta": 0,
         "dbGnocchi": 0,
         "pizzaMod": "45",
         "pastaMod": "pasta",
@@ -2445,7 +2445,7 @@
   "tesztaPenne": 18,
   "db45": 0,
   "db32": 0,
-  "dbPasta": 100,
+  "dbPasta": 0,
   "dbGnocchi": 0,
   "verzio": 2
 }
