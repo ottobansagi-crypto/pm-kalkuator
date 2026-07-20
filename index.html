@@ -564,7 +564,7 @@
       <div style="background:#f0fff4;border:2px solid #27ae60;border-radius:8px;padding:14px 16px;">
         <div style="font-weight:bold;color:#1a5c32;margin-bottom:6px;">💾 Automatikus mentés (ezen az eszközön)</div>
         <div style="margin-bottom:6px;">Minden módosításod (profil, recept, arány, ár) automatikusan elmentődik <strong>ebben a böngészőben</strong> – nem kell külön menteni, legközelebbi megnyitáskor ott folytatod, ahol abbahagytad.</div>
-        <div style="margin-bottom:6px;">Ha vissza szeretnél térni a hivatalos, központi beállításokhoz (mert nagyon elállítottál valamit), nyisd meg a <strong>⚙️ Beállítások</strong> ablakot, és kattints a <strong>⬇️ Központi alapállapot betöltése</strong> gombra – <span style="color:#c0392b;font-weight:bold;">ez felülírja a saját, itt mentett módosításaidat</span>.</div>
+        <div style="margin-bottom:6px;">Ha új árak/receptek/profilok érhetők el központilag (vagy ha nagyon elállítottad a recepteket/arányokat), nyisd meg a <strong>⚙️ Beállítások</strong> ablakot, és kattints a <strong>⬇️ Árak és receptek frissítése</strong> gombra – ez frissíti az árakat, recepteket és arányokat a legfrissebb központi verzióra, de <strong>az aznapi, beírt gombóc/forgalom adataidat és a beállított csúszkákat nem érinti</strong>, azok maradnak úgy, ahogy vannak.</div>
         <div>A <strong>💾 Mentés</strong> gombbal bármikor le is töltheted az aktuális állapotodat <code>allapot.json</code> fájlként (pl. megosztásra vagy biztonsági mentésnek), a <strong>📂 Betöltés</strong> gombbal pedig egy ilyen fájlt tölthetsz vissza.</div>
       </div>
 
@@ -589,7 +589,7 @@
     </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" onclick="kozpontiFelulir()">⬇️ Központi alapállapot betöltése</button>
+      <button class="btn btn-danger btn-sm" onclick="kozpontiFelulir()">⬇️ Árak és receptek frissítése</button>
       <button class="btn btn-success btn-sm" onclick="closeSettings()">✓ Mentés & bezárás</button>
     </div>
   </div>
@@ -725,6 +725,28 @@ function alkalmazBetoltottAllapot(adat) {
   if(adat.db32 !== undefined) db32 = adat.db32;
   if(adat.dbPasta !== undefined) dbPasta = adat.dbPasta;
   if(adat.dbGnocchi !== undefined) dbGnocchi = adat.dbGnocchi;
+  pizzak = aktivProfil().pizzak;
+  pastak = aktivProfil().pastak;
+}
+
+// A "⬇️ Árak és receptek frissítése" gombhoz: CSAK a konfigurációs réteget
+// (árak, illetve minden meglévő profil receptjei/arányai) frissíti a központi
+// adatból – a folyamatban lévő napi munkát (aktív profil, beírt gombóc/forgalom,
+// csúszkák, sablonok) nem érinti.
+function alkalmazKozpontiFrissites(centralAdat) {
+  if(centralAdat.cfg) cfg = {...DEFAULTS, ...centralAdat.cfg};
+  if(Array.isArray(centralAdat.profilok)) {
+    centralAdat.profilok.forEach(cp => {
+      const helyi = profilok.find(p => p.id === cp.id);
+      if(helyi) {
+        helyi.pizzak = dc(cp.pizzak);
+        helyi.pastak = dc(cp.pastak);
+      } else {
+        // Új, központilag hozzáadott profil, amit ez az eszköz még nem ismer
+        profilok.push(dc(cp));
+      }
+    });
+  }
   pizzak = aktivProfil().pizzak;
   pastak = aktivProfil().pastak;
 }
@@ -872,19 +894,25 @@ function allapotJsonBetoltes() {
   toltsKozpontibol(() => console.log('✓ allapot.json betöltve'));
 }
 
-// A Beállítások alján lévő gomb – a felhasználó saját, helyileg mentett módosításait
-// felülírja a legfrissebb központi (allapot.json) állapottal.
+// A Beállítások alján lévő gomb – frissíti az árakat, recepteket és arányokat a
+// legfrissebb központi állapotra. A folyamatban lévő napi munkát (aktív profil,
+// beírt gombóc/forgalom, csúszkák, sablonok) szándékosan NEM érinti.
 function kozpontiFelulir() {
-  if(!confirm('Ez felülírja a saját, ezen az eszközön elmentett módosításaidat a legfrissebb központi állapottal. Folytatod?')) return;
-  toltsKozpontibol(
-    () => {
+  if(!confirm('Ez frissíti az árakat, recepteket és profilokat a legfrissebb központi verzióra. Az aznapi, beírt adataidat és a beállított csúszkákat nem érinti. Folytatod?')) return;
+  fetch(centralAllapotUrl() + '?v=' + Date.now())
+    .then(r => {
+      if(!r.ok) throw new Error('Nincs allapot.json');
+      return r.json();
+    })
+    .then(adat => {
+      alkalmazKozpontiFrissites(adat);
+      szinkronizaljUI();
       const toast = document.getElementById('share-toast');
-      toast.textContent = '✓ Központi alapállapot betöltve!';
+      toast.textContent = '✓ Árak, receptek és profilok frissítve!';
       toast.classList.add('show');
       setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Fájl mentve!'; }, 2500);
-    },
-    () => alert('Nem sikerült elérni a központi alapállapotot.')
-  );
+    })
+    .catch(err => alert('Nem sikerült elérni a központi alapállapotot.'));
 }
 
 // ════════════════════════════════════════
