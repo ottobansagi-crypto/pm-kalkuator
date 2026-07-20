@@ -604,24 +604,25 @@
 const DEFAULTS = { szeletAr45: 1199, pizzaAr32: 5600, szeletPerGomboc: 8, pastaAr: 3090, gnocchiAr: 3390 };
 let cfg = { ...DEFAULTS };
 
+// A "disp" a végfelhasználónak (táblák, exportok) mutatott közönségbarát név;
+// a "nev" marad a recepteknél használt belső hivatkozási kulcs, azt nem érinti.
 const defaultPizzaAlapanyagok = [
-  { nev:"P szósz", egys:"g", alap:10000, ae:"g" },
-  { nev:"Reszelt Mozzarella", egys:"g", alap:2500, ae:"g" },
-  { nev:"P Sonka Cotto", egys:"g", alap:2000, ae:"g" },
-  { nev:"Funghi mix zacskó", egys:"db", alap:1, ae:"db" },
-  { nev:"P Spinata Calabra", egys:"g", alap:1000, ae:"g" },
-  { nev:"Gorgonzola", egys:"g", alap:500, ae:"g" },
-  { nev:"Ricotta", egys:"g", alap:250, ae:"g" },
-  { nev:"Parmezánsajt", egys:"g", alap:1000, ae:"g" },
-  { nev:"Spenót", egys:"db", alap:1, ae:"db" },
-  { nev:"P Szalámi Napolitana", egys:"g", alap:500, ae:"g" },
-  { nev:"Tartufata szósz", egys:"db", alap:1, ae:"db" },
-  { nev:"P Zöldség mix", egys:"g", alap:400, ae:"g" },
-  { nev:"Nutella", egys:"g", alap:null, ae:null },
-  { nev:"Kis Tonhalkonzerv", egys:"db", alap:1, ae:"db" },
-  { nev:"Olívabogyó", egys:"g", alap:160, ae:"g" },
-  { nev:"Pepperoni szalámi", egys:"g", alap:500, ae:"g" },
+  { nev:"P szósz", disp:"Paradicsomszósz", egys:"g", alap:10000, ae:"g" },
+  { nev:"Reszelt Mozzarella", disp:"Mozzarella", egys:"g", alap:2500, ae:"g" },
+  { nev:"P Sonka Cotto", disp:"Sonka", egys:"g", alap:2000, ae:"g" },
+  { nev:"P Spinata Calabra", disp:"Calabra (Diavola)", egys:"g", alap:1000, ae:"g" },
+  { nev:"P Szalámi Napolitana", disp:"Napolitana (Dolce)", egys:"g", alap:500, ae:"g" },
+  { nev:"Pepperoni szalámi", disp:"Pepperoni", egys:"g", alap:500, ae:"g" },
   { nev:"Szupercsípős pepperoni", egys:"g", alap:360, ae:"g" },
+  { nev:"Gorgonzola", egys:"g", alap:500, ae:"g" },
+  { nev:"Parmezánsajt", disp:"Parmezán", egys:"g", alap:1000, ae:"g" },
+  { nev:"Ricotta", egys:"g", alap:250, ae:"g" },
+  { nev:"Spenót", egys:"db", alap:1, ae:"db" },
+  { nev:"Funghi mix zacskó", disp:"Funghi Mix", egys:"db", alap:1, ae:"db" },
+  { nev:"Tartufata szósz", egys:"db", alap:1, ae:"db" },
+  { nev:"Kis Tonhalkonzerv", disp:"Kis tonhalkonzerv", egys:"db", alap:1, ae:"db" },
+  { nev:"P Zöldség mix", disp:"Zöldség mix", egys:"g", alap:400, ae:"g" },
+  { nev:"Olívabogyó", egys:"g", alap:160, ae:"g" },
 ];
 
 const defaultPizzak = [
@@ -670,21 +671,21 @@ const defaultPastaAlapanyagok = [
   { nev:"Tészta (Spaghetti)", egys:"g", alap:1000, ae:"g" },
   { nev:"Tészta (Penne)", egys:"g", alap:1000, ae:"g" },
   { nev:"Gnocchi", egys:"g", alap:1000, ae:"g" },
-  { nev:"P szósz", egys:"g", alap:10000, ae:"g" },
-  { nev:"P Bolognai ragu", egys:"g", alap:2000, ae:"g" },
+  { nev:"P szósz", disp:"Paradicsomszósz", egys:"g", alap:10000, ae:"g" },
+  { nev:"P Bolognai ragu", disp:"Bolognai ragu", egys:"g", alap:2000, ae:"g" },
   { nev:"Tartufata szósz pasta", egys:"g", alap:1000, ae:"g" },
   { nev:"Pesto szósz", egys:"g", alap:1000, ae:"g" },
   { nev:"Panna", egys:"g", alap:1000, ae:"g" },
   { nev:"Olívaolaj", egys:"g", alap:1000, ae:"g" },
-  { nev:"Funghi mix zacskó", egys:"db", alap:1, ae:"db" },
+  { nev:"Funghi mix zacskó", disp:"Funghi Mix", egys:"db", alap:1, ae:"db" },
   { nev:"Gorgonzola", egys:"g", alap:500, ae:"g" },
   { nev:"Ricotta", egys:"g", alap:250, ae:"g" },
-  { nev:"Parmezánsajt", egys:"g", alap:1000, ae:"g" },
-  { nev:"Reszelt Mozzarella", egys:"g", alap:2500, ae:"g" },
-  { nev:"P Sonka Cotto", egys:"g", alap:2000, ae:"g" },
-  { nev:"Kis Tonhalkonzerv", egys:"db", alap:1, ae:"db" },
-  { nev:"P Olívabogyó", egys:"g", alap:160, ae:"g" },
-  { nev:"P Zöldség mix", egys:"g", alap:400, ae:"g" },
+  { nev:"Parmezánsajt", disp:"Parmezán", egys:"g", alap:1000, ae:"g" },
+  { nev:"Reszelt Mozzarella", disp:"Mozzarella", egys:"g", alap:2500, ae:"g" },
+  { nev:"P Sonka Cotto", disp:"Sonka", egys:"g", alap:2000, ae:"g" },
+  { nev:"Kis Tonhalkonzerv", disp:"Kis tonhalkonzerv", egys:"db", alap:1, ae:"db" },
+  { nev:"P Olívabogyó", disp:"Olívabogyó", egys:"g", alap:160, ae:"g" },
+  { nev:"P Zöldség mix", disp:"Zöldség mix", egys:"g", alap:400, ae:"g" },
   { nev:"Cukor", egys:"g", alap:null, ae:null },
 ];
 
@@ -1041,7 +1042,7 @@ function exportExcel() {
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
     ertek = Math.round(ertek*100)/100;
     const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : '';
-    rows.push([a.nev, a.egys, ertek, a.alap || '', ceil]);
+    rows.push([a.disp||a.nev, a.egys, ertek, a.alap || '', ceil]);
   });
 
   // Pasta alapanyagok ha van
@@ -1077,7 +1078,7 @@ function exportExcel() {
       if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
       ertek = Math.round(ertek*100)/100;
       const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : '';
-      rows.push([a.nev, a.egys, ertek, a.alap || '', ceil]);
+      rows.push([a.disp||a.nev, a.egys, ertek, a.alap || '', ceil]);
     });
   }
 
@@ -1126,7 +1127,7 @@ function exportPDF() {
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
     ertek = Math.round(ertek*100)/100;
     const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap + ' ' + a.ae : '–';
-    sorok += `<tr><td>${a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#375623;">${ceil}</strong></td></tr>`;
+    sorok += `<tr><td>${a.disp||a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#375623;">${ceil}</strong></td></tr>`;
   });
 
   // Pasta alapanyagok ha van
@@ -1161,7 +1162,7 @@ function exportPDF() {
       if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
       ertek = Math.round(ertek*100)/100;
       const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap + ' ' + a.ae : '–';
-      pastaSorok += `<tr><td>${a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#375623;">${ceil}</strong></td></tr>`;
+      pastaSorok += `<tr><td>${a.disp||a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#375623;">${ceil}</strong></td></tr>`;
     });
   }
 
@@ -1424,7 +1425,7 @@ function pizzaFrissit() {
     ertek=Math.round(ertek*100)/100;
     const cs=a.alap!==null?`<span class="ceil">${fmt(ceiling(ertek,a.alap))} ${a.ae}</span>`:'<span class="dash">–</span>';
     const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
-    html+=`<tr class="row-norm"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
+    html+=`<tr class="row-norm"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
   });
   Object.keys(ossz).forEach(nev => {
     if(feldolg.has(nev)) return;
@@ -1510,7 +1511,7 @@ function pastaFrissit() {
     const isTeszta=a.nev.includes('Tészta');
     const isGnocchi=a.nev==='Gnocchi';
     const cls=isTeszta?'row-pasta':isGnocchi?'row-gnocchi':'row-norm';
-    phtml+=`<tr class="${cls}"><td>${a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
+    phtml+=`<tr class="${cls}"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
   });
   Object.keys(pOssz).forEach(nev => {
     if(pfeldolg.has(nev)) return;
@@ -2145,7 +2146,7 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
   const gombocNevek=new Set();
   oszlopok.forEach(o=>o.gombocSorok.forEach(r=>{if(r.ertek>0)gombocNevek.add(r.nev+'|'+r.alap);}));
   gombocNevek.forEach(key=>{const[nev,alap]=key.split('|');sorok.push({nev,alap:parseInt(alap),egys:'db',ae:'db',tipus:'gomboc'});});
-  pizzaAlapanyagok.forEach(a=>{if(oszlopok.some(o=>(o.ossz[a.nev]||0)>0)) sorok.push({nev:a.nev,alap:a.alap,egys:a.egys,ae:a.ae,tipus:'anyag'});});
+  pizzaAlapanyagok.forEach(a=>{if(oszlopok.some(o=>(o.ossz[a.nev]||0)>0)) sorok.push({nev:a.disp||a.nev,kulcs:a.nev,alap:a.alap,egys:a.egys,ae:a.ae,tipus:'anyag'});});
 
   let html=`<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;min-width:500px;">
     <thead><tr style="background:#f0f4ff;">
@@ -2176,7 +2177,7 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
     oszlopok.forEach(o=>{
       let ertek=0;
       if(sor.tipus==='gomboc'){const gr=o.gombocSorok.find(r=>r.nev===sor.nev);ertek=gr?gr.ertek:0;}
-      else{ertek=o.ossz[sor.nev]||0;if(sor.egys==='db'&&csomagSuly[sor.nev])ertek=ertek/csomagSuly[sor.nev];ertek=Math.round(ertek*10)/10;}
+      else{const k=sor.kulcs||sor.nev;ertek=o.ossz[k]||0;if(sor.egys==='db'&&csomagSuly[k])ertek=ertek/csomagSuly[k];ertek=Math.round(ertek*10)/10;}
       const ceil=sor.alap?Math.ceil(ertek/sor.alap)*sor.alap:null;
       const van=ertek>0;
       html+=`<td style="padding:6px 12px;text-align:center;">${van?`<div style="font-size:11px;color:#888;">${fmt(ertek)} ${sor.egys}</div>${ceil!==null?`<div style="font-weight:bold;color:#375623;background:#E2EFDA;border-radius:5px;padding:2px 8px;display:inline-block;margin-top:2px;">${fmt(ceil)} ${sor.ae||sor.egys}</div>`:''}`:'<span style="color:#e0e0e0;">–</span>'}</td>`;
