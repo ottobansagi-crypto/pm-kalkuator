@@ -351,7 +351,7 @@
       "pastak": [
         {
           "nev": "Bolognese",
-          "arany": 27.03,
+          "arany": 26.69,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -371,7 +371,7 @@
         },
         {
           "nev": "Tartufata",
-          "arany": 13.3,
+          "arany": 13.14,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -399,7 +399,7 @@
         },
         {
           "nev": "Négysajtos",
-          "arany": 9.72,
+          "arany": 9.61,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -435,7 +435,7 @@
         },
         {
           "nev": "Arrabiata",
-          "arany": 8.66,
+          "arany": 8.56,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -455,7 +455,7 @@
         },
         {
           "nev": "Panna Prosciutto",
-          "arany": 7.61,
+          "arany": 7.52,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -479,7 +479,7 @@
         },
         {
           "nev": "Pesto Genova",
-          "arany": 5.21,
+          "arany": 5.15,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -495,7 +495,7 @@
         },
         {
           "nev": "Tonhalas",
-          "arany": 4.62,
+          "arany": 4.57,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -523,7 +523,7 @@
         },
         {
           "nev": "Pomodoro",
-          "arany": 3.15,
+          "arany": 3.11,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -543,7 +543,7 @@
         },
         {
           "nev": "Vegetariana",
-          "arany": 1.18,
+          "arany": 1.17,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -587,7 +587,7 @@
         },
         {
           "nev": "Négysajtos Gnocchi",
-          "arany": 5.29,
+          "arany": 5.23,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -623,7 +623,7 @@
         },
         {
           "nev": "Bolognese Gnocchi",
-          "arany": 3.48,
+          "arany": 3.44,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -643,7 +643,7 @@
         },
         {
           "nev": "Panna Prosciutto Gnocchi",
-          "arany": 3.16,
+          "arany": 3.12,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -667,7 +667,7 @@
         },
         {
           "nev": "Tartufata Gnocchi",
-          "arany": 2.4,
+          "arany": 2.37,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -695,7 +695,7 @@
         },
         {
           "nev": "Arrabiata Gnocchi",
-          "arany": 2.11,
+          "arany": 2.09,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -715,7 +715,7 @@
         },
         {
           "nev": "Pesto Genova Gnocchi",
-          "arany": 1.85,
+          "arany": 1.83,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -731,7 +731,7 @@
         },
         {
           "nev": "Pomodoro Gnocchi",
-          "arany": 1.24,
+          "arany": 1.23,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -751,7 +751,7 @@
         },
         {
           "nev": "Vegetariana Gnocchi",
-          "arany": 1.18,
+          "arany": 1.17,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1160,7 +1160,7 @@
       "pastak": [
         {
           "nev": "Bolognese",
-          "arany": 27.03,
+          "arany": 26.69,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1180,7 +1180,7 @@
         },
         {
           "nev": "Tartufata",
-          "arany": 13.3,
+          "arany": 13.14,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1208,7 +1208,7 @@
         },
         {
           "nev": "Négysajtos",
-          "arany": 9.72,
+          "arany": 9.61,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1244,7 +1244,7 @@
         },
         {
           "nev": "Arrabiata",
-          "arany": 8.66,
+          "arany": 8.56,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1264,7 +1264,7 @@
         },
         {
           "nev": "Panna Prosciutto",
-          "arany": 7.61,
+          "arany": 7.52,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1288,7 +1288,7 @@
         },
         {
           "nev": "Pesto Genova",
-          "arany": 5.21,
+          "arany": 5.15,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1304,7 +1304,7 @@
         },
         {
           "nev": "Tonhalas",
-          "arany": 4.62,
+          "arany": 4.57,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1332,7 +1332,7 @@
         },
         {
           "nev": "Pomodoro",
-          "arany": 3.15,
+          "arany": 3.11,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1352,7 +1352,7 @@
         },
         {
           "nev": "Vegetariana",
-          "arany": 1.18,
+          "arany": 1.17,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1396,7 +1396,7 @@
         },
         {
           "nev": "Négysajtos Gnocchi",
-          "arany": 5.29,
+          "arany": 5.23,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1432,7 +1432,7 @@
         },
         {
           "nev": "Bolognese Gnocchi",
-          "arany": 3.48,
+          "arany": 3.44,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1452,7 +1452,7 @@
         },
         {
           "nev": "Panna Prosciutto Gnocchi",
-          "arany": 3.16,
+          "arany": 3.12,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1476,7 +1476,7 @@
         },
         {
           "nev": "Tartufata Gnocchi",
-          "arany": 2.4,
+          "arany": 2.37,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1504,7 +1504,7 @@
         },
         {
           "nev": "Arrabiata Gnocchi",
-          "arany": 2.11,
+          "arany": 2.09,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1524,7 +1524,7 @@
         },
         {
           "nev": "Pesto Genova Gnocchi",
-          "arany": 1.85,
+          "arany": 1.83,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1540,7 +1540,7 @@
         },
         {
           "nev": "Pomodoro Gnocchi",
-          "arany": 1.24,
+          "arany": 1.23,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1560,7 +1560,7 @@
         },
         {
           "nev": "Vegetariana Gnocchi",
-          "arany": 1.18,
+          "arany": 1.17,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -1969,7 +1969,7 @@
       "pastak": [
         {
           "nev": "Bolognese",
-          "arany": 27.03,
+          "arany": 26.69,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -1989,7 +1989,7 @@
         },
         {
           "nev": "Tartufata",
-          "arany": 13.3,
+          "arany": 13.14,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2017,7 +2017,7 @@
         },
         {
           "nev": "Négysajtos",
-          "arany": 9.72,
+          "arany": 9.61,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2053,7 +2053,7 @@
         },
         {
           "nev": "Arrabiata",
-          "arany": 8.66,
+          "arany": 8.56,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2073,7 +2073,7 @@
         },
         {
           "nev": "Panna Prosciutto",
-          "arany": 7.61,
+          "arany": 7.52,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2097,7 +2097,7 @@
         },
         {
           "nev": "Pesto Genova",
-          "arany": 5.21,
+          "arany": 5.15,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2113,7 +2113,7 @@
         },
         {
           "nev": "Tonhalas",
-          "arany": 4.62,
+          "arany": 4.57,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2141,7 +2141,7 @@
         },
         {
           "nev": "Pomodoro",
-          "arany": 3.15,
+          "arany": 3.11,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2161,7 +2161,7 @@
         },
         {
           "nev": "Vegetariana",
-          "arany": 1.18,
+          "arany": 1.17,
           "aktiv": true,
           "gnocchi": false,
           "recept": [
@@ -2205,7 +2205,7 @@
         },
         {
           "nev": "Négysajtos Gnocchi",
-          "arany": 5.29,
+          "arany": 5.23,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2241,7 +2241,7 @@
         },
         {
           "nev": "Bolognese Gnocchi",
-          "arany": 3.48,
+          "arany": 3.44,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2261,7 +2261,7 @@
         },
         {
           "nev": "Panna Prosciutto Gnocchi",
-          "arany": 3.16,
+          "arany": 3.12,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2285,7 +2285,7 @@
         },
         {
           "nev": "Tartufata Gnocchi",
-          "arany": 2.4,
+          "arany": 2.37,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2313,7 +2313,7 @@
         },
         {
           "nev": "Arrabiata Gnocchi",
-          "arany": 2.11,
+          "arany": 2.09,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2333,7 +2333,7 @@
         },
         {
           "nev": "Pesto Genova Gnocchi",
-          "arany": 1.85,
+          "arany": 1.83,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2349,7 +2349,7 @@
         },
         {
           "nev": "Pomodoro Gnocchi",
-          "arany": 1.24,
+          "arany": 1.23,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2369,7 +2369,7 @@
         },
         {
           "nev": "Vegetariana Gnocchi",
-          "arany": 1.18,
+          "arany": 1.17,
           "aktiv": true,
           "gnocchi": true,
           "recept": [
@@ -2435,7 +2435,7 @@
       "sablonok": []
     }
   ],
-  "aktivProfilId": 1779515471991.0847,
+  "aktivProfilId": 1779514657539.4731,
   "pizzaMod": "45",
   "pastaMod": "pasta",
   "simaArany45": 70,
