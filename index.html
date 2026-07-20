@@ -562,9 +562,10 @@
       </div>
 
       <div style="background:#f0fff4;border:2px solid #27ae60;border-radius:8px;padding:14px 16px;">
-        <div style="font-weight:bold;color:#1a5c32;margin-bottom:6px;">💾 Mentés / 📂 Betöltés</div>
-        <div style="margin-bottom:6px;">Ha új profilt vagy sablont hozol létre → <strong>💾 Mentés</strong> → <code>allapot.json</code> fájl → legközelebb <strong>📂 Betöltés</strong> → minden visszaáll. Az alapprofilok automatikusan betöltődnek.</div>
-        <div style="color:#c0392b;font-weight:bold;">⚠️ Fontos: az oldal nem ment automatikusan – ha változtatsz valamit, ne felejtsd el lementeni!</div>
+        <div style="font-weight:bold;color:#1a5c32;margin-bottom:6px;">💾 Automatikus mentés (ezen az eszközön)</div>
+        <div style="margin-bottom:6px;">Minden módosításod (profil, recept, arány, ár) automatikusan elmentődik <strong>ebben a böngészőben</strong> – nem kell külön menteni, legközelebbi megnyitáskor ott folytatod, ahol abbahagytad.</div>
+        <div style="margin-bottom:6px;">Ha vissza szeretnél térni a hivatalos, központi beállításokhoz (mert nagyon elállítottál valamit), nyisd meg a <strong>⚙️ Beállítások</strong> ablakot, és kattints a <strong>⬇️ Központi alapállapot betöltése</strong> gombra – <span style="color:#c0392b;font-weight:bold;">ez felülírja a saját, itt mentett módosításaidat</span>.</div>
+        <div>A <strong>💾 Mentés</strong> gombbal bármikor le is töltheted az aktuális állapotodat <code>allapot.json</code> fájlként (pl. megosztásra vagy biztonsági mentésnek), a <strong>📂 Betöltés</strong> gombbal pedig egy ilyen fájlt tölthetsz vissza.</div>
       </div>
 
     </div>
@@ -588,7 +589,7 @@
     </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" onclick="resetAll()">↺ Alapértelmezett</button>
+      <button class="btn btn-danger btn-sm" onclick="kozpontiFelulir()">⬇️ Központi alapállapot betöltése</button>
       <button class="btn btn-success btn-sm" onclick="closeSettings()">✓ Mentés & bezárás</button>
     </div>
   </div>
@@ -688,6 +689,67 @@ const defaultPastaAlapanyagok = [
 ];
 
 // ════════════════════════════════════════
+// ÁLLAPOT BETÖLTÉS/MENTÉS – KÖZÖS SEGÉDFÜGGVÉNYEK
+// ════════════════════════════════════════
+const LS_KEY = 'pmkalk_allapot_v1';
+
+// Automatikus, helyi (böngészőnkénti) mentés – minden render-frissítés után lefut,
+// így egy adott eszközön/böngészőben senki nem veszíti el a saját módosításait.
+function automent() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      cfg, profilok, aktivProfilId,
+      pizzaMod, pastaMod,
+      simaArany45, simaArany32,
+      tesztaFusili, tesztaSpagetti, tesztaPenne,
+      db45, db32, dbPasta, dbGnocchi,
+      verzio: 2
+    }));
+  } catch(e) { console.warn('Auto-mentés sikertelen:', e); }
+}
+
+// Egy betöltött (URL / localStorage / fájl / központi allapot.json) adatobjektum alkalmazása
+function alkalmazBetoltottAllapot(adat) {
+  if(adat.cfg) cfg = {...DEFAULTS, ...adat.cfg};
+  if(adat.profilok) profilok = adat.profilok;
+  if(adat.aktivProfilId) aktivProfilId = adat.aktivProfilId;
+  if(adat.pizzaMod) pizzaMod = adat.pizzaMod;
+  if(adat.pastaMod) pastaMod = adat.pastaMod;
+  if(adat.simaArany45 !== undefined) simaArany45 = adat.simaArany45;
+  if(adat.simaArany32 !== undefined) simaArany32 = adat.simaArany32;
+  if(adat.tesztaFusili !== undefined) tesztaFusili = adat.tesztaFusili;
+  if(adat.tesztaSpagetti !== undefined) tesztaSpagetti = adat.tesztaSpagetti;
+  if(adat.tesztaPenne !== undefined) tesztaPenne = adat.tesztaPenne;
+  if(adat.db45 !== undefined) db45 = adat.db45;
+  if(adat.db32 !== undefined) db32 = adat.db32;
+  if(adat.dbPasta !== undefined) dbPasta = adat.dbPasta;
+  if(adat.dbGnocchi !== undefined) dbGnocchi = adat.dbGnocchi;
+  pizzak = aktivProfil().pizzak;
+  pastak = aktivProfil().pastak;
+}
+
+// UI szinkronizálás + újrarenderelés betöltés után (ez automatikusan újra el is menti helyileg)
+function szinkronizaljUI() {
+  ['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
+  ['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
+  document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
+  document.getElementById('sl45').value=simaArany45;
+  document.getElementById('s45-sima').textContent=simaArany45+'%';
+  document.getElementById('s45-tk').textContent=(100-simaArany45)+'%';
+  document.getElementById('sl32').value=simaArany32;
+  document.getElementById('s32-sima').textContent=simaArany32+'%';
+  document.getElementById('s32-tk').textContent=(100-simaArany32)+'%';
+  document.getElementById('teszta-fusili-sl').value=tesztaFusili;
+  document.getElementById('teszta-spagetti-sl').value=tesztaSpagetti;
+  document.getElementById('teszta-penne-sl').value=tesztaPenne;
+  const ossz2=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
+  document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
+  document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
+  document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
+  renderProfilBar(); renderSablonBar(); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit();
+}
+
+// ════════════════════════════════════════
 // URL ALAPÚ MEGOSZTÁS
 // ════════════════════════════════════════
 function allapotMentes() {
@@ -707,22 +769,7 @@ function allapotMentes() {
 function allapotBetoltes(kodolt) {
   try {
     const adat = JSON.parse(decodeURIComponent(escape(atob(kodolt))));
-    if(adat.cfg) cfg = {...DEFAULTS, ...adat.cfg};
-    if(adat.profilok) profilok = adat.profilok;
-    if(adat.aktivProfilId) aktivProfilId = adat.aktivProfilId;
-    if(adat.pizzaMod) pizzaMod = adat.pizzaMod;
-    if(adat.pastaMod) pastaMod = adat.pastaMod;
-    if(adat.simaArany45 !== undefined) simaArany45 = adat.simaArany45;
-    if(adat.simaArany32 !== undefined) simaArany32 = adat.simaArany32;
-    if(adat.tesztaFusili !== undefined) tesztaFusili = adat.tesztaFusili;
-    if(adat.tesztaSpagetti !== undefined) tesztaSpagetti = adat.tesztaSpagetti;
-    if(adat.tesztaPenne !== undefined) tesztaPenne = adat.tesztaPenne;
-    if(adat.db45 !== undefined) db45 = adat.db45;
-    if(adat.db32 !== undefined) db32 = adat.db32;
-    if(adat.dbPasta !== undefined) dbPasta = adat.dbPasta;
-    if(adat.dbGnocchi !== undefined) dbGnocchi = adat.dbGnocchi;
-    pizzak = aktivProfil().pizzak;
-    pastak = aktivProfil().pastak;
+    alkalmazBetoltottAllapot(adat);
     return true;
   } catch(e) {
     console.warn('URL betöltés hiba:', e);
@@ -762,40 +809,8 @@ function importAllapot(input) {
   reader.onload = function(e) {
     try {
       const adat = JSON.parse(e.target.result);
-      if(adat.cfg) cfg = {...DEFAULTS, ...adat.cfg};
-      if(adat.profilok) profilok = adat.profilok;
-      if(adat.aktivProfilId) aktivProfilId = adat.aktivProfilId;
-      if(adat.pizzaMod) pizzaMod = adat.pizzaMod;
-      if(adat.pastaMod) pastaMod = adat.pastaMod;
-      if(adat.simaArany45 !== undefined) simaArany45 = adat.simaArany45;
-      if(adat.simaArany32 !== undefined) simaArany32 = adat.simaArany32;
-      if(adat.tesztaFusili !== undefined) tesztaFusili = adat.tesztaFusili;
-      if(adat.tesztaSpagetti !== undefined) tesztaSpagetti = adat.tesztaSpagetti;
-      if(adat.tesztaPenne !== undefined) tesztaPenne = adat.tesztaPenne;
-      if(adat.db45 !== undefined) db45 = adat.db45;
-      if(adat.db32 !== undefined) db32 = adat.db32;
-      if(adat.dbPasta !== undefined) dbPasta = adat.dbPasta;
-      if(adat.dbGnocchi !== undefined) dbGnocchi = adat.dbGnocchi;
-      pizzak = aktivProfil().pizzak;
-      pastak = aktivProfil().pastak;
-      // UI szinkronizálás
-      ['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
-      ['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
-      document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
-      document.getElementById('sl45').value=simaArany45;
-      document.getElementById('s45-sima').textContent=simaArany45+'%';
-      document.getElementById('s45-tk').textContent=(100-simaArany45)+'%';
-      document.getElementById('sl32').value=simaArany32;
-      document.getElementById('s32-sima').textContent=simaArany32+'%';
-      document.getElementById('s32-tk').textContent=(100-simaArany32)+'%';
-      document.getElementById('teszta-fusili-sl').value=tesztaFusili;
-      document.getElementById('teszta-spagetti-sl').value=tesztaSpagetti;
-      document.getElementById('teszta-penne-sl').value=tesztaPenne;
-      const ossz2=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
-      document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
-      document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
-      document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
-      renderProfilBar(); renderSablonBar(); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit();
+      alkalmazBetoltottAllapot(adat);
+      szinkronizaljUI();
       const toast = document.getElementById('share-toast');
       toast.textContent = '✓ Beállítások betöltve!';
       toast.classList.add('show');
@@ -817,54 +832,58 @@ function urlBetoltesIndulas() {
   return false;
 }
 
-function allapotJsonBetoltes() {
-  // Automatikusan betölti az allapot.json-t a szerver mellől
-  const alap = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/') + 'allapot.json';
-  fetch(alap + '?v=' + Date.now()) // cache busting
+function helyiAllapotBetoltese() {
+  try {
+    const nyers = localStorage.getItem(LS_KEY);
+    if(!nyers) return false;
+    alkalmazBetoltottAllapot(JSON.parse(nyers));
+    return true;
+  } catch(e) {
+    console.warn('Helyi mentés betöltési hiba:', e);
+    return false;
+  }
+}
+
+function centralAllapotUrl() {
+  return window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/') + 'allapot.json';
+}
+
+// Központi allapot.json lekérése – induláskor (első látogatás) és a "Központi alapállapot
+// betöltése" gombra kattintva is ezt hívjuk.
+function toltsKozpontibol(onSuccess, onError) {
+  fetch(centralAllapotUrl() + '?v=' + Date.now()) // cache busting
     .then(r => {
       if(!r.ok) throw new Error('Nincs allapot.json');
       return r.json();
     })
     .then(adat => {
-      if(adat.cfg) cfg = {...DEFAULTS, ...adat.cfg};
-      if(adat.profilok) profilok = adat.profilok;
-      if(adat.aktivProfilId) aktivProfilId = adat.aktivProfilId;
-      if(adat.pizzaMod) pizzaMod = adat.pizzaMod;
-      if(adat.pastaMod) pastaMod = adat.pastaMod;
-      if(adat.simaArany45 !== undefined) simaArany45 = adat.simaArany45;
-      if(adat.simaArany32 !== undefined) simaArany32 = adat.simaArany32;
-      if(adat.tesztaFusili !== undefined) tesztaFusili = adat.tesztaFusili;
-      if(adat.tesztaSpagetti !== undefined) tesztaSpagetti = adat.tesztaSpagetti;
-      if(adat.tesztaPenne !== undefined) tesztaPenne = adat.tesztaPenne;
-      if(adat.db45 !== undefined) db45 = adat.db45;
-      if(adat.db32 !== undefined) db32 = adat.db32;
-      if(adat.dbPasta !== undefined) dbPasta = adat.dbPasta;
-      if(adat.dbGnocchi !== undefined) dbGnocchi = adat.dbGnocchi;
-      pizzak = aktivProfil().pizzak;
-      pastak = aktivProfil().pastak;
-      // UI szinkronizálás
-      ['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
-      ['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
-      document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
-      document.getElementById('sl45').value=simaArany45;
-      document.getElementById('s45-sima').textContent=simaArany45+'%';
-      document.getElementById('s45-tk').textContent=(100-simaArany45)+'%';
-      document.getElementById('sl32').value=simaArany32;
-      document.getElementById('s32-sima').textContent=simaArany32+'%';
-      document.getElementById('s32-tk').textContent=(100-simaArany32)+'%';
-      document.getElementById('teszta-fusili-sl').value=tesztaFusili;
-      document.getElementById('teszta-spagetti-sl').value=tesztaSpagetti;
-      document.getElementById('teszta-penne-sl').value=tesztaPenne;
-      const ossz2=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
-      document.getElementById('teszta-fusili-pct').textContent=Math.round(tesztaFusili/ossz2*100)+'%';
-      document.getElementById('teszta-spagetti-pct').textContent=Math.round(tesztaSpagetti/ossz2*100)+'%';
-      document.getElementById('teszta-penne-pct').textContent=Math.round(tesztaPenne/ossz2*100)+'%';
-      renderProfilBar(); renderSablonBar(); renderPizzaInputs(); renderPastaInputs(); pizzaFrissit(); pastaFrissit();
-      console.log('✓ allapot.json betöltve');
+      alkalmazBetoltottAllapot(adat);
+      szinkronizaljUI();
+      if(onSuccess) onSuccess();
     })
     .catch(err => {
       console.log('allapot.json nem található, alapértelmezett állapot használva.');
+      if(onError) onError(err);
     });
+}
+
+function allapotJsonBetoltes() {
+  toltsKozpontibol(() => console.log('✓ allapot.json betöltve'));
+}
+
+// A Beállítások alján lévő gomb – a felhasználó saját, helyileg mentett módosításait
+// felülírja a legfrissebb központi (allapot.json) állapottal.
+function kozpontiFelulir() {
+  if(!confirm('Ez felülírja a saját, ezen az eszközön elmentett módosításaidat a legfrissebb központi állapottal. Folytatod?')) return;
+  toltsKozpontibol(
+    () => {
+      const toast = document.getElementById('share-toast');
+      toast.textContent = '✓ Központi alapállapot betöltve!';
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); toast.textContent = '✓ Fájl mentve!'; }, 2500);
+    },
+    () => alert('Nem sikerült elérni a központi alapállapotot.')
+  );
 }
 
 // ════════════════════════════════════════
@@ -1342,6 +1361,7 @@ const pizzaCsomagSuly = { "Funghi mix zacskó":1800, "Spenót":1800, "Tartufata 
 // PIZZA FRISSÍTÉS
 // ════════════════════════════════════════
 function pizzaFrissit() {
+  automent();
   const tk45=100-simaArany45, tk32=100-simaArany32;
   const ft45=db45*cfg.szeletPerGomboc*cfg.szeletAr45, ft32=db32*cfg.pizzaAr32;
 
@@ -1417,6 +1437,7 @@ function pizzaFrissit() {
 // PASTA FRISSÍTÉS
 // ════════════════════════════════════════
 function pastaFrissit() {
+  automent();
   const ftPasta=dbPasta*cfg.pastaAr, ftGnocchi=dbGnocchi*cfg.gnocchiAr;
   const ossz_t=tesztaFusili+tesztaSpagetti+tesztaPenne||1;
   const pctF=tesztaFusili/ossz_t, pctS=tesztaSpagetti/ossz_t, pctP=tesztaPenne/ossz_t;
@@ -1508,6 +1529,7 @@ function aktivProfilSablonok() {
 }
 
 function renderSablonBar() {
+  automent();
   const sablonok = aktivProfilSablonok();
   const bar = document.getElementById('sablon-bar');
   if(!bar) return;
@@ -1648,6 +1670,7 @@ function sablonBetolt(i) {
 // PROFIL
 // ════════════════════════════════════════
 function renderProfilBar() {
+  automent();
   let h='<span class="profil-label">Profil:</span>';
   profilok.forEach(p => {
     h+=`<button class="profil-btn ${p.id===aktivProfilId?'active':''}" onclick="profilValtas(${p.id})">${esc(p.nev)}</button>`;
@@ -1704,6 +1727,7 @@ function renderModalBody() {
 }
 
 function renderArakTab() {
+  automent();
   document.getElementById('modal-body').innerHTML=`
     <div class="settings-grid">
       <div class="si-item"><label>🍕 45cm szelet ára (Ft)</label>
@@ -1755,6 +1779,7 @@ function anyagOptionHtml(tipus, selected) {
 }
 
 function renderEtelek(lista, tipus) {
+  automent();
   const ossz = Math.round(lista.filter(p=>p.aktiv).reduce((s,p)=>s+p.arany,0)*100)/100;
   const okE = Math.abs(ossz-100)<0.1;
   const normFn = tipus==='pizza'?'normPizza':'normPasta';
@@ -1965,6 +1990,7 @@ function normPasta() {
 }
 
 function renderProfilokTab() {
+  automent();
   let h=`<div class="profil-lista">`;
   profilok.forEach((p,i) => {
     const isA=p.id===aktivProfilId;
@@ -2009,17 +2035,6 @@ function ujProfilMent() {
   hiba.textContent='';
   profilValtas(uj.id);
   renderProfilokTab();
-}
-
-function resetAll() {
-  if(!confirm('Visszaállítod az összes beállítást?')) return;
-  cfg={...DEFAULTS};
-  const alap=ujProfilObj('Általános', defaultPizzak, defaultPastaEtelek);
-  profilok=[alap]; aktivProfilId=alap.id;
-  pizzak=aktivProfil().pizzak; pastak=aktivProfil().pastak;
-  pizzaAlapanyagok=defaultPizzaAlapanyagok.map(a=>({...a}));
-  pastaAlapanyagok=defaultPastaAlapanyagok.map(a=>({...a}));
-  renderProfilBar(); renderModalBody(); pizzaFrissit(); pastaFrissit();
 }
 
 // ════════════════════════════════════════
@@ -2177,33 +2192,20 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
 }
 
 // ════════════════════════════════════════
-// INIT – URL betöltés + renderelés
+// INIT – betöltési sorrend + renderelés
 // ════════════════════════════════════════
-const urlBetoltve = urlBetoltesIndulas();  // ← Ha van ?d= az URL-ben, betölti
-if(!urlBetoltve) allapotJsonBetoltes();    // ← Csak akkor tölti be az allapot.json-t, ha nem jött állapot az URL-ből
-
-// Slider-ek szinkronizálása a betöltött értékekre
-document.getElementById('sl45').value = simaArany45;
-document.getElementById('s45-sima').textContent = simaArany45+'%';
-document.getElementById('s45-tk').textContent = (100-simaArany45)+'%';
-document.getElementById('sl32').value = simaArany32;
-document.getElementById('s32-sima').textContent = simaArany32+'%';
-document.getElementById('s32-tk').textContent = (100-simaArany32)+'%';
-document.getElementById('teszta-fusili-sl').value = tesztaFusili;
-document.getElementById('teszta-spagetti-sl').value = tesztaSpagetti;
-document.getElementById('teszta-penne-sl').value = tesztaPenne;
-
-// Mód szinkronizálás
-['45','32','kombi'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('active',t===pizzaMod));
-['pasta','gnocchi','kombi'].forEach(t=>document.getElementById('ptab-'+t).classList.toggle('active',t===pastaMod));
-document.getElementById('teszta-box').classList.toggle('hidden', pastaMod==='gnocchi');
-
-renderProfilBar();
-renderSablonBar();
-renderPizzaInputs();
-renderPastaInputs();
-pizzaFrissit();
-pastaFrissit();
+// 1) megosztott link (?d=) – ha van, ez a legerősebb, felülír mindent
+// 2) ezen a böngészőn korábban automatikusan elmentett saját állapot
+// 3) központi allapot.json (első látogatás, vagy ha nincs helyi mentés)
+const urlBetoltve = urlBetoltesIndulas();
+if(urlBetoltve) {
+  szinkronizaljUI();
+} else if(helyiAllapotBetoltese()) {
+  szinkronizaljUI();
+} else {
+  szinkronizaljUI();      // azonnali render a beépített alapértékekkel
+  allapotJsonBetoltes();  // aszinkron – felülírja a fentit, ha sikerül elérni a központi állapotot
+}
 </script>
 </body>
 </html>
