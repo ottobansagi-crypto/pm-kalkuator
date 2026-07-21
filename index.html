@@ -2221,6 +2221,25 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
 }
 
 // ════════════════════════════════════════
+// FÜLEK KÖZTI SZINKRONIZÁLÁS
+// ════════════════════════════════════════
+// Ha ugyanabban a böngészőben egyszerre több fülön/ablakban is nyitva van az
+// oldal, mindegyiknek saját, egymástól független memóriája van. E nélkül a
+// figyelés nélkül az egyik fülön mentett sablon/módosítás elveszne, mihelyt egy
+// másik (a mentésről nem tudó) fül is ment valamit, mert az felülírná a
+// localStorage-ot a saját, régebbi állapotával. Ha egy másik fülön történt
+// mentés, ez a fül azonnal átveszi a friss állapotot.
+window.addEventListener('storage', function(e) {
+  if(e.key !== LS_KEY || !e.newValue) return;
+  const settingsNyitva = !document.getElementById('settings-modal').classList.contains('hidden');
+  if(settingsNyitva) return; // ne zavarjuk meg, ha épp szerkesztés/beállítás van folyamatban
+  try {
+    alkalmazBetoltottAllapot(JSON.parse(e.newValue));
+    szinkronizaljUI();
+  } catch(err) { console.warn('Fülek közti szinkronizálási hiba:', err); }
+});
+
+// ════════════════════════════════════════
 // INIT – betöltési sorrend + renderelés
 // ════════════════════════════════════════
 // 1) megosztott link (?d=) – ha van, ez a legerősebb, felülír mindent
