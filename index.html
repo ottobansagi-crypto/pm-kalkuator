@@ -80,7 +80,7 @@
   .input-panel.ppasta { border-color: #8E5A96; background: #F8EFF9; }
   .input-panel.pgnocchi { border-color: #6FA85C; background: #EFF9EC; }
   .input-panel h4 { font-size: 13px; margin-bottom: 10px; }
-  .p45 h4 { color: #BC1D23; } .p32 h4 { color: #8a5a1f; }
+  .p45 h4 { color: #222; } .p32 h4 { color: #8a5a1f; }
   .ppasta h4 { color: #6b3f72; } .pgnocchi h4 { color: #345c28; }
   .dual-input { display: flex; flex-direction: column; gap: 8px; }
   .iblock { border: 2px solid #dde3f0; border-radius: 8px; padding: 10px 14px; background: white; }
@@ -90,7 +90,7 @@
   .iblock.agnocchi { border-color: #6FA85C; background: #E7F5E3; }
   .iblock label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 4px; }
   .irow { display: flex; align-items: center; gap: 6px; }
-  .iblock input[type=number] { font-size: 20px; font-weight: bold; color: #BC1D23; border: none; outline: none; background: transparent; width: 100%; }
+  .iblock input[type=number] { font-size: 20px; font-weight: bold; color: #222; border: none; outline: none; background: transparent; width: 100%; }
   .iblock .sfx { font-size: 12px; color: #888; white-space: nowrap; }
   .or-div { text-align: center; font-size: 11px; color: #aaa; font-weight: bold; }
 
@@ -105,7 +105,7 @@
   .slider-box.s45 { background: #FFF2F3; border: 2px solid #EC1B23; }
   .slider-box.s32 { background: #FDF3E7; border: 2px solid #D9A24F; }
   .slider-box .stitle { font-size: 12px; font-weight: bold; margin-bottom: 10px; }
-  .s45 .stitle { color: #EC1B23; } .s32 .stitle { color: #8a5a1f; }
+  .s45 .stitle { color: #222; } .s32 .stitle { color: #8a5a1f; }
   .slider-side { display: flex; flex-direction: column; gap: 6px; }
   .slider-side label { font-size: 13px; font-weight: bold; color: #555; }
   input[type=range] { width: 200px; accent-color: #EC1B23; cursor: pointer; }
@@ -113,9 +113,9 @@
   .gv { border-radius: 8px; padding: 7px 12px; text-align: center; min-width: 80px; border: 2px solid #EC1B23; background: #FFF2F3; }
   .gv.tk { border-color: #D9A24F; background: #FDF3E7; }
   .gv .gl { font-size: 9px; color: #888; margin-bottom: 1px; }
-  .gv .gn { font-size: 17px; font-weight: bold; color: #BC1D23; }
+  .gv .gn { font-size: 17px; font-weight: bold; color: #222; }
   .gv.tk .gn { color: #8a5a1f; }
-  .gv .gp { font-size: 10px; color: #EC1B23; font-weight: bold; }
+  .gv .gp { font-size: 10px; color: #555; font-weight: bold; }
   .gv.tk .gp { color: #D9A24F; }
   .vs { font-size: 13px; color: #ccc; font-weight: bold; }
   .reset-btn { background: #f0f4f8; border: 1px solid #ccc; border-radius: 6px; padding: 5px 12px; font-size: 11px; cursor: pointer; color: #555; margin-top: 6px; display: inline-block; }
@@ -2177,7 +2177,7 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
   pizzaAlapanyagok.forEach(a=>{if(oszlopok.some(o=>(o.ossz[a.nev]||0)>0)) sorok.push({nev:a.disp||a.nev,kulcs:a.nev,alap:a.alap,egys:a.egys,ae:a.ae,tipus:'anyag'});});
 
   let html=`<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;min-width:500px;">
-    <thead><tr style="background:#FFF2F3;">
+    <thead><tr style="background:#f7f9fc;">
       <th style="text-align:left;padding:8px 12px;font-size:11px;color:#BC1D23;border-bottom:2px solid #dde3f0;min-width:160px;">Alapanyag</th>
       <th style="padding:8px 12px;font-size:11px;color:#BC1D23;border-bottom:2px solid #dde3f0;">Egység</th>`;
 
@@ -2213,7 +2213,7 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
     html+=`</tr>`;
   });
 
-  html+=`<tr style="background:#FFF2F3;font-weight:bold;border-top:2px solid #dde3f0;">
+  html+=`<tr style="background:#f7f9fc;font-weight:bold;border-top:2px solid #dde3f0;">
     <td colspan="2" style="padding:7px 12px;color:#BC1D23;font-size:12px;">🏆 Forgalom összesen</td>`;
   oszlopok.forEach(o=>{html+=`<td style="padding:7px 12px;text-align:center;color:${szin};">${fmt(Math.round(o.ft45+o.ft32))} Ft</td>`;});
   html+=`</tr></tbody></table></div>`;
