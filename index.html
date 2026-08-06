@@ -147,6 +147,7 @@
   .val { font-weight: bold; color: #BC1D23; }
   .ceil { font-weight: bold; color: #345c28; background: #E3F0DC; border-radius: 5px; padding: 2px 7px; display: inline-block; }
   .unit { color: #888; font-size: 10px; margin-left: 2px; }
+  .masod-egys { color: #888; font-size: 11px; font-weight: normal; }
   .dash { color: #bbb; }
   .gh td { font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 7px 12px 5px; border-bottom: none; color: white; }
   .gh-gomboc td { background: #BC1D23; }
@@ -605,7 +606,15 @@
 // ════════════════════════════════════════
 // KONFIGURÁCIÓ
 // ════════════════════════════════════════
-const DEFAULTS = { szeletAr45: 1199, pizzaAr32: 5600, szeletPerGomboc: 8, pastaAr: 3090, gnocchiAr: 3390 };
+const DEFAULTS = {
+  szeletAr45: 1199, pizzaAr32: 5600, szeletPerGomboc: 8, pastaAr: 3090, gnocchiAr: 3390,
+  // Másodlagos egység (pl. tálca) – opciós, kikapcsolható megjelenítés a db mennyiségek mellett
+  masodEgysBe: false,
+  talca45Sima: 6, talca45SimaNev: 'tálca',
+  talca45Tk: 6, talca45TkNev: 'tálca',
+  talca32Sima: 12, talca32SimaNev: 'tálca',
+  talca32Tk: 8, talca32TkNev: 'tálca',
+};
 let cfg = { ...DEFAULTS };
 
 // A "disp" a végfelhasználónak (táblák, exportok) mutatott közönségbarát név;
@@ -1049,17 +1058,22 @@ function exportExcel() {
   rows.push(['32cm forgalom:', db32 > 0 ? db32*cfg.pizzaAr32 + ' Ft' : '', 'Pasta adag:', dbPasta + ' db', 'Gnocchi adag:', dbGnocchi + ' db']);
   rows.push(['Pasta forgalom:', dbPasta > 0 ? dbPasta*cfg.pastaAr + ' Ft' : '', 'Gnocchi forgalom:', dbGnocchi > 0 ? dbGnocchi*cfg.gnocchiAr + ' Ft' : '']);
   rows.push([]);
-  rows.push(['Alapanyag', 'Egység', 'Szükséges', 'Rendelési egység', 'Rendeléshez (kerekítve)']);
+  rows.push(['Alapanyag', 'Egység', 'Szükséges', 'Rendelési egység', 'Rendeléshez (kerekítve)', 'Tálca (opció)']);
 
   // Gombóc sorok
   const tk45 = 100 - simaArany45, tk32 = 100 - simaArany32;
+  const talcaExcel = (rendelt, meret, nev) => cfg.masodEgysBe && meret ? `${Math.round(rendelt/meret*10)/10} ${nev}` : '';
   if(db45 > 0) {
-    rows.push([`Sima gombóc 45cm (${simaArany45}%)`, 'db', Math.round(db45*simaArany45/100), 6, Math.ceil(Math.round(db45*simaArany45/100)/6)*6]);
-    rows.push([`TK gombóc 45cm (${tk45}%)`, 'db', Math.round(db45*tk45/100), 6, Math.ceil(Math.round(db45*tk45/100)/6)*6]);
+    const sima45=Math.round(db45*simaArany45/100), tk45db=Math.round(db45*tk45/100);
+    const sima45r=ceiling(sima45,cfg.talca45Sima), tk45r=ceiling(tk45db,cfg.talca45Tk);
+    rows.push([`Sima gombóc 45cm (${simaArany45}%)`, 'db', sima45, cfg.talca45Sima, sima45r, talcaExcel(sima45r,cfg.talca45Sima,cfg.talca45SimaNev)]);
+    rows.push([`TK gombóc 45cm (${tk45}%)`, 'db', tk45db, cfg.talca45Tk, tk45r, talcaExcel(tk45r,cfg.talca45Tk,cfg.talca45TkNev)]);
   }
   if(db32 > 0) {
-    rows.push([`Sima gombóc 32cm (${simaArany32}%)`, 'db', Math.round(db32*simaArany32/100), 12, Math.ceil(Math.round(db32*simaArany32/100)/12)*12]);
-    rows.push([`TK gombóc 32cm (${tk32}%)`, 'db', Math.round(db32*tk32/100), 8, Math.ceil(Math.round(db32*tk32/100)/8)*8]);
+    const sima32=Math.round(db32*simaArany32/100), tk32db=Math.round(db32*tk32/100);
+    const sima32r=ceiling(sima32,cfg.talca32Sima), tk32r=ceiling(tk32db,cfg.talca32Tk);
+    rows.push([`Sima gombóc 32cm (${simaArany32}%)`, 'db', sima32, cfg.talca32Sima, sima32r, talcaExcel(sima32r,cfg.talca32Sima,cfg.talca32SimaNev)]);
+    rows.push([`TK gombóc 32cm (${tk32}%)`, 'db', tk32db, cfg.talca32Tk, tk32r, talcaExcel(tk32r,cfg.talca32Tk,cfg.talca32TkNev)]);
   }
 
   // Pizza alapanyagok
@@ -1074,7 +1088,7 @@ function exportExcel() {
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
     ertek = Math.round(ertek*100)/100;
     const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : '';
-    rows.push([a.disp||a.nev, a.egys, ertek, a.alap || '', ceil]);
+    rows.push([a.disp||a.nev, a.egys, ertek, a.alap || '', ceil, talcaExcel(ceil, a.masodEgys?.meret, a.masodEgys?.nev)]);
   });
 
   // Pasta alapanyagok ha van
@@ -1110,14 +1124,14 @@ function exportExcel() {
       if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
       ertek = Math.round(ertek*100)/100;
       const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : '';
-      rows.push([a.disp||a.nev, a.egys, ertek, a.alap || '', ceil]);
+      rows.push([a.disp||a.nev, a.egys, ertek, a.alap || '', ceil, talcaExcel(ceil, a.masodEgys?.meret, a.masodEgys?.nev)]);
     });
   }
 
   // Excel generálás SheetJS-szel
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = [{wch:30},{wch:8},{wch:12},{wch:16},{wch:18}];
+  ws['!cols'] = [{wch:30},{wch:8},{wch:12},{wch:16},{wch:18},{wch:14}];
   XLSX.utils.book_append_sheet(wb, ws, 'Alapanyag lista');
   XLSX.writeFile(wb, 'pizzame-rendeles-' + new Date().toISOString().slice(0,10) + '.xlsx');
 
@@ -1146,20 +1160,25 @@ function exportPDF() {
   let sorok = '';
   // Gombócok
   if(db45>0) {
-    sorok += `<tr style="background:#FDF3E7;"><td>Sima gombóc 45cm (${simaArany45}%)</td><td>db</td><td>${Math.round(db45*simaArany45/100)}</td><td><strong>${Math.ceil(Math.round(db45*simaArany45/100)/6)*6} db</strong></td></tr>`;
-    sorok += `<tr style="background:#FDF3E7;"><td>TK gombóc 45cm (${tk45}%)</td><td>db</td><td>${Math.round(db45*tk45/100)}</td><td><strong>${Math.ceil(Math.round(db45*tk45/100)/6)*6} db</strong></td></tr>`;
+    const sima45=Math.round(db45*simaArany45/100), tk45db=Math.round(db45*tk45/100);
+    const sima45r=ceiling(sima45,cfg.talca45Sima), tk45r=ceiling(tk45db,cfg.talca45Tk);
+    sorok += `<tr style="background:#FDF3E7;"><td>Sima gombóc 45cm (${simaArany45}%)</td><td>db</td><td>${sima45}</td><td><strong>${sima45r} db</strong>${masodEgysSzoveg(sima45r,cfg.talca45Sima,cfg.talca45SimaNev)}</td></tr>`;
+    sorok += `<tr style="background:#FDF3E7;"><td>TK gombóc 45cm (${tk45}%)</td><td>db</td><td>${tk45db}</td><td><strong>${tk45r} db</strong>${masodEgysSzoveg(tk45r,cfg.talca45Tk,cfg.talca45TkNev)}</td></tr>`;
   }
   if(db32>0) {
-    sorok += `<tr style="background:#FDF3E7;"><td>Sima gombóc 32cm (${simaArany32}%)</td><td>db</td><td>${Math.round(db32*simaArany32/100)}</td><td><strong>${Math.ceil(Math.round(db32*simaArany32/100)/12)*12} db</strong></td></tr>`;
-    sorok += `<tr style="background:#FDF3E7;"><td>TK gombóc 32cm (${tk32}%)</td><td>db</td><td>${Math.round(db32*tk32/100)}</td><td><strong>${Math.ceil(Math.round(db32*tk32/100)/8)*8} db</strong></td></tr>`;
+    const sima32=Math.round(db32*simaArany32/100), tk32db=Math.round(db32*tk32/100);
+    const sima32r=ceiling(sima32,cfg.talca32Sima), tk32r=ceiling(tk32db,cfg.talca32Tk);
+    sorok += `<tr style="background:#FDF3E7;"><td>Sima gombóc 32cm (${simaArany32}%)</td><td>db</td><td>${sima32}</td><td><strong>${sima32r} db</strong>${masodEgysSzoveg(sima32r,cfg.talca32Sima,cfg.talca32SimaNev)}</td></tr>`;
+    sorok += `<tr style="background:#FDF3E7;"><td>TK gombóc 32cm (${tk32}%)</td><td>db</td><td>${tk32db}</td><td><strong>${tk32r} db</strong>${masodEgysSzoveg(tk32r,cfg.talca32Tk,cfg.talca32TkNev)}</td></tr>`;
   }
   pizzaAlapanyagok.forEach(a => {
     if(ossz[a.nev]===undefined) return;
     let ertek = ossz[a.nev];
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
     ertek = Math.round(ertek*100)/100;
-    const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap + ' ' + a.ae : '–';
-    sorok += `<tr><td>${a.disp||a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#345c28;">${ceil}</strong></td></tr>`;
+    const ceilNum = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : null;
+    const ceil = ceilNum !== null ? ceilNum + ' ' + a.ae : '–';
+    sorok += `<tr><td>${a.disp||a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#345c28;">${ceil}</strong>${ceilNum!==null?masodEgysSzoveg(ceilNum,a.masodEgys?.meret,a.masodEgys?.nev):''}</td></tr>`;
   });
 
   // Pasta alapanyagok ha van
@@ -1193,8 +1212,9 @@ function exportPDF() {
       let ertek = pOssz[a.nev];
       if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek = ertek/pizzaCsomagSuly[a.nev];
       ertek = Math.round(ertek*100)/100;
-      const ceil = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap + ' ' + a.ae : '–';
-      pastaSorok += `<tr><td>${a.disp||a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#345c28;">${ceil}</strong></td></tr>`;
+      const ceilNum = a.alap !== null ? Math.ceil(ertek/a.alap)*a.alap : null;
+      const ceil = ceilNum !== null ? ceilNum + ' ' + a.ae : '–';
+      pastaSorok += `<tr><td>${a.disp||a.nev}</td><td>${a.egys}</td><td>${ertek}</td><td><strong style="color:#345c28;">${ceil}</strong>${ceilNum!==null?masodEgysSzoveg(ceilNum,a.masodEgys?.meret,a.masodEgys?.nev):''}</td></tr>`;
     });
   }
 
@@ -1383,6 +1403,11 @@ function tesztaReset() {
 // ════════════════════════════════════════
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function ceiling(v,a) { return Math.ceil(v/a)*a; }
+// Opciós másodlagos egység (pl. "≈ 10 tálca") szöveg egy db/g mennyiséghez, ha van hozzá megadva méret.
+function masodEgysSzoveg(ertek, meret, nev) {
+  if(!cfg.masodEgysBe || !meret) return '';
+  return ` <span class="masod-egys">(${fmt(Math.round(ertek/meret*10)/10)} ${esc(nev||'egység')})</span>`;
+}
 function fmt(n) { return Number(n).toLocaleString('hu-HU'); }
 function fmtFt(n) { return Number(n).toLocaleString('hu-HU')+' Ft'; }
 function aktivPizzak() { return pizzak.filter(p=>p.aktiv); }
@@ -1409,12 +1434,12 @@ function pizzaFrissit() {
   document.getElementById('pizza-summary').innerHTML=sh;
   document.getElementById('pizza-input-title').textContent=`📊 Mennyi áru kell? · Profil: ${aktivProfil().nev}`;
 
-  if(pizzaMod!=='32') document.getElementById('gv45').innerHTML=
-    `<div class="gv"><div class="gl">Sima</div><div class="gn">${Math.round(db45*simaArany45/100)}</div><div class="gp">${simaArany45}%</div></div>
-    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${Math.round(db45*tk45/100)}</div><div class="gp">${tk45}%</div></div>`;
-  if(pizzaMod!=='45') document.getElementById('gv32').innerHTML=
-    `<div class="gv" style="border-color:#D9A24F;background:#FDF3E7"><div class="gl">Sima</div><div class="gn" style="color:#8a5a1f">${Math.round(db32*simaArany32/100)}</div><div class="gp" style="color:#D9A24F">${simaArany32}%</div></div>
-    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${Math.round(db32*tk32/100)}</div><div class="gp">${tk32}%</div></div>`;
+  if(pizzaMod!=='32') { const s45=Math.round(db45*simaArany45/100), t45=Math.round(db45*tk45/100); document.getElementById('gv45').innerHTML=
+    `<div class="gv"><div class="gl">Sima</div><div class="gn">${s45}</div><div class="gp">${simaArany45}%${masodEgysSzoveg(s45,cfg.talca45Sima,cfg.talca45SimaNev)}</div></div>
+    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${t45}</div><div class="gp">${tk45}%${masodEgysSzoveg(t45,cfg.talca45Tk,cfg.talca45TkNev)}</div></div>`; }
+  if(pizzaMod!=='45') { const s32=Math.round(db32*simaArany32/100), t32=Math.round(db32*tk32/100); document.getElementById('gv32').innerHTML=
+    `<div class="gv" style="border-color:#D9A24F;background:#FDF3E7"><div class="gl">Sima</div><div class="gn" style="color:#8a5a1f">${s32}</div><div class="gp" style="color:#D9A24F">${simaArany32}%${masodEgysSzoveg(s32,cfg.talca32Sima,cfg.talca32SimaNev)}</div></div>
+    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${t32}</div><div class="gp">${tk32}%${masodEgysSzoveg(t32,cfg.talca32Tk,cfg.talca32TkNev)}</div></div>`; }
 
   document.getElementById('pizza-grid').innerHTML = aktivPizzak().map(pz => {
     const d45=Math.round(db45*pz.arany/100), d32=Math.round(db32*pz.arany/100);
@@ -1436,15 +1461,16 @@ function pizzaFrissit() {
 
   let html=`<tr class="gh gh-gomboc"><td colspan="5">🫓 Gombóc</td></tr>`;
   const gsorok=[
-    {nev:`Sima gombóc 45cm (${simaArany45}%)`,egys:"db",ertek:Math.round(db45*simaArany45/100),alap:6,ae:"db",cls:"row-gomboc"},
-    {nev:`TK gombóc 45cm (${tk45}%)`,egys:"db",ertek:Math.round(db45*tk45/100),alap:6,ae:"db",cls:"row-gomboc"},
+    {nev:`Sima gombóc 45cm (${simaArany45}%)`,egys:"db",ertek:Math.round(db45*simaArany45/100),alap:cfg.talca45Sima,ae:"db",cls:"row-gomboc",megNev:cfg.talca45SimaNev},
+    {nev:`TK gombóc 45cm (${tk45}%)`,egys:"db",ertek:Math.round(db45*tk45/100),alap:cfg.talca45Tk,ae:"db",cls:"row-gomboc",megNev:cfg.talca45TkNev},
   ];
   if(pizzaMod!=='45') {
-    gsorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`,egys:"db",ertek:Math.round(db32*simaArany32/100),alap:12,ae:"db",cls:"row-gomboc"});
-    gsorok.push({nev:`TK gombóc 32cm (${tk32}%)`,egys:"db",ertek:Math.round(db32*tk32/100),alap:8,ae:"db",cls:"row-gomboc"});
+    gsorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`,egys:"db",ertek:Math.round(db32*simaArany32/100),alap:cfg.talca32Sima,ae:"db",cls:"row-gomboc",megNev:cfg.talca32SimaNev});
+    gsorok.push({nev:`TK gombóc 32cm (${tk32}%)`,egys:"db",ertek:Math.round(db32*tk32/100),alap:cfg.talca32Tk,ae:"db",cls:"row-gomboc",megNev:cfg.talca32TkNev});
   }
   gsorok.forEach(r => {
-    html+=`<tr class="${r.cls}"><td>${r.nev}</td><td>${r.egys}</td><td><span class="val">${fmt(r.ertek)}</span></td><td>${fmt(r.alap)} ${r.ae}</td><td><span class="ceil">${fmt(ceiling(r.ertek,r.alap))} ${r.ae}</span></td></tr>`;
+    const rendelt=ceiling(r.ertek,r.alap);
+    html+=`<tr class="${r.cls}"><td>${r.nev}</td><td>${r.egys}</td><td><span class="val">${fmt(r.ertek)}</span></td><td>${fmt(r.alap)} ${r.ae}</td><td><span class="ceil">${fmt(rendelt)} ${r.ae}</span>${masodEgysSzoveg(rendelt,r.alap,r.megNev)}</td></tr>`;
   });
 
   html+=`<tr class="gh gh-alap"><td colspan="5">📦 Alapanyagok</td></tr>`;
@@ -1455,7 +1481,8 @@ function pizzaFrissit() {
     let ertek=ossz[a.nev];
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek=ertek/pizzaCsomagSuly[a.nev];
     ertek=Math.round(ertek*100)/100;
-    const cs=a.alap!==null?`<span class="ceil">${fmt(ceiling(ertek,a.alap))} ${a.ae}</span>`:'<span class="dash">–</span>';
+    const rendelt=a.alap!==null?ceiling(ertek,a.alap):null;
+    const cs=rendelt!==null?`<span class="ceil">${fmt(rendelt)} ${a.ae}</span>${masodEgysSzoveg(rendelt,a.masodEgys?.meret,a.masodEgys?.nev)}`:'<span class="dash">–</span>';
     const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
     html+=`<tr class="row-norm"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
   });
@@ -1538,7 +1565,8 @@ function pastaFrissit() {
     let ertek=pOssz[a.nev];
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek=ertek/pizzaCsomagSuly[a.nev];
     ertek=Math.round(ertek*100)/100;
-    const cs=a.alap!==null?`<span class="ceil">${fmt(ceiling(ertek,a.alap))} ${a.ae}</span>`:'<span class="dash">–</span>';
+    const rendelt=a.alap!==null?ceiling(ertek,a.alap):null;
+    const cs=rendelt!==null?`<span class="ceil">${fmt(rendelt)} ${a.ae}</span>${masodEgysSzoveg(rendelt,a.masodEgys?.meret,a.masodEgys?.nev)}`:'<span class="dash">–</span>';
     const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
     const isTeszta=a.nev.includes('Tészta');
     const isGnocchi=a.nev==='Gnocchi';
@@ -1784,6 +1812,19 @@ function renderArakTab() {
           1 gombóc (45cm) = <strong>${fmtFt(cfg.szeletPerGomboc*cfg.szeletAr45)}</strong><br>
           1 pizza (32cm) = <strong>${fmtFt(cfg.pizzaAr32)}</strong>
         </div></div>
+      <div class="si-item" style="grid-column:1/-1;background:#f7f9fc;border-radius:8px;padding:14px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="set-masod-be" ${cfg.masodEgysBe?'checked':''} onchange="cfgV()">
+          📐 Másodlagos egység mutatása (pl. tálca)
+        </label>
+        <div class="hint" style="margin:4px 0 10px;">Ha bekapcsolod, a gombóc db-mennyiségek mellett megjelenik a tálcaszám is – pl. "60 db (10 tálca)".</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;${cfg.masodEgysBe?'':'opacity:0.5;'}">
+          <div class="si-item"><label>45cm Sima – db/tálca</label><input type="number" id="set-talca-45s" value="${cfg.talca45Sima}" min="1" oninput="cfgV()" ${cfg.masodEgysBe?'':'disabled'}></div>
+          <div class="si-item"><label>45cm TK – db/tálca</label><input type="number" id="set-talca-45t" value="${cfg.talca45Tk}" min="1" oninput="cfgV()" ${cfg.masodEgysBe?'':'disabled'}></div>
+          <div class="si-item"><label>32cm Sima – db/tálca</label><input type="number" id="set-talca-32s" value="${cfg.talca32Sima}" min="1" oninput="cfgV()" ${cfg.masodEgysBe?'':'disabled'}></div>
+          <div class="si-item"><label>32cm TK – db/tálca</label><input type="number" id="set-talca-32t" value="${cfg.talca32Tk}" min="1" oninput="cfgV()" ${cfg.masodEgysBe?'':'disabled'}></div>
+        </div>
+      </div>
     </div>`;
 }
 
@@ -1793,6 +1834,11 @@ function cfgV() {
   cfg.szeletPerGomboc=parseInt(document.getElementById('set-spg').value)||cfg.szeletPerGomboc;
   cfg.pastaAr=parseInt(document.getElementById('set-pasta-ar').value)||cfg.pastaAr;
   cfg.gnocchiAr=parseInt(document.getElementById('set-gnocchi-ar').value)||cfg.gnocchiAr;
+  cfg.masodEgysBe=document.getElementById('set-masod-be').checked;
+  cfg.talca45Sima=parseInt(document.getElementById('set-talca-45s').value)||cfg.talca45Sima;
+  cfg.talca45Tk=parseInt(document.getElementById('set-talca-45t').value)||cfg.talca45Tk;
+  cfg.talca32Sima=parseInt(document.getElementById('set-talca-32s').value)||cfg.talca32Sima;
+  cfg.talca32Tk=parseInt(document.getElementById('set-talca-32t').value)||cfg.talca32Tk;
   aktivProfil().beallitasok = aktivProfil().beallitasok || {};
   aktivProfil().beallitasok.cfg = {...cfg};
   renderArakTab();
@@ -2114,12 +2160,12 @@ function szamolRendeles(gomboc45, gomboc32, profil) {
   });
   const tk45=100-simaArany45, tk32=100-simaArany32;
   const gombocSorok=[
-    {nev:`Sima gombóc 45cm (${simaArany45}%)`,ertek:Math.round(gomboc45*simaArany45/100),alap:6},
-    {nev:`TK gombóc 45cm (${tk45}%)`,ertek:Math.round(gomboc45*tk45/100),alap:6},
+    {nev:`Sima gombóc 45cm (${simaArany45}%)`,ertek:Math.round(gomboc45*simaArany45/100),alap:cfg.talca45Sima,megNev:cfg.talca45SimaNev},
+    {nev:`TK gombóc 45cm (${tk45}%)`,ertek:Math.round(gomboc45*tk45/100),alap:cfg.talca45Tk,megNev:cfg.talca45TkNev},
   ];
   if(gomboc32>0) {
-    gombocSorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`,ertek:Math.round(gomboc32*simaArany32/100),alap:12});
-    gombocSorok.push({nev:`TK gombóc 32cm (${tk32}%)`,ertek:Math.round(gomboc32*tk32/100),alap:8});
+    gombocSorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`,ertek:Math.round(gomboc32*simaArany32/100),alap:cfg.talca32Sima,megNev:cfg.talca32SimaNev});
+    gombocSorok.push({nev:`TK gombóc 32cm (${tk32}%)`,ertek:Math.round(gomboc32*tk32/100),alap:cfg.talca32Tk,megNev:cfg.talca32TkNev});
   }
   return {ossz,gombocSorok};
 }
@@ -2175,10 +2221,10 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
   }).filter(o=>o.ft45+o.ft32>0);
 
   const sorok=[];
-  const gombocNevek=new Set();
-  oszlopok.forEach(o=>o.gombocSorok.forEach(r=>{if(r.ertek>0)gombocNevek.add(r.nev+'|'+r.alap);}));
-  gombocNevek.forEach(key=>{const[nev,alap]=key.split('|');sorok.push({nev,alap:parseInt(alap),egys:'db',ae:'db',tipus:'gomboc'});});
-  pizzaAlapanyagok.forEach(a=>{if(oszlopok.some(o=>(o.ossz[a.nev]||0)>0)) sorok.push({nev:a.disp||a.nev,kulcs:a.nev,alap:a.alap,egys:a.egys,ae:a.ae,tipus:'anyag'});});
+  const gombocNevek=new Map();
+  oszlopok.forEach(o=>o.gombocSorok.forEach(r=>{if(r.ertek>0)gombocNevek.set(r.nev+'|'+r.alap,r.megNev);}));
+  gombocNevek.forEach((megNev,key)=>{const[nev,alap]=key.split('|');sorok.push({nev,alap:parseInt(alap),megNev,egys:'db',ae:'db',tipus:'gomboc'});});
+  pizzaAlapanyagok.forEach(a=>{if(oszlopok.some(o=>(o.ossz[a.nev]||0)>0)) sorok.push({nev:a.disp||a.nev,kulcs:a.nev,alap:a.alap,egys:a.egys,ae:a.ae,tipus:'anyag',masodEgys:a.masodEgys});});
 
   let html=`<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;min-width:500px;">
     <thead><tr style="background:#f7f9fc;">
@@ -2212,7 +2258,8 @@ function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h)
       else{const k=sor.kulcs||sor.nev;ertek=o.ossz[k]||0;if(sor.egys==='db'&&csomagSuly[k])ertek=ertek/csomagSuly[k];ertek=Math.round(ertek*10)/10;}
       const ceil=sor.alap?Math.ceil(ertek/sor.alap)*sor.alap:null;
       const van=ertek>0;
-      html+=`<td style="padding:6px 12px;text-align:center;">${van?`<div style="font-size:11px;color:#888;">${fmt(ertek)} ${sor.egys}</div>${ceil!==null?`<div style="font-weight:bold;color:#345c28;background:#E3F0DC;border-radius:5px;padding:2px 8px;display:inline-block;margin-top:2px;">${fmt(ceil)} ${sor.ae||sor.egys}</div>`:''}`:'<span style="color:#e0e0e0;">–</span>'}</td>`;
+      const megEgys=ceil!==null&&sor.tipus==='gomboc'?masodEgysSzoveg(ceil,sor.alap,sor.megNev):(ceil!==null?masodEgysSzoveg(ceil,sor.masodEgys?.meret,sor.masodEgys?.nev):'');
+      html+=`<td style="padding:6px 12px;text-align:center;">${van?`<div style="font-size:11px;color:#888;">${fmt(ertek)} ${sor.egys}</div>${ceil!==null?`<div style="font-weight:bold;color:#345c28;background:#E3F0DC;border-radius:5px;padding:2px 8px;display:inline-block;margin-top:2px;">${fmt(ceil)} ${sor.ae||sor.egys}</div>${megEgys}`:''}`:'<span style="color:#e0e0e0;">–</span>'}</td>`;
     });
     html+=`</tr>`;
   });
