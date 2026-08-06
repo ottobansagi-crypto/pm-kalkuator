@@ -148,6 +148,10 @@
   .ceil { font-weight: bold; color: #345c28; background: #E3F0DC; border-radius: 5px; padding: 2px 7px; display: inline-block; }
   .unit { color: #888; font-size: 10px; margin-left: 2px; }
   .masod-egys { color: #888; font-size: 11px; font-weight: normal; }
+  .talca-col { display: none; }
+  table.talca-on .talca-col { display: table-cell; }
+  .talca-val { font-weight: bold; color: #345c28; background: #E3F0DC; border-radius: 5px; padding: 2px 7px; display: inline-block; }
+  .gv .gt { font-size: 11px; font-weight: bold; color: #345c28; margin-top: 3px; }
   .dash { color: #bbb; }
   .gh td { font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 7px 12px 5px; border-bottom: none; color: white; }
   .gh-gomboc td { background: #BC1D23; }
@@ -324,8 +328,8 @@
   </div>
   <div class="section">
     <div class="section-title">📦 Alapanyag szükséglet</div>
-    <table>
-      <thead><tr><th>Alapanyag</th><th>Egység</th><th>Szükséges</th><th>Alapegység</th><th>Rendeléshez</th></tr></thead>
+    <table id="pizza-anyag-table">
+      <thead><tr><th>Alapanyag</th><th>Egység</th><th>Szükséges</th><th>Alapegység</th><th>Rendeléshez</th><th class="talca-col">Tálca/Csomag</th></tr></thead>
       <tbody id="pizza-anyag-tabla"></tbody>
     </table>
   </div>
@@ -371,10 +375,11 @@
   </div>
   <div class="section">
     <div class="section-title pasta-color">📦 Pasta alapanyag szükséglet</div>
-    <table>
+    <table id="pasta-anyag-table">
       <thead><tr>
         <th class="pasta-th">Alapanyag</th><th class="pasta-th">Egység</th>
         <th class="pasta-th">Szükséges</th><th class="pasta-th">Alapegység</th><th class="pasta-th">Rendeléshez</th>
+        <th class="pasta-th talca-col">Tálca/Csomag</th>
       </tr></thead>
       <tbody id="pasta-anyag-tabla"></tbody>
     </table>
@@ -1408,6 +1413,11 @@ function masodEgysSzoveg(ertek, meret, nev) {
   if(!cfg.masodEgysBe || !meret) return '';
   return ` <span class="masod-egys">(${fmt(Math.round(ertek/meret*10)/10)} ${esc(nev||'egység')})</span>`;
 }
+// Ugyanez, önálló táblacellaként (a "Tálca/Csomag" oszlophoz).
+function talcaCellHtml(ertek, meret, nev) {
+  if(!meret) return '<span class="dash">–</span>';
+  return `<span class="talca-val">${fmt(Math.round(ertek/meret*10)/10)} ${esc(nev||'egység')}</span>`;
+}
 function fmt(n) { return Number(n).toLocaleString('hu-HU'); }
 function fmtFt(n) { return Number(n).toLocaleString('hu-HU')+' Ft'; }
 function aktivPizzak() { return pizzak.filter(p=>p.aktiv); }
@@ -1434,12 +1444,13 @@ function pizzaFrissit() {
   document.getElementById('pizza-summary').innerHTML=sh;
   document.getElementById('pizza-input-title').textContent=`📊 Mennyi áru kell? · Profil: ${aktivProfil().nev}`;
 
+  const gtLine = (ertek,meret,nev) => cfg.masodEgysBe && meret ? `<div class="gt">≈ ${fmt(Math.round(ertek/meret*10)/10)} ${esc(nev||'egység')}</div>` : '';
   if(pizzaMod!=='32') { const s45=Math.round(db45*simaArany45/100), t45=Math.round(db45*tk45/100); document.getElementById('gv45').innerHTML=
-    `<div class="gv"><div class="gl">Sima</div><div class="gn">${s45}</div><div class="gp">${simaArany45}%${masodEgysSzoveg(s45,cfg.talca45Sima,cfg.talca45SimaNev)}</div></div>
-    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${t45}</div><div class="gp">${tk45}%${masodEgysSzoveg(t45,cfg.talca45Tk,cfg.talca45TkNev)}</div></div>`; }
+    `<div class="gv"><div class="gl">Sima</div><div class="gn">${s45}</div><div class="gp">${simaArany45}%</div>${gtLine(s45,cfg.talca45Sima,cfg.talca45SimaNev)}</div>
+    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${t45}</div><div class="gp">${tk45}%</div>${gtLine(t45,cfg.talca45Tk,cfg.talca45TkNev)}</div>`; }
   if(pizzaMod!=='45') { const s32=Math.round(db32*simaArany32/100), t32=Math.round(db32*tk32/100); document.getElementById('gv32').innerHTML=
-    `<div class="gv" style="border-color:#D9A24F;background:#FDF3E7"><div class="gl">Sima</div><div class="gn" style="color:#8a5a1f">${s32}</div><div class="gp" style="color:#D9A24F">${simaArany32}%${masodEgysSzoveg(s32,cfg.talca32Sima,cfg.talca32SimaNev)}</div></div>
-    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${t32}</div><div class="gp">${tk32}%${masodEgysSzoveg(t32,cfg.talca32Tk,cfg.talca32TkNev)}</div></div>`; }
+    `<div class="gv" style="border-color:#D9A24F;background:#FDF3E7"><div class="gl">Sima</div><div class="gn" style="color:#8a5a1f">${s32}</div><div class="gp" style="color:#D9A24F">${simaArany32}%</div>${gtLine(s32,cfg.talca32Sima,cfg.talca32SimaNev)}</div>
+    <div class="vs">vs</div><div class="gv tk"><div class="gl">TK</div><div class="gn">${t32}</div><div class="gp">${tk32}%</div>${gtLine(t32,cfg.talca32Tk,cfg.talca32TkNev)}</div>`; }
 
   document.getElementById('pizza-grid').innerHTML = aktivPizzak().map(pz => {
     const d45=Math.round(db45*pz.arany/100), d32=Math.round(db32*pz.arany/100);
@@ -1459,7 +1470,9 @@ function pizzaFrissit() {
     });
   });
 
-  let html=`<tr class="gh gh-gomboc"><td colspan="5">🫓 Gombóc</td></tr>`;
+  document.getElementById('pizza-anyag-table').classList.toggle('talca-on', cfg.masodEgysBe);
+  const colN=6;
+  let html=`<tr class="gh gh-gomboc"><td colspan="${colN}">🫓 Gombóc</td></tr>`;
   const gsorok=[
     {nev:`Sima gombóc 45cm (${simaArany45}%)`,egys:"db",ertek:Math.round(db45*simaArany45/100),alap:cfg.talca45Sima,ae:"db",cls:"row-gomboc",megNev:cfg.talca45SimaNev},
     {nev:`TK gombóc 45cm (${tk45}%)`,egys:"db",ertek:Math.round(db45*tk45/100),alap:cfg.talca45Tk,ae:"db",cls:"row-gomboc",megNev:cfg.talca45TkNev},
@@ -1470,10 +1483,10 @@ function pizzaFrissit() {
   }
   gsorok.forEach(r => {
     const rendelt=ceiling(r.ertek,r.alap);
-    html+=`<tr class="${r.cls}"><td>${r.nev}</td><td>${r.egys}</td><td><span class="val">${fmt(r.ertek)}</span></td><td>${fmt(r.alap)} ${r.ae}</td><td><span class="ceil">${fmt(rendelt)} ${r.ae}</span>${masodEgysSzoveg(rendelt,r.alap,r.megNev)}</td></tr>`;
+    html+=`<tr class="${r.cls}"><td>${r.nev}</td><td>${r.egys}</td><td><span class="val">${fmt(r.ertek)}</span></td><td>${fmt(r.alap)} ${r.ae}</td><td><span class="ceil">${fmt(rendelt)} ${r.ae}</span></td><td class="talca-col">${talcaCellHtml(rendelt,r.alap,r.megNev)}</td></tr>`;
   });
 
-  html+=`<tr class="gh gh-alap"><td colspan="5">📦 Alapanyagok</td></tr>`;
+  html+=`<tr class="gh gh-alap"><td colspan="${colN}">📦 Alapanyagok</td></tr>`;
   const feldolg=new Set();
   pizzaAlapanyagok.forEach(a => {
     if(ossz[a.nev]===undefined) return;
@@ -1482,13 +1495,14 @@ function pizzaFrissit() {
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek=ertek/pizzaCsomagSuly[a.nev];
     ertek=Math.round(ertek*100)/100;
     const rendelt=a.alap!==null?ceiling(ertek,a.alap):null;
-    const cs=rendelt!==null?`<span class="ceil">${fmt(rendelt)} ${a.ae}</span>${masodEgysSzoveg(rendelt,a.masodEgys?.meret,a.masodEgys?.nev)}`:'<span class="dash">–</span>';
+    const cs=rendelt!==null?`<span class="ceil">${fmt(rendelt)} ${a.ae}</span>`:'<span class="dash">–</span>';
     const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
-    html+=`<tr class="row-norm"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
+    const tc=rendelt!==null?talcaCellHtml(rendelt,a.masodEgys?.meret,a.masodEgys?.nev):'<span class="dash">–</span>';
+    html+=`<tr class="row-norm"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td><td class="talca-col">${tc}</td></tr>`;
   });
   Object.keys(ossz).forEach(nev => {
     if(feldolg.has(nev)) return;
-    html+=`<tr class="row-norm"><td>${esc(nev)}</td><td>g</td><td><span class="val">${fmt(Math.round(ossz[nev]))}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td></tr>`;
+    html+=`<tr class="row-norm"><td>${esc(nev)}</td><td>g</td><td><span class="val">${fmt(Math.round(ossz[nev]))}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td><td class="talca-col"><span class="dash">–</span></td></tr>`;
   });
   document.getElementById('pizza-anyag-tabla').innerHTML=html;
 }
@@ -1557,6 +1571,7 @@ function pastaFrissit() {
     });
   });
 
+  document.getElementById('pasta-anyag-table').classList.toggle('talca-on', cfg.masodEgysBe);
   let phtml='';
   const pfeldolg=new Set();
   pastaAlapanyagok.forEach(a => {
@@ -1566,16 +1581,17 @@ function pastaFrissit() {
     if(a.egys==="db" && pizzaCsomagSuly[a.nev]) ertek=ertek/pizzaCsomagSuly[a.nev];
     ertek=Math.round(ertek*100)/100;
     const rendelt=a.alap!==null?ceiling(ertek,a.alap):null;
-    const cs=rendelt!==null?`<span class="ceil">${fmt(rendelt)} ${a.ae}</span>${masodEgysSzoveg(rendelt,a.masodEgys?.meret,a.masodEgys?.nev)}`:'<span class="dash">–</span>';
+    const cs=rendelt!==null?`<span class="ceil">${fmt(rendelt)} ${a.ae}</span>`:'<span class="dash">–</span>';
     const as=a.alap!==null?`${fmt(a.alap)} ${a.ae}`:'<span class="dash">–</span>';
+    const tc=rendelt!==null?talcaCellHtml(rendelt,a.masodEgys?.meret,a.masodEgys?.nev):'<span class="dash">–</span>';
     const isTeszta=a.nev.includes('Tészta');
     const isGnocchi=a.nev==='Gnocchi';
     const cls=isTeszta?'row-pasta':isGnocchi?'row-gnocchi':'row-norm';
-    phtml+=`<tr class="${cls}"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td></tr>`;
+    phtml+=`<tr class="${cls}"><td>${a.disp||a.nev}</td><td>${a.egys}</td><td><span class="val">${fmt(ertek)}</span><span class="unit"> ${a.egys}</span></td><td>${as}</td><td>${cs}</td><td class="talca-col">${tc}</td></tr>`;
   });
   Object.keys(pOssz).forEach(nev => {
     if(pfeldolg.has(nev)) return;
-    phtml+=`<tr class="row-norm"><td>${esc(nev)}</td><td>g</td><td><span class="val">${fmt(Math.round(pOssz[nev]))}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td></tr>`;
+    phtml+=`<tr class="row-norm"><td>${esc(nev)}</td><td>g</td><td><span class="val">${fmt(Math.round(pOssz[nev]))}</span></td><td><span class="dash">–</span></td><td><span class="dash">–</span></td><td class="talca-col"><span class="dash">–</span></td></tr>`;
   });
   document.getElementById('pasta-anyag-tabla').innerHTML=phtml;
 }
