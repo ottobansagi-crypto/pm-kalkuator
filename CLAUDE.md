@@ -1,4 +1,17 @@
-# pm-kalkuator
+# PM kalkulátor – Claude Code útmutató
+
+Egyfájlos, backend nélküli alapanyag-kalkulátor (`index.html` + `allapot.json` + `logo.png`),
+**nyilvános** GitHub Pages-en fut a `main` ágról.
+
+## Szabályok
+- Magyarul, tömören. Engedély nélkül ne implementálj; élesre (main) csak Otto jóváhagyásával.
+- **Ide üzletadat, adatbázis-séma, jelszó vagy token nem kerülhet** – a repó és az oldal nyilvános.
+- A receptszerkesztő jelszavas kapuja (`#jelszó-modal`, `ADMIN_HASH`) marad; csak kényelmi zár, nem valódi védelem.
+
+## Kapcsolódó
+- Az üzletenkénti készletfogyás (Tény / Ajánlás / Összevetés) és a régi üzlet-szimulátor utódja
+  a privát **`Keszletfogyas`** repóban készül; a terv és a döntések annak `docs/` mappájában vannak.
+- A törölt üzlet-szimulátor utolsó állapota: tag `szimulator-elotte-2026-09-30` (b7863e5).
 
 ## Vendorolt skillek
 
