@@ -280,7 +280,6 @@
 <div class="main-tabs">
   <div class="main-tab active" id="maintab-pizza" onclick="setMainTab('pizza')">🍕 Pizza</div>
   <div class="main-tab" id="maintab-pasta" onclick="setMainTab('pasta')">🍝 Pasta</div>
-  <div class="main-tab" id="maintab-uzlet" onclick="uzletJelszó()">🏪 Üzlet szimulátor 🔒</div>
 </div>
 
 <div class="profil-bar" id="profil-bar"></div>
@@ -387,97 +386,6 @@
 </div>
 </div>
 
-<!-- ÜZLET SZIMULÁTOR -->
-<div id="section-uzlet" class="hidden">
-<div class="container">
-  <div class="card">
-    <h3>🏪 Üzlet szimulátor – rendelési tervező</h3>
-    <p style="font-size:13px;color:#666;margin-bottom:16px;">Valós forgalmi adatok alapján automatikusan kiszámolja, hogy egy szállítási ciklusra mennyi alapanyag kell minden üzletnek.</p>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:280px;background:#FFF2F3;border:2px solid #EC1B23;border-radius:10px;padding:16px 18px;">
-        <div style="font-size:13px;font-weight:bold;color:#BC1D23;margin-bottom:12px;">🍕 PM1 Király – csak 45cm pizza</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div style="font-size:11px;font-weight:bold;color:#555;margin-bottom:4px;grid-column:1/-1;">Heti forgalmi minta (Ft/nap átlag)</div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">hétfő</label><input type="number" id="a-ft-0" value="393740" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">kedd</label><input type="number" id="a-ft-1" value="401924" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">szerda</label><input type="number" id="a-ft-2" value="460079" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">csütörtök</label><input type="number" id="a-ft-3" value="711283" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">péntek</label><input type="number" id="a-ft-4" value="983941" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">szombat</label><input type="number" id="a-ft-5" value="1223280" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">vasárnap</label><input type="number" id="a-ft-6" value="586258" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#BC1D23;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-        </div>
-        <div style="margin-bottom:10px;">
-          <label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:4px;">Szállítási ciklus</label>
-          <select id="a-ciklus" style="border:2px solid #EC1B23;border-radius:7px;padding:8px 10px;font-size:13px;width:100%;outline:none;" onchange="uzletFrissit()">
-            <option value="2n">2 naponta</option><option value="3n">3 naponta</option>
-            <option value="h3x" selected>Heti 3x (H/Sze/P)</option><option value="h2x">Heti 2x (H/Cs)</option>
-            <option value="h1x">Heti 1x</option><option value="2h">2 hetente</option>
-          </select>
-        </div>
-        <div style="margin-bottom:10px;">
-          <label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:4px;">Szállítás napja / kezdőnap</label>
-          <select id="a-nap" style="border:2px solid #EC1B23;border-radius:7px;padding:8px 10px;font-size:13px;width:100%;outline:none;" onchange="uzletFrissit()">
-            <option value="0">Hétfő</option><option value="1">Kedd</option><option value="2">Szerda</option>
-            <option value="3">Csütörtök</option><option value="4" selected>Péntek</option>
-            <option value="5">Szombat</option><option value="6">Vasárnap</option>
-          </select>
-        </div>
-        <div style="background:white;border-radius:8px;padding:10px 12px;font-size:12px;color:#555;" id="a-osszefoglalo">– számítás –</div>
-      </div>
-
-      <div style="flex:1;min-width:280px;background:#FDF3E7;border:2px solid #D9A24F;border-radius:10px;padding:16px 18px;">
-        <div style="font-size:13px;font-weight:bold;color:#8a5a1f;margin-bottom:12px;">🍕🫓 PM10 Oktogon – 45cm + 32cm pizza</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div style="font-size:11px;font-weight:bold;color:#555;margin-bottom:4px;grid-column:1/-1;">Heti forgalmi minta (Ft/nap – 45cm)</div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">hétfő</label><input type="number" id="b45-ft-0" value="349947" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">kedd</label><input type="number" id="b45-ft-1" value="334520" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">szerda</label><input type="number" id="b45-ft-2" value="339235" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">csütörtök</label><input type="number" id="b45-ft-3" value="429893" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">péntek</label><input type="number" id="b45-ft-4" value="646750" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">szombat</label><input type="number" id="b45-ft-5" value="617034" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">vasárnap</label><input type="number" id="b45-ft-6" value="351566" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#8a5a1f;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div style="font-size:11px;font-weight:bold;color:#555;margin-bottom:4px;grid-column:1/-1;">32cm forgalom (Ft/nap)</div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">hétfő</label><input type="number" id="b32-ft-0" value="365257" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">kedd</label><input type="number" id="b32-ft-1" value="373254" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">szerda</label><input type="number" id="b32-ft-2" value="351973" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">csütörtök</label><input type="number" id="b32-ft-3" value="401130" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">péntek</label><input type="number" id="b32-ft-4" value="426235" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">szombat</label><input type="number" id="b32-ft-5" value="541548" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-          <div style="display:flex;flex-direction:column;gap:2px;"><label style="font-size:10px;color:#888;">vasárnap</label><input type="number" id="b32-ft-6" value="485703" style="border:1.5px solid #dde3f0;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:bold;color:#D9A24F;outline:none;width:100%;" oninput="uzletFrissit()"></div>
-        </div>
-        <div style="margin-bottom:10px;">
-          <label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:4px;">Szállítási ciklus</label>
-          <select id="b-ciklus" style="border:2px solid #D9A24F;border-radius:7px;padding:8px 10px;font-size:13px;width:100%;outline:none;" onchange="uzletFrissit()">
-            <option value="2n">2 naponta</option><option value="3n" selected>3 naponta</option>
-            <option value="h3x">Heti 3x (H/Sze/P)</option><option value="h2x">Heti 2x (H/Cs)</option>
-            <option value="h1x">Heti 1x</option><option value="2h">2 hetente</option>
-          </select>
-        </div>
-        <div style="margin-bottom:10px;">
-          <label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:4px;">Szállítás kezdőnapja</label>
-          <select id="b-nap" style="border:2px solid #D9A24F;border-radius:7px;padding:8px 10px;font-size:13px;width:100%;outline:none;" onchange="uzletFrissit()">
-            <option value="0" selected>Hétfő</option><option value="1">Kedd</option><option value="2">Szerda</option>
-            <option value="3">Csütörtök</option><option value="4">Péntek</option>
-            <option value="5">Szombat</option><option value="6">Vasárnap</option>
-          </select>
-        </div>
-        <div style="background:white;border-radius:8px;padding:10px 12px;font-size:12px;color:#555;" id="b-osszefoglalo">– számítás –</div>
-      </div>
-    </div>
-  </div>
-
-  <div style="background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:20px;">
-    <div style="display:flex;border-bottom:2px solid #eee;">
-      <button id="utab-a" onclick="setUzletTab('a')" style="flex:1;padding:12px 20px;font-size:14px;font-weight:bold;border:none;cursor:pointer;background:#EC1B23;color:white;border-radius:0;">🍕 PM1 Király – rendelési terv</button>
-      <button id="utab-b" onclick="setUzletTab('b')" style="flex:1;padding:12px 20px;font-size:14px;font-weight:bold;border:none;cursor:pointer;background:#f0f4f8;color:#888;border-radius:0;">🍕🫓 PM10 Oktogon – rendelési terv</button>
-    </div>
-    <div id="uzlet-rendelesek" style="padding:16px;"></div>
-  </div>
-</div>
-</div>
-
 <!-- MODAL -->
 <!-- SABLON MENTÉS MODAL -->
 <div class="modal-overlay hidden" id="sablon-modal">
@@ -512,7 +420,7 @@
       <button class="modal-close" onclick="jelszóModalZár()">✕</button>
     </div>
     <div style="padding:24px;">
-      <div style="font-size:13px;color:#555;margin-bottom:16px;">Az Üzlet szimulátor csak jelszóval érhető el.</div>
+      <div style="font-size:13px;color:#555;margin-bottom:16px;">A receptek szerkesztése csak jelszóval érhető el.</div>
       <label style="font-size:12px;font-weight:bold;color:#555;display:block;margin-bottom:6px;">Jelszó</label>
       <input type="password" id="jelszó-inp" placeholder="••••••••"
         style="width:100%;border:2px solid #EC1B23;border-radius:8px;padding:10px 14px;font-size:16px;outline:none;"
@@ -1010,11 +918,6 @@ let pastaAlapanyagok = defaultPastaAlapanyagok.map(a => ({...a}));
 // ════════════════════════════════════════
 const ADMIN_HASH = 'U2FsdGVkX1' + btoa('United82!').split('').reverse().join('');
 
-function uzletJelszó() {
-  if(sessionStorage.getItem('pm_admin') === ADMIN_HASH) { setMainTab('uzlet'); return; }
-  document.getElementById('jelszó-modal').classList.remove('hidden');
-  setTimeout(() => document.getElementById('jelszó-inp').focus(), 100);
-}
 function jelszóEllenőr() {
   const inp = document.getElementById('jelszó-inp').value;
   if(inp === 'United82!') {
@@ -1025,8 +928,6 @@ function jelszóEllenőr() {
     if(pendingReceptToggle) {
       toggleRecept(pendingReceptToggle.tipus, pendingReceptToggle.i);
       pendingReceptToggle = null;
-    } else {
-      setMainTab('uzlet');
     }
   } else {
     document.getElementById('jelszó-hiba').textContent = '❌ Helytelen jelszó!';
@@ -1283,11 +1184,10 @@ function closeSugo() { document.getElementById('sugo-modal').classList.add('hidd
 
 function setMainTab(t) {
   mainTab = t;
-  ['pizza','pasta','uzlet'].forEach(tab => {
+  ['pizza','pasta'].forEach(tab => {
     document.getElementById('maintab-'+tab).classList.toggle('active', t===tab);
     document.getElementById('section-'+tab).classList.toggle('hidden', t!==tab);
   });
-  if(t==='uzlet') uzletFrissit();
 }
 
 // ════════════════════════════════════════
@@ -2130,161 +2030,6 @@ function ujProfilMent() {
   hiba.textContent='';
   profilValtas(uj.id);
   renderProfilokTab();
-}
-
-// ════════════════════════════════════════
-// ÜZLET SZIMULÁTOR
-// ════════════════════════════════════════
-const NAPOK = ["hétfő","kedd","szerda","csütörtök","péntek","szombat","vasárnap"];
-
-function getCiklusNapok(ciklus, kezdonap) {
-  const k = parseInt(kezdonap);
-  let szallNapok;
-  switch(ciklus) {
-    case '2n': szallNapok=[]; for(let i=k;i<k+7;i+=2) szallNapok.push(i%7); break;
-    case '3n': szallNapok=[]; for(let i=k;i<k+7;i+=3) szallNapok.push(i%7); break;
-    case 'h3x': szallNapok=[0,2,4]; break;
-    case 'h2x': szallNapok=[k%7,(k+3)%7]; break;
-    case 'h1x': szallNapok=[k%7]; break;
-    case '2h': szallNapok=[k%7]; break;
-    default: szallNapok=[k%7];
-  }
-  const szallDb=szallNapok.length;
-  return szallNapok.map((szallNap,idx) => {
-    const kovetkezo=szallNapok[(idx+1)%szallDb];
-    const fedettNapok=[];
-    let cur=szallNap, count=0;
-    do { fedettNapok.push(cur); cur=(cur+1)%7; count++; if(count>7) break; } while(cur!==kovetkezo);
-    if(ciklus==='2h') return [...fedettNapok,...fedettNapok];
-    return fedettNapok;
-  });
-}
-
-function getForgalom(prefix45, prefix32) {
-  const ft45=Array.from({length:7},(_,i)=>{const el=document.getElementById(`${prefix45}-ft-${i}`);return el?parseFloat(el.value)||0:0;});
-  const ft32=prefix32?Array.from({length:7},(_,i)=>{const el=document.getElementById(`${prefix32}-ft-${i}`);return el?parseFloat(el.value)||0:0;}):Array(7).fill(0);
-  return {ft45,ft32};
-}
-
-function szamolRendeles(gomboc45, gomboc32, profil) {
-  const ossz={};
-  const apizzak=profil.pizzak.filter(p=>p.aktiv);
-  const tOssz=apizzak.reduce((s,p)=>s+p.arany,0)||1;
-  apizzak.forEach(p => {
-    const d45=gomboc45*p.arany/tOssz, d32=gomboc32*p.arany/tOssz;
-    (p.recept||[]).forEach(r => { if(!ossz[r.a]) ossz[r.a]=0; ossz[r.a]+=d45*r.m+d32*r.m*0.5; });
-  });
-  const tk45=100-simaArany45, tk32=100-simaArany32;
-  const gombocSorok=[
-    {nev:`Sima gombóc 45cm (${simaArany45}%)`,ertek:Math.round(gomboc45*simaArany45/100),alap:cfg.talca45Sima,megNev:cfg.talca45SimaNev},
-    {nev:`TK gombóc 45cm (${tk45}%)`,ertek:Math.round(gomboc45*tk45/100),alap:cfg.talca45Tk,megNev:cfg.talca45TkNev},
-  ];
-  if(gomboc32>0) {
-    gombocSorok.push({nev:`Sima gombóc 32cm (${simaArany32}%)`,ertek:Math.round(gomboc32*simaArany32/100),alap:cfg.talca32Sima,megNev:cfg.talca32SimaNev});
-    gombocSorok.push({nev:`TK gombóc 32cm (${tk32}%)`,ertek:Math.round(gomboc32*tk32/100),alap:cfg.talca32Tk,megNev:cfg.talca32TkNev});
-  }
-  return {ossz,gombocSorok};
-}
-
-let aktívUzletTab='a';
-
-function setUzletTab(t) {
-  aktívUzletTab=t;
-  const aBtn=document.getElementById('utab-a'), bBtn=document.getElementById('utab-b');
-  if(aBtn){aBtn.style.background=t==='a'?'#EC1B23':'#f0f4f8';aBtn.style.color=t==='a'?'white':'#888';}
-  if(bBtn){bBtn.style.background=t==='b'?'#D9A24F':'#f0f4f8';bBtn.style.color=t==='b'?'white':'#888';}
-  uzletTabFrissit();
-}
-
-function uzletTabFrissit() {
-  const cont=document.getElementById('uzlet-rendelesek');
-  if(!cont) return;
-  const profil=aktivProfil();
-  if(aktívUzletTab==='a') {
-    const {ft45}=getForgalom('a',null);
-    const ciklus=document.getElementById('a-ciklus')?.value||'h3x';
-    const nap=document.getElementById('a-nap')?.value||'4';
-    cont.innerHTML=uzletTablaHtml('🍕 PM1 Király (csak 45cm)','#EC1B23',getCiklusNapok(ciklus,nap),ft45,Array(7).fill(0),profil,ciklus==='2h');
-  } else {
-    const {ft45,ft32}=getForgalom('b45','b32');
-    const ciklus=document.getElementById('b-ciklus')?.value||'3n';
-    const nap=document.getElementById('b-nap')?.value||'0';
-    cont.innerHTML=uzletTablaHtml('🍕🫓 PM10 Oktogon (45cm + 32cm)','#D9A24F',getCiklusNapok(ciklus,nap),ft45,ft32,profil,ciklus==='2h');
-  }
-}
-
-function uzletFrissit() {
-  const {ft45:aft45}=getForgalom('a',null);
-  const aHeti=aft45.reduce((s,v)=>s+v,0);
-  const aEl=document.getElementById('a-osszefoglalo');
-  if(aEl) aEl.innerHTML=`<strong>Heti forgalom:</strong> ${fmt(Math.round(aHeti))} Ft<br><strong>Heti gombóc:</strong> ${Math.round(aHeti/cfg.szeletAr45/cfg.szeletPerGomboc)} db`;
-  const {ft45:bft45,ft32:bft32}=getForgalom('b45','b32');
-  const bHeti45=bft45.reduce((s,v)=>s+v,0), bHeti32=bft32.reduce((s,v)=>s+v,0);
-  const bEl=document.getElementById('b-osszefoglalo');
-  if(bEl) bEl.innerHTML=`<strong>Heti 45cm:</strong> ${fmt(Math.round(bHeti45))} Ft · ${Math.round(bHeti45/cfg.szeletAr45/cfg.szeletPerGomboc)} gombóc<br><strong>Heti 32cm:</strong> ${fmt(Math.round(bHeti32))} Ft · ${Math.round(bHeti32/cfg.pizzaAr32)} pizza`;
-  uzletTabFrissit();
-}
-
-function uzletTablaHtml(cim, szin, ciklusok, ft45_napi, ft32_napi, profil, is2h) {
-  const csomagSuly=pizzaCsomagSuly;
-  const szorzo=is2h?2:1;
-  const oszlopok=ciklusok.map((napIndexek,ci) => {
-    const uniqueNapok=[...new Set(napIndexek.map(n=>n%7))];
-    let gomboc45=0,gomboc32=0,ft45=0,ft32=0;
-    uniqueNapok.forEach(n=>{gomboc45+=ft45_napi[n]/cfg.szeletAr45/cfg.szeletPerGomboc*szorzo;gomboc32+=ft32_napi[n]/cfg.pizzaAr32*szorzo;ft45+=ft45_napi[n]*szorzo;ft32+=ft32_napi[n]*szorzo;});
-    const {ossz,gombocSorok}=szamolRendeles(gomboc45,gomboc32,profil);
-    return {ci,napok:uniqueNapok,szallNap:NAPOK[napIndexek[0]%7],fedNapok:uniqueNapok.map(n=>NAPOK[n]).join('+'),gomboc45,gomboc32,ft45,ft32,ossz,gombocSorok};
-  }).filter(o=>o.ft45+o.ft32>0);
-
-  const sorok=[];
-  const gombocNevek=new Map();
-  oszlopok.forEach(o=>o.gombocSorok.forEach(r=>{if(r.ertek>0)gombocNevek.set(r.nev+'|'+r.alap,r.megNev);}));
-  gombocNevek.forEach((megNev,key)=>{const[nev,alap]=key.split('|');sorok.push({nev,alap:parseInt(alap),megNev,egys:'db',ae:'db',tipus:'gomboc'});});
-  pizzaAlapanyagok.forEach(a=>{if(oszlopok.some(o=>(o.ossz[a.nev]||0)>0)) sorok.push({nev:a.disp||a.nev,kulcs:a.nev,alap:a.alap,egys:a.egys,ae:a.ae,tipus:'anyag',masodEgys:a.masodEgys});});
-
-  let html=`<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;min-width:500px;">
-    <thead><tr style="background:#f7f9fc;">
-      <th style="text-align:left;padding:8px 12px;font-size:11px;color:#BC1D23;border-bottom:2px solid #dde3f0;min-width:160px;">Alapanyag</th>
-      <th style="padding:8px 12px;font-size:11px;color:#BC1D23;border-bottom:2px solid #dde3f0;">Egység</th>`;
-
-  oszlopok.forEach((o,oi)=>{
-    html+=`<th style="padding:10px 12px;border-bottom:3px solid ${szin};text-align:center;min-width:120px;background:#FEFAFB;">
-      <div style="font-size:10px;font-weight:bold;color:#aaa;text-transform:uppercase;">${oi+1}. szállítás</div>
-      <div style="font-size:16px;font-weight:bold;color:${szin};">📦 ${o.szallNap}</div>
-      <div style="font-size:10px;color:#888;margin-top:3px;">${o.fedNapok.split('+').map(n=>`<span style="background:#FCEEF0;border-radius:4px;padding:1px 5px;margin:1px;display:inline-block;">${n}</span>`).join('')}${is2h?' <span style="color:#BC1D23;font-weight:bold;">×2 hét</span>':''}</div>
-      <div style="margin-top:5px;font-size:11px;font-weight:bold;color:#555;border-top:1px solid #eee;padding-top:4px;">${fmt(Math.round(o.ft45+o.ft32))} Ft</div>
-    </th>`;
-  });
-  html+=`</tr></thead><tbody>`;
-
-  let lastTipus='';
-  sorok.forEach(sor=>{
-    if(sor.tipus!==lastTipus){
-      lastTipus=sor.tipus;
-      const fejNev=sor.tipus==='gomboc'?'🫓 Gombóc':'📦 Alapanyagok';
-      const fejSzin=sor.tipus==='gomboc'?'#8a5a1f':'#BC1D23';
-      html+=`<tr><td colspan="${oszlopok.length+2}" style="background:${sor.tipus==='gomboc'?'#FBE7CC':'#FFCCCE'};padding:5px 12px;font-size:11px;font-weight:bold;color:${fejSzin};">${fejNev}</td></tr>`;
-    }
-    html+=`<tr style="border-bottom:1px solid #f0f0f0;" onmouseover="this.style.background='#FDF9FB'" onmouseout="this.style.background=''">
-      <td style="padding:6px 12px;font-weight:500;">${sor.nev}</td>
-      <td style="padding:6px 12px;color:#888;text-align:center;">${sor.egys}</td>`;
-    oszlopok.forEach(o=>{
-      let ertek=0;
-      if(sor.tipus==='gomboc'){const gr=o.gombocSorok.find(r=>r.nev===sor.nev);ertek=gr?gr.ertek:0;}
-      else{const k=sor.kulcs||sor.nev;ertek=o.ossz[k]||0;if(sor.egys==='db'&&csomagSuly[k])ertek=ertek/csomagSuly[k];ertek=Math.round(ertek*10)/10;}
-      const ceil=sor.alap?Math.ceil(ertek/sor.alap)*sor.alap:null;
-      const van=ertek>0;
-      const megEgys=ceil!==null&&sor.tipus==='gomboc'?masodEgysSzoveg(ceil,sor.alap,sor.megNev):(ceil!==null?masodEgysSzoveg(ceil,sor.masodEgys?.meret,sor.masodEgys?.nev):'');
-      html+=`<td style="padding:6px 12px;text-align:center;">${van?`<div style="font-size:11px;color:#888;">${fmt(ertek)} ${sor.egys}</div>${ceil!==null?`<div style="font-weight:bold;color:#345c28;background:#E3F0DC;border-radius:5px;padding:2px 8px;display:inline-block;margin-top:2px;">${fmt(ceil)} ${sor.ae||sor.egys}</div>${megEgys}`:''}`:'<span style="color:#e0e0e0;">–</span>'}</td>`;
-    });
-    html+=`</tr>`;
-  });
-
-  html+=`<tr style="background:#f7f9fc;font-weight:bold;border-top:2px solid #dde3f0;">
-    <td colspan="2" style="padding:7px 12px;color:#BC1D23;font-size:12px;">🏆 Forgalom összesen</td>`;
-  oszlopok.forEach(o=>{html+=`<td style="padding:7px 12px;text-align:center;color:${szin};">${fmt(Math.round(o.ft45+o.ft32))} Ft</td>`;});
-  html+=`</tr></tbody></table></div>`;
-  return html;
 }
 
 // ════════════════════════════════════════
