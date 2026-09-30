@@ -10,8 +10,8 @@ Egyfájlos, backend nélküli alapanyag-kalkulátor (`index.html` + `allapot.jso
 
 ## Kapcsolódó
 - Az üzletenkénti készletfogyás (Tény / Ajánlás / Összevetés) és a régi üzlet-szimulátor utódja
-  a privát **`pm-keszletfogyas`** repóban készül; a terv és a döntések annak `docs/` mappájában vannak.
-- A törölt üzlet-szimulátor utolsó állapota: `main` 6edcac7 (tag: `szimulator-elotte-2026-09-30`).
+  a privát **`Keszletfogyas`** repóban készül; a terv és a döntések annak `docs/` mappájában vannak.
+- A törölt üzlet-szimulátor utolsó állapota: tag `szimulator-elotte-2026-09-30` (b7863e5).
 
 ## Vendorolt skillek
 
